@@ -1,0 +1,8 @@
+{
+  "name": "Nexora Christmas Studio",
+  "description": "Hyper-realistic Christmas portrait studio powered by Gemini 2.5 and Veo 3.1. Create stunning holiday memories and videos from your photos.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

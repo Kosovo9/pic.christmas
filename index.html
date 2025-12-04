@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIC.CHRISTMAS – Premium AI Portraits</title>
+    <!-- SEO & Social Tags -->
+    <meta name="description" content="PIC.CHRISTMAS – Hyper-realistic Christmas photos with AI for families and pets. Create your holiday studio portraits in minutes." />
+    <meta property="og:title" content="PIC.CHRISTMAS – Premium AI Christmas Studio" />
+    <meta property="og:description" content="Turn your photos into hyper-realistic Christmas portraits. Family, couples, and pets." />
+    <meta property="og:url" content="https://pic.christmas" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PIC.CHRISTMAS" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --color-bg: #1a0505; /* Deep Burgundy/Black */
+        --color-gold: #D4AF37;
+        --color-gold-light: #F3E5AB;
+        --color-red-deep: #4a0404;
+      }
+      
+      body {
+        font-family: 'Lato', sans-serif;
+        background-color: var(--color-bg);
+        color: #f8fafc;
+        overflow-x: hidden;
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Playfair Display', serif;
+      }
+
+      /* Custom Animation Utilities */
+      @keyframes fade-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in {
+        animation: fade-in 0.8s ease-out forwards;
+      }
+      
+      /* Gold Shimmer Effect */
+      .text-gold {
+        color: var(--color-gold);
+      }
+      .border-gold {
+        border-color: var(--color-gold);
+      }
+      .bg-gold-gradient {
+        background: linear-gradient(135deg, #B8860B 0%, #D4AF37 50%, #F3E5AB 100%);
+      }
+      .text-gold-gradient {
+        background: linear-gradient(135deg, #B8860B 0%, #D4AF37 50%, #F3E5AB 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* Santa Claus animation */
+      @keyframes santa-slide {
+        from { transform: translateX(-300px); }
+        to { transform: translateX(calc(100vw + 300px)); }
+      }
+      .santa-slide {
+        animation: santa-slide 35s linear infinite;
+      }
+
+      /* Floating animation */
+      @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(2deg); }
+        50% { transform: translateY(-15px) rotate(-1deg); }
+      }
+      .animate-float {
+        animation: float 5s ease-in-out infinite;
+      }
+
+      /* Earth Rotation */
+      @keyframes spin-slow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      .animate-spin-slow {
+        animation: spin-slow 120s linear infinite;
+      }
+
+      /* Sparkle animation */
+      @keyframes sparkle {
+        0% { transform: scale(0); opacity: 0; }
+        50% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(0); opacity: 0; }
+      }
+      .animate-sparkle {
+        animation: sparkle 2s ease-in-out infinite;
+      }
+      
+      /* Snow */
+      .snowflake {
+        position: absolute;
+        top: -2vh;
+        background: white;
+        border-radius: 50%;
+        opacity: 0.8;
+        pointer-events: none;
+        z-index: 1;
+        animation-name: fall, sway;
+        animation-timing-function: linear, ease-in-out;
+        animation-iteration-count: infinite, infinite;
+      }
+      @keyframes fall {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(105vh); }
+      }
+      @keyframes sway {
+        0%, 100% { margin-left: 0; }
+        50% { margin-left: 25px; }
+      }
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+        "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0",
+        "react/": "https://aistudiocdn.com/react@^19.2.1/",
+        "react": "https://aistudiocdn.com/react@^19.2.1"
+      }
+    }
+    </script>
+    <link rel="stylesheet" href="/index.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Audio Element for Music Player -->
+    <audio id="bg-music" loop>
+        <source src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Jingle_Bells_-_Kevin_MacLeod_-_No_Copyright_Music.mp3" type="audio/mpeg">
+    </audio>
+    <script type="module" src="/index.tsx"></script>
+
+    <script>
+      document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+      });
+      ['copy', 'cut', 'selectstart'].forEach(function (ev) {
+        document.addEventListener(ev, function (e) {
+          e.preventDefault();
+        });
+      });
+    </script>
+  </body>
+</html>
