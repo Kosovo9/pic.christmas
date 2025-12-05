@@ -2,7 +2,7 @@ import { PromptItem, AspectRatio } from "../types";
 
 // En producción, no expongas la API key en el cliente.
 // Aquí se deja por simplicidad / demo.
-const apiKey = process.env.NEXT_PUBLIC_API_KEY || '';
+const apiKey = process.env.NEXT_PUBLIC_GOOGLE_AI_API_KEY || '';
 
 // Mock implementation for now as we don't have the GoogleGenAI SDK installed yet
 // and we want to avoid installation issues in this environment.
