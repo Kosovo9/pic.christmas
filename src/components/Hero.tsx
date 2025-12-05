@@ -26,7 +26,7 @@ export const Hero: React.FC<HeroProps> = ({ language, onStart }) => {
     }, []);
 
     return (
-        <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div suppressHydrationWarning className="relative min-h-screen flex items-center justify-center overflow-hidden">
             {/* Dynamic Background */}
             <div className="absolute inset-0 z-0">
                 {heroImages.map((img, index) => (
