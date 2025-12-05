@@ -1,0 +1,8 @@
+{
+  "christmas": {
+    "base_price": 20,
+    "currency": "USD",
+    "extra_person": 5,
+    "extra_pet": 5
+  }
+}
