@@ -30,9 +30,7 @@
         "mongoose": "^9.0.0",
         "multer": "^2.0.2",
         "replicate": "^1.4.0",
-        "stripe": "^20.0.0"
-    },
-    "devDependencies": {
+        "stripe": "^20.0.0",
         "@types/cors": "^2.8.19",
         "@types/express": "^5.0.6",
         "@types/node": "^24.10.1",
@@ -40,6 +38,7 @@
         "ts-node": "^10.9.2",
         "typescript": "^5"
     },
+    "devDependencies": {},
     "engines": {
         "node": ">=18.0.0"
     }
