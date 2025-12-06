@@ -7,6 +7,7 @@ import paymentsRoutes from './routes/payments.routes';
 import referralsRoutes from './routes/referrals.routes';
 import promptsRoutes from './routes/prompts.routes';
 import aiRoutes from './routes/ai.routes';
+import uploadsRoutes from './routes/uploads.routes';
 import { v2 as cloudinary } from 'cloudinary';
 import Stripe from 'stripe';
 import MercadoPagoConfig, { Preference } from 'mercadopago';
@@ -93,7 +94,8 @@ app.use('/api/payments', paymentsRoutes);
 app.use('/api/referrals', referralsRoutes);
 app.use('/api/prompts', promptsRoutes);
 app.use('/api/ai', aiRoutes);
-app.use('/api/admin', adminRoutes); // Admin routes registered
+app.use('/api/admin', adminRoutes);
+app.use('/api/uploads', uploadsRoutes);
 
 app.get('/', (req, res) => {
   res.send('Pic.Christmas API is running 🎄 (All Features Active)');
