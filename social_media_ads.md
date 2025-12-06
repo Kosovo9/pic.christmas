@@ -14,6 +14,21 @@
 
 ---
 
+## 💸 GROSS PROFIT (GP) ESTIMATES
+
+**Estimated Margin: ~85%**
+*(Calculated after subtracting Cloud GPU costs, Stripe fees, and hosting)*
+
+**15 Days GP:** $201,450 - $267,750 USD
+**30 Days GP:** $559,300 - $756,500 USD
+
+*Why 85%?*
+- High-ticket "Family" packages ($29+) absurdly outweigh the fixed GPU cost per generation (~$0.20-0.40).
+- Digital product = Zero shipping, zero inventory.
+- Viral referrals reduce CAC (Customer Acquisition Cost) to near zero.
+
+---
+
 ## 🔥 INSTAGRAM / FACEBOOK (Visual-First)
 
 ### ENGLISH

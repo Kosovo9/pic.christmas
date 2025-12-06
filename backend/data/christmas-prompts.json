@@ -1,0 +1,595 @@
+{
+    "categories": {
+        "family": {
+            "name": "Family Moments",
+            "icon": "👨‍👩‍👧‍👦",
+            "prompts": [
+                {
+                    "id": "fam001",
+                    "title": "Cozy Fireplace Christmas",
+                    "description": "Family gathered around a roaring fireplace decorated with stockings and garland, warm golden lighting, Christmas tree in background, cozy living room",
+                    "tags": [
+                        "indoor",
+                        "cozy",
+                        "traditional"
+                    ]
+                },
+                {
+                    "id": "fam002",
+                    "title": "Snowy Front Porch",
+                    "description": "Family on decorated front porch with Christmas lights, gentle snow falling, wreaths and garland, warm sweaters, evening golden hour",
+                    "tags": [
+                        "outdoor",
+                        "snow",
+                        "evening"
+                    ]
+                },
+                {
+                    "id": "fam003",
+                    "title": "Christmas Tree Opening Presents",
+                    "description": "Family sitting around beautifully decorated Christmas tree, opening presents, warm interior lighting, wrapping paper scattered, joyful expressions",
+                    "tags": [
+                        "indoor",
+                        "presents",
+                        "traditional"
+                    ]
+                },
+                {
+                    "id": "fam004",
+                    "title": "Baking Christmas Cookies",
+                    "description": "Family in festive kitchen baking Christmas cookies together, flour on aprons, cookie cutters, decorated cookies, warm atmosphere",
+                    "tags": [
+                        "indoor",
+                        "activity",
+                        "kitchen"
+                    ]
+                },
+                {
+                    "id": "fam005",
+                    "title": "Winter Wonderland Walk",
+                    "description": "Family walking through snowy forest, pine trees covered in snow, warm winter coats, holding hands, magical winter atmosphere",
+                    "tags": [
+                        "outdoor",
+                        "snow",
+                        "nature"
+                    ]
+                },
+                {
+                    "id": "fam006",
+                    "title": "Christmas Dinner Table",
+                    "description": "Family gathered around elegant Christmas dinner table, candles lit, festive centerpiece, formal attire, warm dining room",
+                    "tags": [
+                        "indoor",
+                        "formal",
+                        "dinner"
+                    ]
+                },
+                {
+                    "id": "fam007",
+                    "title": "Sledding Adventure",
+                    "description": "Family sledding down snowy hill, winter jackets, laughing, snow-covered landscape, bright sunny day",
+                    "tags": [
+                        "outdoor",
+                        "activity",
+                        "snow"
+                    ]
+                },
+                {
+                    "id": "fam008",
+                    "title": "Christmas Movie Night",
+                    "description": "Family cuddled on couch watching Christmas movie, blankets, hot cocoa mugs, Christmas tree lights glowing, cozy evening",
+                    "tags": [
+                        "indoor",
+                        "cozy",
+                        "evening"
+                    ]
+                },
+                {
+                    "id": "fam009",
+                    "title": "Building Snowman Together",
+                    "description": "Family building snowman in front yard, carrot nose, scarf and hat, snow-covered house with Christmas lights in background",
+                    "tags": [
+                        "outdoor",
+                        "activity",
+                        "snow"
+                    ]
+                },
+                {
+                    "id": "fam010",
+                    "title": "Christmas Morning Pajamas",
+                    "description": "Family in matching Christmas pajamas, morning light streaming through windows, Christmas tree, excited children, cozy home",
+                    "tags": [
+                        "indoor",
+                        "morning",
+                        "pajamas"
+                    ]
+                },
+                {
+                    "id": "fam011",
+                    "title": "Ice Skating Together",
+                    "description": "Family ice skating at outdoor rink, Christmas lights overhead, snow gently falling, holding hands, winter evening",
+                    "tags": [
+                        "outdoor",
+                        "activity",
+                        "evening"
+                    ]
+                },
+                {
+                    "id": "fam012",
+                    "title": "Caroling in the Neighborhood",
+                    "description": "Family dressed warmly singing Christmas carols, songbooks in hand, festively decorated houses in background, evening lights",
+                    "tags": [
+                        "outdoor",
+                        "activity",
+                        "evening"
+                    ]
+                },
+                {
+                    "id": "fam013",
+                    "title": "Christmas Train Display",
+                    "description": "Family admiring elaborate model train display under Christmas tree, vintage trains, detailed village, warm home interior",
+                    "tags": [
+                        "indoor",
+                        "traditional",
+                        "detailed"
+                    ]
+                },
+                {
+                    "id": "fam014",
+                    "title": "Picking Christmas Tree",
+                    "description": "Family at Christmas tree farm selecting perfect tree, snowy field of pine trees, pulling sled, winter clothes",
+                    "tags": [
+                        "outdoor",
+                        "activity",
+                        "traditional"
+                    ]
+                },
+                {
+                    "id": "fam015",
+                    "title": "Christmas Lights Drive",
+                    "description": "Family in car driving through neighborhood decorated with spectacular Christmas lights, reflections on car windows, magical evening",
+                    "tags": [
+                        "evening",
+                        "lights",
+                        "modern"
+                    ]
+                }
+            ]
+        },
+        "couples": {
+            "name": "Romantic Couples",
+            "icon": "💑",
+            "prompts": [
+                {
+                    "id": "cpl001",
+                    "title": "Kissing Under Mistletoe",
+                    "description": "Couple kissing under mistletoe, Christmas lights bokeh background, elegant holiday outfits, romantic atmosphere, soft lighting",
+                    "tags": [
+                        "romantic",
+                        "indoor",
+                        "classic"
+                    ]
+                },
+                {
+                    "id": "cpl002",
+                    "title": "Snowy Embrace",
+                    "description": "Couple embracing in gentle snowfall, winter coats, cozy scarves, Christmas lights in background, evening golden hour",
+                    "tags": [
+                        "romantic",
+                        "outdoor",
+                        "snow"
+                    ]
+                },
+                {
+                    "id": "cpl003",
+                    "title": "Hot Cocoa by Fireplace",
+                    "description": "Couple cuddled on couch by fireplace, holding mugs of hot cocoa, Christmas stockings hung, warm blanket, intimate lighting",
+                    "tags": [
+                        "romantic",
+                        "indoor",
+                        "cozy"
+                    ]
+                },
+                {
+                    "id": "cpl004",
+                    "title": "Christmas Market Stroll",
+                    "description": "Couple walking through festive Christmas market, holding hands, market stalls with lights, warm cups of mulled wine, evening",
+                    "tags": [
+                        "romantic",
+                        "outdoor",
+                        "market"
+                    ]
+                },
+                {
+                    "id": "cpl005",
+                    "title": "Decorating Tree Together",
+                    "description": "Couple decorating Christmas tree together, laughing, ornaments in hand, cozy home interior, string lights",
+                    "tags": [
+                        "romantic",
+                        "indoor",
+                        "activity"
+                    ]
+                },
+                {
+                    "id": "cpl006",
+                    "title": "First Christmas Together",
+                    "description": "Couple with 'Our First Christmas' ornament, standing by tree, elegant outfits, romantic lighting, special moment",
+                    "tags": [
+                        "romantic",
+                        "indoor",
+                        "milestone"
+                    ]
+                },
+                {
+                    "id": "cpl007",
+                    "title": "Winter Cabin Retreat",
+                    "description": "Couple at rustic winter cabin, snow-covered landscape, wearing cozy sweaters, pine trees, mountain backdrop",
+                    "tags": [
+                        "romantic",
+                        "outdoor",
+                        "rustic"
+                    ]
+                },
+                {
+                    "id": "cpl008",
+                    "title": "Christmas Eve Formal",
+                    "description": "Couple in formal evening wear, elegant Christmas party setting, champagne glasses, sophisticated decoration, glamorous",
+                    "tags": [
+                        "romantic",
+                        "formal",
+                        "elegant"
+                    ]
+                },
+                {
+                    "id": "cpl009",
+                    "title": "Ice Skating Romance",
+                    "description": "Couple ice skating together, holding hands, outdoor rink with Christmas lights, snow falling gently, magical evening",
+                    "tags": [
+                        "romantic",
+                        "outdoor",
+                        "activity"
+                    ]
+                },
+                {
+                    "id": "cpl010",
+                    "title": "Christmas Gift Exchange",
+                    "description": "Couple exchanging wrapped gifts, sitting by Christmas tree, warm smiles, intimate moment, soft glowing lights",
+                    "tags": [
+                        "romantic",
+                        "indoor",
+                        "gifts"
+                    ]
+                }
+            ]
+        },
+        "pets": {
+            "name": "Festive Pets",
+            "icon": "🐾",
+            "prompts": [
+                {
+                    "id": "pet001",
+                    "title": "Santa Paws Portrait",
+                    "description": "Dog wearing Santa hat sitting by Christmas tree, wrapped presents around, festive collar, warm home interior, professional portrait style",
+                    "tags": [
+                        "dog",
+                        "indoor",
+                        "cute"
+                    ]
+                },
+                {
+                    "id": "pet002",
+                    "title": "Cat in Christmas Tree",
+                    "description": "Mischievous cat peeking out from decorated Christmas tree, ornaments nearby, playful expression, cozy living room",
+                    "tags": [
+                        "cat",
+                        "indoor",
+                        "playful"
+                    ]
+                },
+                {
+                    "id": "pet003",
+                    "title": "Winter Walk with Dog",
+                    "description": "Dog in festive bandana walking through snowy park, snow on fur, pine trees, winter wonderland, happy expression",
+                    "tags": [
+                        "dog",
+                        "outdoor",
+                        "snow"
+                    ]
+                },
+                {
+                    "id": "pet004",
+                    "title": "Pets on Santa's Lap",
+                    "description": "Multiple pets sitting with Santa Claus, Christmas workshop background, presents scattered, festive and whimsical",
+                    "tags": [
+                        "multiple",
+                        "indoor",
+                        "santa"
+                    ]
+                },
+                {
+                    "id": "pet005",
+                    "title": "Reindeer Costume Dog",
+                    "description": "Dog wearing reindeer antlers, red nose, sitting by fireplace with stockings, adorable and festive",
+                    "tags": [
+                        "dog",
+                        "indoor",
+                        "costume"
+                    ]
+                },
+                {
+                    "id": "pet006",
+                    "title": "Cat with Ornaments",
+                    "description": "Cat lying among Christmas ornaments and tinsel, soft focus background, elegant and cute, studio lighting",
+                    "tags": [
+                        "cat",
+                        "indoor",
+                        "ornaments"
+                    ]
+                },
+                {
+                    "id": "pet007",
+                    "title": "Christmas Stocking Pups",
+                    "description": "Puppy peeking out of oversized Christmas stocking, gifts and decorations around, cute and heartwarming",
+                    "tags": [
+                        "dog",
+                        "indoor",
+                        "cute"
+                    ]
+                },
+                {
+                    "id": "pet008",
+                    "title": "Festive Pet Family",
+                    "description": "Multiple pets (dogs and cats) together with Christmas theme, wearing matching scarves, holiday background",
+                    "tags": [
+                        "multiple",
+                        "indoor",
+                        "family"
+                    ]
+                },
+                {
+                    "id": "pet009",
+                    "title": "Snow Day Pet Fun",
+                    "description": "Dog playing in fresh snow, catching snowflakes, Christmas lights on house in background, joyful winter scene",
+                    "tags": [
+                        "dog",
+                        "outdoor",
+                        "playful"
+                    ]
+                },
+                {
+                    "id": "pet010",
+                    "title": "Cozy Fireplace Cat",
+                    "description": "Cat curled up by warm fireplace, Christmas stockings above, peaceful and cozy atmosphere, soft lighting",
+                    "tags": [
+                        "cat",
+                        "indoor",
+                        "cozy"
+                    ]
+                }
+            ]
+        },
+        "professional": {
+            "name": "Professional & Corporate",
+            "icon": "💼",
+            "prompts": [
+                {
+                    "id": "pro001",
+                    "title": "Executive Holiday Portrait",
+                    "description": "Professional business portrait with subtle Christmas decorations, elegant office background, business attire with festive touch, LinkedIn-worthy",
+                    "tags": [
+                        "business",
+                        "formal",
+                        "linkedin"
+                    ]
+                },
+                {
+                    "id": "pro002",
+                    "title": "Corporate Holiday Card",
+                    "description": "Professional in business casual with Christmas tree background, warm smile, office setting, suitable for business holiday cards",
+                    "tags": [
+                        "business",
+                        "friendly",
+                        "card"
+                    ]
+                },
+                {
+                    "id": "pro003",
+                    "title": "Festive Home Office",
+                    "description": "Professional working in tastefully decorated home office, Christmas touches, bookshelf with decorations, modern professional",
+                    "tags": [
+                        "business",
+                        "modern",
+                        "home"
+                    ]
+                },
+                {
+                    "id": "pro004",
+                    "title": "Holiday Team Photo",
+                    "description": "Professional team in business attire, Christmas decorations, office setting, cohesive and festive",
+                    "tags": [
+                        "business",
+                        "team",
+                        "indoor"
+                    ]
+                },
+                {
+                    "id": "pro005",
+                    "title": "Elegant Reception Holiday",
+                    "description": "Professional in elegant business wear, upscale reception area with classy Christmas decor, sophisticated",
+                    "tags": [
+                        "business",
+                        "elegant",
+                        "formal"
+                    ]
+                }
+            ]
+        },
+        "creative": {
+            "name": "Creative & Unique",
+            "icon": "✨",
+            "prompts": [
+                {
+                    "id": "cre001",
+                    "title": "Gingerbread House Kingdom",
+                    "description": "Whimsical scene inside magical gingerbread house village, candy cane decorations, fairy lights, sweet and fantastical",
+                    "tags": [
+                        "whimsical",
+                        "indoor",
+                        "magical"
+                    ]
+                },
+                {
+                    "id": "cre002",
+                    "title": "Northern Lights Christmas",
+                    "description": "Standing in snowy landscape with Northern Lights aurora in sky, Christmas magic in air, ethereal and breathtaking",
+                    "tags": [
+                        "outdoor",
+                        "magical",
+                        "lights"
+                    ]
+                },
+                {
+                    "id": "cre003",
+                    "title": "Vintage Victorian Christmas",
+                    "description": "Victorian-era Christmas scene, period clothing, vintage decorations, old-fashioned charm, sepia-toned warmth",
+                    "tags": [
+                        "vintage",
+                        "indoor",
+                        "historical"
+                    ]
+                },
+                {
+                    "id": "cre004",
+                    "title": "Steampunk Christmas",
+                    "description": "Steampunk-themed Christmas with brass gears, Victorian goggles, industrial Christmas decorations, unique aesthetic",
+                    "tags": [
+                        "steampunk",
+                        "unique",
+                        "creative"
+                    ]
+                },
+                {
+                    "id": "cre005",
+                    "title": "Christmas in the Tropics",
+                    "description": "Beach Christmas with palm trees decorated with lights, Santa hat, tropical paradise meets holiday cheer",
+                    "tags": [
+                        "outdoor",
+                        "tropical",
+                        "unique"
+                    ]
+                },
+                {
+                    "id": "cre006",
+                    "title": "Fairy Tale Snow Queen",
+                    "description": "Elegant winter fairy tale setting, ice palace, shimmering snow, regal and magical atmosphere",
+                    "tags": [
+                        "fantasy",
+                        "elegant",
+                        "magical"
+                    ]
+                },
+                {
+                    "id": "cre007",
+                    "title": "Retro 1950s Christmas",
+                    "description": "1950s-style Christmas with vintage clothing, retro decorations, classic mid-century modern aesthetic",
+                    "tags": [
+                        "retro",
+                        "vintage",
+                        "indoor"
+                    ]
+                },
+                {
+                    "id": "cre008",
+                    "title": "Minimalist Scandinavian",
+                    "description": "Clean Scandinavian Christmas aesthetic, white and natural wood, minimalist decorations, hygge atmosphere",
+                    "tags": [
+                        "modern",
+                        "minimalist",
+                        "scandinavian"
+                    ]
+                },
+                {
+                    "id": "cre009",
+                    "title": "Enchanted Forest Christmas",
+                    "description": "Mystical enchanted forest with Christmas magic, glowing lights among trees, fairy-tale woodland setting",
+                    "tags": [
+                        "fantasy",
+                        "outdoor",
+                        "magical"
+                    ]
+                },
+                {
+                    "id": "cre010",
+                    "title": "Space Station Christmas",
+                    "description": "Futuristic Christmas on space station, Earth visible through window, sci-fi meets holiday tradition",
+                    "tags": [
+                        "scifi",
+                        "futuristic",
+                        "unique"
+                    ]
+                }
+            ]
+        },
+        "outdoor": {
+            "name": "Outdoor Adventures",
+            "icon": "⛄",
+            "prompts": [
+                {
+                    "id": "out001",
+                    "title": "Mountain Lodge Christmas",
+                    "description": "Outside snow-covered mountain lodge, ski equipment, Christmas wreaths, alpine setting, crisp winter air",
+                    "tags": [
+                        "outdoor",
+                        "mountain",
+                        "lodge"
+                    ]
+                },
+                {
+                    "id": "out002",
+                    "title": "Downtown Christmas Lights",
+                    "description": "City downtown decorated with spectacular Christmas lights, shopping bags, festive urban atmosphere, evening",
+                    "tags": [
+                        "outdoor",
+                        "urban",
+                        "lights"
+                    ]
+                },
+                {
+                    "id": "out003",
+                    "title": "Christmas Tree Farm Sunset",
+                    "description": "At Christmas tree farm during golden hour sunset, rows of pine trees, pulling fresh tree, warm winter light",
+                    "tags": [
+                        "outdoor",
+                        "sunset",
+                        "farm"
+                    ]
+                },
+                {
+                    "id": "out004",
+                    "title": "Ski Resort Holiday",
+                    "description": "At festive ski resort, wearing ski gear, Christmas decorations on lodge, snowy mountains, alpine adventure",
+                    "tags": [
+                        "outdoor",
+                        "ski",
+                        "resort"
+                    ]
+                },
+                {
+                    "id": "out005",
+                    "title": "Central Park Snow",
+                    "description": "In snowy Central Park-style setting, iconic bridge, Christmas lights on trees, urban winter wonderland",
+                    "tags": [
+                        "outdoor",
+                        "urban",
+                        "snow"
+                    ]
+                }
+            ]
+        }
+    },
+    "meta": {
+        "total_prompts": 75,
+        "version": "1.0.0",
+        "last_updated": "2025-12-05"
+    }
+}

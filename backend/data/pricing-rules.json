@@ -1,0 +1,38 @@
+{
+  "christmas": {
+    "base_price": 9.99,
+    "currency": "USD",
+    "extra_adult": 5.00,
+    "extra_child": 3.00,
+    "extra_pet": 5.00,
+    "packages": {
+      "single": {
+        "name": "Single Portrait",
+        "base": 9.99,
+        "includes": {
+          "adults": 1,
+          "children": 0,
+          "pets": 0
+        }
+      },
+      "couple": {
+        "name": "Couple / Pet",
+        "base": 19.99,
+        "includes": {
+          "adults": 2,
+          "children": 0,
+          "pets": 1
+        }
+      },
+      "family": {
+        "name": "Family Pack",
+        "base": 29.99,
+        "includes": {
+          "adults": 2,
+          "children": 2,
+          "pets": 1
+        }
+      }
+    }
+  }
+}
