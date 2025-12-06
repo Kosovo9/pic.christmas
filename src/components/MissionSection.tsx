@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useI18n } from '../hooks/useI18n';
+import { ImpactMap } from './ImpactMap';
 
 export const MissionSection: React.FC = () => {
+    // ...
     const { t } = useI18n();
     const [showRegisterForm, setShowRegisterForm] = useState(false);
     const [nominatedShelter, setNominatedShelter] = useState({ name: '', location: '', contact: '', reason: '' });
@@ -132,6 +134,9 @@ export const MissionSection: React.FC = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* Global Impact Map */}
+                <ImpactMap />
 
                 {/* Seasons Teaser */}
                 <div className="mt-24 text-center border-t border-slate-800 pt-16">
