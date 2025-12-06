@@ -9,10 +9,37 @@ const router = express.Router();
 // @route   POST /api/payments/create-intent
 router.post('/create-intent', async (req, res) => {
     const { orderId } = req.body;
+    // 🚨 7-HOUR FREE MODE ACTIVE (For User & Friends Testing)
+    // To disable, set this const to false.
+    const FREE_MODE_ACTIVE = true;
 
     try {
         const order = await Order.findById(orderId);
         if (!order) return res.status(404).json({ message: 'Order not found' });
+
+        if (FREE_MODE_ACTIVE) {
+            console.log(`🚀 FREE MODE: Bypassing payment for Order ${orderId}`);
+
+            // 1. Mark as Paid
+            order.status = 'paid';
+            order.paymentProvider = 'free_mode';
+            // order.email will be captured later or is already there if user entered it 
+            await order.save();
+
+            // 2. Trigger Generation Trigger (Same logic as Webhook)
+            await generationQueue.add('generate-images', {
+                orderId: order._id,
+                config: order.config,
+                originalImages: order.originalImages,
+                packageId: order.packageId
+            });
+
+            // 3. Return Direct Success URL (Skips Stripe Checkout)
+            return res.json({
+                url: `${process.env.FRONTEND_URL}/success?orderId=${order._id}`,
+                provider: 'free_mode'
+            });
+        }
 
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
