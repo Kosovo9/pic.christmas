@@ -17,8 +17,10 @@ import guidelinesData from '../data/guidelines.json';
 import { BeforeAfter } from '../components/BeforeAfter';
 import { FAQ } from '../components/FAQ';
 import { PageTransition } from '../components/PageTransition';
+import { StickyCTA } from '../components/StickyCTA';
 
 export default function Home() {
+  // ...
   const { language, switchLanguage } = useI18n();
   const { referralCode } = useReferral();
   const [currentView, setCurrentView] = useState<'landing' | 'upload' | 'pricing' | 'results'>('landing');
@@ -200,6 +202,9 @@ export default function Home() {
 
         {/* Footer */}
         <Footer language={language} />
+
+        {/* Mobile Sticky CTA */}
+        <StickyCTA onClick={scrollToUpload} />
       </main>
     </PageTransition>
   );
