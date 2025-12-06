@@ -1,7 +1,7 @@
 import express from 'express';
 import Order from '../models/Order';
 import Referral from '../models/Referral';
-import { generationQueue } from '../server';
+import { generationQueue } from '../config/clients';
 import pricingRules from '../../data/pricing-rules.json';
 import referralConfig from '../../data/referral-config.json';
 

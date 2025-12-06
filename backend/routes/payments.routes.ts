@@ -1,6 +1,6 @@
 import express from 'express';
 import Order from '../models/Order';
-import { stripe, mpClient, generationQueue } from '../server';
+import { stripe, mpClient, generationQueue } from '../config/clients';
 import { Preference } from 'mercadopago';
 
 const router = express.Router();
