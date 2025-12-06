@@ -40,17 +40,36 @@ export const imageGenerationWorker = new Worker(
 
             for (let i = 0; i < count; i++) {
                 // 1. Generate with Replicate (Flux Pro or SDXL)
-                console.log(`[Worker] Generating image ${i + 1}/${count} with prompt: ${prompt.substring(0, 50)}...`);
+                const { config } = job.data;
+
+                // Advanced Prompt Engineering Logic 100x 🚀
+                let enhancedPrompt = prompt;
+                let subjectDirectives = "";
+
+                if (config) {
+                    if (config.pets > 0) {
+                        subjectDirectives += "hyper-realistic pet photography, detailed fur texture, bright expressive eyes, shallow depth of field, ";
+                    }
+                    if (config.children > 0) {
+                        subjectDirectives += "adorable happy child, soft skin tones, magical sparkle in eyes, candid moment, ";
+                    }
+                    if (config.adults > 0 && config.children === 0 && config.pets === 0) {
+                        subjectDirectives += "professional portrait, elegant attire, warm skin tones, cinematic lighting, ";
+                    }
+                }
+
+                const finalPrompt = `${subjectDirectives} ${enhancedPrompt}, Christmas magic, cozy holiday atmosphere, 8k resolution, highly detailed, photorealistic, cinematic lighting, bokeh background`;
+
                 // Using Flux-schnell for speed and quality
                 const output = await replicate.run(
                     "black-forest-labs/flux-schnell",
                     {
                         input: {
-                            prompt: prompt + ", Christmas magic, professional photography, 8k, highly detailed, festive atmosphere",
+                            prompt: finalPrompt,
                             num_outputs: 1,
                             aspect_ratio: "1:1",
                             output_format: "jpg",
-                            output_quality: 90
+                            output_quality: 100 // Cranked to 100 for max quality
                         }
                     }
                 );

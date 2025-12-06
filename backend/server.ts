@@ -67,8 +67,12 @@ app.get('/', (req, res) => {
   res.send('Pic.Christmas API is running 🎄 (All Features Active)');
 });
 
+// Import Worker to ensure it starts processing
+import './workers/imageGeneration.worker';
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log('🔌 Connected to: MongoDB, Redis, Cloudinary, Stripe, MercadoPago');
   console.log('✨ Features: Orders, Payments, Referrals, AI Enhancement, Christmas Catalog');
+  console.log('👷 Worker: Image Generation Active');
 });
