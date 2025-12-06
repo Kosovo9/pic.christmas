@@ -9,6 +9,7 @@ export const UploadWizard: React.FC<UploadWizardProps> = ({ onComplete }) => {
     const [step, setStep] = useState(1);
     const [files, setFiles] = useState<File[]>([]);
     const [config, setConfig] = useState({
+        email: '',
         adults: 1,
         children: 0,
         pets: 0,
@@ -42,13 +43,14 @@ export const UploadWizard: React.FC<UploadWizardProps> = ({ onComplete }) => {
                 <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                     <div
                         className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-500 ease-out"
-                        style={{ width: `${(step / 3) * 100}%` }}
+                        style={{ width: `${(step / 4) * 100}%` }}
                     />
                 </div>
                 <div className="flex justify-between mt-2 text-sm font-medium text-slate-400">
-                    <span className={step >= 1 ? 'text-blue-400' : ''}>Upload Photos</span>
-                    <span className={step >= 2 ? 'text-blue-400' : ''}>Customize</span>
-                    <span className={step >= 3 ? 'text-blue-400' : ''}>Review</span>
+                    <span className={step >= 1 ? 'text-blue-400' : ''}>Start</span>
+                    <span className={step >= 2 ? 'text-blue-400' : ''}>Email</span>
+                    <span className={step >= 3 ? 'text-blue-400' : ''}>Customize</span>
+                    <span className={step >= 4 ? 'text-blue-400' : ''}>Review</span>
                 </div>
             </div>
 
@@ -109,8 +111,8 @@ export const UploadWizard: React.FC<UploadWizardProps> = ({ onComplete }) => {
                     </div>
                 )}
 
-                {/* Step 2: Configuration */}
-                {step === 2 && (
+                {/* Step 3: Configuration */}
+                {step === 3 && (
                     <div className="animate-fade-in flex-1 flex flex-col">
                         <h2 className="text-3xl font-bold text-white mb-2">Customize Your Magic</h2>
                         <p className="text-slate-400 mb-8">Tell us who is in the photo and choose a style.</p>
@@ -175,8 +177,8 @@ export const UploadWizard: React.FC<UploadWizardProps> = ({ onComplete }) => {
                     </div>
                 )}
 
-                {/* Step 3: Review */}
-                {step === 3 && (
+                {/* Step 4: Review */}
+                {step === 4 && (
                     <div className="animate-fade-in flex-1 flex flex-col">
                         <h2 className="text-3xl font-bold text-white mb-2">Ready to Create?</h2>
                         <p className="text-slate-400 mb-8">Review your choices before we work our magic.</p>

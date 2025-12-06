@@ -14,11 +14,34 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nexora Christmas Studio",
-  description: "Transform your photos into hyper-realistic Christmas portraits.",
+  title: "Nexora Christmas Studio | Professional AI Photos",
+  description: "Transform your photos into hyper-realistic Christmas portraits in minutes. The #1 AI Christmas Photo Generator.",
+  openGraph: {
+    title: "Nexora Christmas Studio 🎄",
+    description: "Create magical Christmas photos with AI. Try it now!",
+    url: "https://pic.christmas",
+    siteName: "Nexora Christmas",
+    images: [
+      {
+        url: "https://pic.christmas/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Nexora Christmas AI",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nexora Christmas Studio 🎄",
+    description: "Create magical Christmas photos with AI.",
+    images: ["https://pic.christmas/og-image.jpg"],
+  },
 };
 
 import { ClerkProvider } from '@clerk/nextjs'
+import { ToastProvider } from "@/context/ToastContext";
 
 export default function RootLayout({
   children,
@@ -31,7 +54,9 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-slate-950 text-white overflow-x-hidden`}
         >
-          {children}
+          <ToastProvider>
+            {children}
+          </ToastProvider>
 
           {/* Anti-copy / anti-right-click basic protection */}
           <Script id="anti-scraping" strategy="afterInteractive">
