@@ -4,9 +4,10 @@
     "description": "Backend API for pic.christmas - Christmas photo generation service",
     "main": "server.ts",
     "scripts": {
-        "start": "node server.js",
+        "start": "node dist/server.js",
         "dev": "nodemon server.ts",
-        "build": "tsc"
+        "build": "tsc",
+        "postinstall": "npm run build"
     },
     "keywords": [
         "christmas",
@@ -28,6 +29,7 @@
         "mercadopago": "^2.11.0",
         "mongoose": "^9.0.0",
         "multer": "^2.0.2",
+        "replicate": "^1.4.0",
         "stripe": "^20.0.0"
     },
     "devDependencies": {

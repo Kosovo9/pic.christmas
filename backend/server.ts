@@ -12,6 +12,7 @@ import Stripe from 'stripe';
 import MercadoPagoConfig, { Preference } from 'mercadopago';
 import { Queue } from 'bullmq';
 import IORedis from 'ioredis';
+import './workers/imageGeneration.worker'; // Start worker
 
 dotenv.config();
 
