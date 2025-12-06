@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useI18n, Language } from '../hooks/useI18n';
+import { useI18n } from '../hooks/useI18n';
 
 export const ImpactMap: React.FC = () => {
     const { language } = useI18n();
@@ -18,7 +18,7 @@ export const ImpactMap: React.FC = () => {
             ja: { country: 'Japan', raised: '¥2,500,000', shelters: 7, color: 'text-pink-400' },
             ar: { country: 'MENA', raised: '$14,000', shelters: 8, color: 'text-emerald-400' },
         };
-        return map[language] || map['en'];
+        return map[language as string] || map['en'];
     }, [language]);
 
     return (
@@ -27,7 +27,7 @@ export const ImpactMap: React.FC = () => {
 
             <div className="flex flex-col md:flex-row gap-8 items-center">
                 {/* Text Side */}
-                <div className="flex-1 w-full">
+                <div className="flex-1 w-full text-left">
                     <div className="flex items-center gap-3 mb-4">
                         <span className="animate-pulse w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]" />
                         <span className="text-sm font-bold tracking-widest text-slate-400 uppercase">Live Impact Map</span>
@@ -75,7 +75,7 @@ export const ImpactMap: React.FC = () => {
                     <div className="relative z-10 text-center">
                         <div className="relative inline-block">
                             <div className={`absolute inset-0 ${localStats.color.replace('text', 'bg')}/20 blur-xl rounded-full animate-ping-slow`} />
-                            <span className={`relative text-6xl ${localStats.color}`}>
+                            <span className={`relative text-6xl shadow-2xl drop-shadow-lg`}>
                                 🌍
                             </span>
                         </div>

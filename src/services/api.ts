@@ -127,5 +127,24 @@ export const api = {
             }
         });
         return res.json();
+    },
+
+    // Affiliate Assets (Gemini AI)
+    generateAffiliateAsset: async (data: { productName: string; ctaText: string; style?: string }) => {
+        const res = await fetch(`${API_BASE}/affiliate-assets/generate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        return res.json();
+    },
+
+    generateAssetVariations: async (data: { productName: string; ctaText: string; style?: string }) => {
+        const res = await fetch(`${API_BASE}/affiliate-assets/variations`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        return res.json();
     }
 };
