@@ -99,13 +99,73 @@ export const UploadWizard: React.FC<UploadWizardProps> = ({ onComplete }) => {
                             </div>
                         )}
 
+                        import {ContentSafetyService} from '../services/safety';
+                        import {useI18n} from '../hooks/useI18n';
+
+                        // ... inside component ...
+                        const {t} = useI18n();
+                        const [isScanning, setIsScanning] = useState(false);
+                        const [agreedToLegal, setAgreedToLegal] = useState(false);
+
+    const handleContinue = async () => {
+                            setIsScanning(true);
+                        try {
+            const result = await ContentSafetyService.scanFiles(files);
+                        if (!result.safe) {
+                            alert(result.reason || "Unsafe content detected.");
+                        setFiles([]); // Clear unsafe files
+                        setIsScanning(false);
+                        return;
+            }
+                        setIsScanning(false);
+            setStep(s => s + 1);
+        } catch (e) {
+                            console.error(e);
+                        setIsScanning(false);
+        }
+    };
+
+                        // ... inside Step 1 ...
+                        {files.length > 0 && (
+                            <div className="mt-8 bg-red-900/20 border border-red-500/30 p-4 rounded-xl">
+                                <h4 className="text-red-400 font-bold text-sm mb-2 transform uppercase tracking-wider">
+                                    ⚠️ {t('legal.upload_title')}
+                                </h4>
+                                <p className="text-xs text-slate-400 mb-4 leading-relaxed">
+                                    {t('legal.upload_text')}
+                                </p>
+                                <label className="flex items-center gap-3 cursor-pointer group">
+                                    <div className="relative">
+                                        <input
+                                            type="checkbox"
+                                            checked={agreedToLegal}
+                                            onChange={(e) => setAgreedToLegal(e.target.checked)}
+                                            className="peer sr-only"
+                                        />
+                                        <div className="w-6 h-6 border-2 border-slate-600 rounded transition duration-200 peer-checked:bg-blue-500 peer-checked:border-blue-500"></div>
+                                        <svg className="absolute w-4 h-4 text-white left-1 top-1 opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
+                                    </div>
+                                    <span className="text-sm text-white group-hover:text-blue-400 transition-colors">
+                                        {t('legal.checkbox')}
+                                    </span>
+                                </label>
+                            </div>
+                        )}
+
                         <div className="mt-8 flex justify-end">
                             <button
-                                onClick={nextStep}
-                                disabled={files.length === 0}
-                                className="px-8 py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-bold transition-all"
+                                onClick={handleContinue}
+                                disabled={files.length === 0 || !agreedToLegal || isScanning}
+                                className="px-8 py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-bold transition-all flex items-center gap-2"
                             >
-                                Continue
+                                {isScanning ? (
+                                    <>
+                                        <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                        Scanning...
+                                    </>
+                                ) : (
+                                    'Continue'
+                                )}
                             </button>
                         </div>
                     </div>

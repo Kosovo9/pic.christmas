@@ -23,6 +23,9 @@ const translations: Record<Language, Record<string, string>> = {
         'footer.disclaimer': 'Este servicio utiliza inteligencia artificial para generar imágenes. Los resultados pueden variar. Las imágenes generadas son para uso personal. No nos hacemos responsables del uso indebido de las imágenes generadas.',
         'footer.terms': 'Términos de Servicio',
         'footer.privacy': 'Política de Privacidad',
+        'legal.upload_title': 'Responsabilidad de Contenido',
+        'legal.upload_text': 'Certifico que poseo los derechos de estas fotos. Acepto que soy totalmente responsable del contenido subido y generado. Nexora prohíbe estrictamente pornografía, discurso de odio, abuso o contenido ilegal. La violación resultará en bloqueo inmediato.',
+        'legal.checkbox': 'Acepto los términos y asumo total responsabilidad.',
     },
     en: {
         'nav.home': 'Home',
@@ -44,6 +47,9 @@ const translations: Record<Language, Record<string, string>> = {
         'footer.disclaimer': 'This service uses artificial intelligence to generate images. Results may vary. Generated images are for personal use. We are not responsible for misuse of generated images.',
         'footer.terms': 'Terms of Service',
         'footer.privacy': 'Privacy Policy',
+        'legal.upload_title': 'Content Responsibility',
+        'legal.upload_text': 'I certify I own rights to these photos. I accept full responsibility for uploaded/generated content. Nexora strictly prohibits pornography, hate speech, abuse, or illegal content. Violation results in immediate ban.',
+        'legal.checkbox': 'I agree to terms and assume full responsibility.',
     },
     fr: {
         'nav.home': 'Accueil',
@@ -65,6 +71,9 @@ const translations: Record<Language, Record<string, string>> = {
         'footer.disclaimer': 'Ce service utilise l\'intelligence artificielle pour générer des images. Les résultats peuvent varier. Les images générées sont à usage personnel. Nous ne sommes pas responsables d\'une utilisation abusive des images générées.',
         'footer.terms': 'Conditions de Service',
         'footer.privacy': 'Politique de Confidentialité',
+        'legal.upload_title': 'Responsabilité du Contenu',
+        'legal.upload_text': 'Je certifie posséder les droits. J\'accepte la responsabilité totale du contenu. Pornographie, haine, abus strictement interdits. La violation entraîne un bannissement immédiat.',
+        'legal.checkbox': 'J\'accepte les conditions et la responsabilité.',
     },
     de: {
         'nav.home': 'Startseite',
@@ -86,6 +95,9 @@ const translations: Record<Language, Record<string, string>> = {
         'footer.disclaimer': 'Dieser Service verwendet künstliche Intelligenz zur Bilderzeugung. Die Ergebnisse können variieren. Generierte Bilder sind für den persönlichen Gebrauch. Wir sind nicht verantwortlich für Missbrauch generierter Bilder.',
         'footer.terms': 'Nutzungsbedingungen',
         'footer.privacy': 'Datenschutzrichtlinie',
+        'legal.upload_title': 'Inhaltsverantwortung',
+        'legal.upload_text': 'Ich besitze die Rechte. Ich übernehme die volle Verantwortung. Pornografie, Hassrede, Missbrauch streng verboten. Verstoß führt zu sofortiger Sperrung.',
+        'legal.checkbox': 'Ich akzeptiere die Bedingungen und Verantwortung.',
     },
     it: {
         'nav.home': 'Home',
@@ -107,6 +119,9 @@ const translations: Record<Language, Record<string, string>> = {
         'footer.disclaimer': 'Questo servizio utilizza l\'intelligenza artificiale per generare immagini. I risultati possono variare. Le immagini generate sono per uso personale. Non siamo responsabili per l\'uso improprio delle immagini generate.',
         'footer.terms': 'Termini di Servizio',
         'footer.privacy': 'Privacy Policy',
+        'legal.upload_title': 'Responsabilità Contenuti',
+        'legal.upload_text': 'Certifico di possedere i diritti. Accetto la piena responsabilità. Pornografia, odio, abusi severamente vietati. La violazione comporta il ban immediato.',
+        'legal.checkbox': 'Accetto i termini e la responsabilità.',
     },
     pt: {
         'nav.home': 'Início',
@@ -128,6 +143,9 @@ const translations: Record<Language, Record<string, string>> = {
         'footer.disclaimer': 'Este serviço usa inteligência artificial para gerar imagens. Os resultados podem variar. As imagens geradas são para uso pessoal. Não somos responsáveis pelo uso indevido das imagens geradas.',
         'footer.terms': 'Termos de Serviço',
         'footer.privacy': 'Política de Privacidade',
+        'legal.upload_title': 'Responsabilidade de Conteúdo',
+        'legal.upload_text': 'Certifico que possuo os direitos. Aceito total responsabilidade. Pornografia, ódio, abuso estritamente proibidos. A violação resultará em banimento imediato.',
+        'legal.checkbox': 'Aceito os termos e responsabilidade.',
     },
     ru: {
         'nav.home': 'Главная',
@@ -149,6 +167,9 @@ const translations: Record<Language, Record<string, string>> = {
         'footer.disclaimer': 'Этот сервис использует искусственный интеллект для генерации изображений. Результаты могут отличаться. Созданные изображения предназначены для личного использования. Мы не несем ответственности за неправильное использование созданных изображений.',
         'footer.terms': 'Условия Использования',
         'footer.privacy': 'Политика Конфиденциальности',
+        'legal.upload_title': 'Ответственность за контент',
+        'legal.upload_text': 'Я подтверждаю права на фото. Принимаю полную ответственность. Порнография, ненависть, насилие строго запрещены. Нарушение влечет немедленную блокировку.',
+        'legal.checkbox': 'Я принимаю условия и ответственность.',
     },
     zh: {
         'nav.home': '首页',
@@ -170,6 +191,9 @@ const translations: Record<Language, Record<string, string>> = {
         'footer.disclaimer': '本服务使用人工智能生成图像。结果可能有所不同。生成的图像仅供个人使用。我们不对生成图像的滥用负责。',
         'footer.terms': '服务条款',
         'footer.privacy': '隐私政策',
+        'legal.upload_title': '内容责任',
+        'legal.upload_text': '我证明拥有版权。我承担全部责任。严禁色情、仇恨、滥用内容。违规将导致立即封号。',
+        'legal.checkbox': '我接受条款并承担责任。',
     },
     ja: {
         'nav.home': 'ホーム',
@@ -191,6 +215,9 @@ const translations: Record<Language, Record<string, string>> = {
         'footer.disclaimer': 'このサービスは人工知能を使用して画像を生成します。結果は異なる場合があります。生成された画像は個人使用のためのものです。生成された画像の誤用については責任を負いません。',
         'footer.terms': '利用規約',
         'footer.privacy': 'プライバシーポリシー',
+        'legal.upload_title': 'コンテンツの責任',
+        'legal.upload_text': '権利を所有していることを証明します。全責任を負います。ポルノ、ヘイト、虐待は固く禁じられています。違反した場合は即座に禁止されます。',
+        'legal.checkbox': '利用規約と責任に同意します。',
     },
     ar: {
         'nav.home': 'الرئيسية',
@@ -212,7 +239,11 @@ const translations: Record<Language, Record<string, string>> = {
         'footer.disclaimer': 'تستخدم هذه الخدمة الذكاء الاصطناعي لإنشاء الصور. قد تختلف النتائج. الصور المُنشأة للاستخدام الشخصي. نحن غير مسؤولين عن إساءة استخدام الصور المُنشأة.',
         'footer.terms': 'شروط الخدمة',
         'footer.privacy': 'سياسة الخصوصية',
+        'legal.upload_title': 'مسؤولية المحتوى',
+        'legal.upload_text': 'أشهد أنني أملك الحقوق. أتحمل المسؤولية الكاملة. يمنع منعا باتا الإباحية والكراهية وسوء المعاملة. الانتهاك سيؤدي إلى الحظر الفوري.',
+        'legal.checkbox': 'أوافق على الشروط والمسؤولية.',
     }
+};
 };
 
 const languageNames: Record<Language, string> = {
