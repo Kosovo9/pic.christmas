@@ -9,6 +9,7 @@ import promptsRoutes from './routes/prompts.routes';
 import aiRoutes from './routes/ai.routes';
 import uploadsRoutes from './routes/uploads.routes';
 import adminRoutes from './routes/admin.routes';
+import affiliateAssetsRoutes from './routes/affiliateAssets.routes';
 import { v2 as cloudinary } from 'cloudinary';
 import { stripe } from './config/clients'; // Import strictly to verify connection if needed
 import './workers/imageGeneration.worker'; // Start worker
@@ -77,6 +78,7 @@ app.use('/api/prompts', promptsRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/uploads', uploadsRoutes);
+app.use('/api/affiliate-assets', affiliateAssetsRoutes);
 
 app.get('/', (req, res) => {
   res.send('Pic.Christmas API is running 🎄 (All Features Active)');

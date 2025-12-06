@@ -50,17 +50,17 @@ export const imageGenerationWorker = new Worker(
 
                 if (config) {
                     if (config.pets > 0) {
-                        subjectDirectives += "hyper-realistic pet photography, detailed fur texture, bright expressive eyes, shallow depth of field, wearing cute festive Christmas sweater or scarf, ";
+                        subjectDirectives += "award-winning studio photography of a cute pet, hyper-detailed fur texture, individual hairs visible, bright expressive looking at camera, shallow depth of field, f/1.8, soft studio lighting, wearing cute festive Christmas sweater, ";
                     }
                     if (config.children > 0) {
-                        subjectDirectives += "adorable happy child, soft skin tones, magical sparkle in eyes, candid moment, wearing traditional Christmas clothing, ";
+                        subjectDirectives += "portrait of an adorable happy child, authentic candid moment, genuine smile, soft skin texture, magical sparkle in eyes, wearing traditional Christmas clothing, soft volumetric lighting, ";
                     }
                     if (config.adults > 0 && config.children === 0 && config.pets === 0) {
-                        subjectDirectives += "professional portrait, elegant attire, wearing sophisticated Christmas gala outfit or cozy holiday sweater, warm skin tones, cinematic lighting, ";
+                        subjectDirectives += "high-fashion editorial portrait, elegant sophisticated attire, Christmas gala atmosphere, 85mm lens, incredibly detailed skin texture, warm skin tones, cinematic lighting, ";
                     }
                 }
 
-                const finalPrompt = `${subjectDirectives} ${enhancedPrompt}, wearing festive Christmas attire, Christmas magic, cozy holiday atmosphere, 8k resolution, highly detailed, photorealistic, cinematic lighting, bokeh background`;
+                const finalPrompt = `${subjectDirectives} ${enhancedPrompt}, christmas masterpiece, 8k resolution, raw photo, ultra-realistic, photorealistic, cinematic lighting, bokeh background, detailed textures, sharp focus, high dynamic range, perfect composition, shot on Sony A7R IV`;
 
                 // Using Flux-schnell for speed and quality
                 const output = await replicate.run(
