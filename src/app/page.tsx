@@ -5,15 +5,24 @@ import { Hero } from '../components/Hero';
 import { UploadWizard } from '../components/UploadWizard';
 import { PricingSection } from '../components/PricingSection';
 import { ResultsGallery } from '../components/ResultsGallery';
-import { Language } from '../types';
+import { ReferralSection } from '../components/ReferralSection';
+import { MusicToggle } from '../components/MusicToggle';
+import { Footer } from '../components/Footer';
+import { Navbar } from '../components/Navbar';
+import { ExamplesGallery } from '../components/ExamplesGallery';
+import { useReferral } from '../hooks/useReferral';
+import { useI18n } from '../hooks/useI18n';
 import { api } from '../services/api';
 
 export default function Home() {
-  const [language, setLanguage] = useState<Language>('es');
+  const { language, switchLanguage } = useI18n();
+  const { referralCode } = useReferral();
   const [currentView, setCurrentView] = useState<'landing' | 'upload' | 'pricing' | 'results'>('landing');
+  const [uploadData, setUploadData] = useState<any>(null);
 
   const uploadRef = useRef<HTMLDivElement>(null);
   const pricingRef = useRef<HTMLDivElement>(null);
+  const referralRef = useRef<HTMLDivElement>(null);
 
   const handleStart = () => {
     setCurrentView('upload');
@@ -24,15 +33,14 @@ export default function Home() {
 
   const handleUploadComplete = async (data: any) => {
     console.log('Upload data:', data);
+    setUploadData(data);
+
     try {
       // Upload photos to backend
       const uploadResult = await api.uploadPhotos(data.files);
       console.log('Uploaded:', uploadResult);
 
-      // Store file IDs for the order creation step
-      // In a real app, we'd pass this to the next step or store in context/state
-      // setUploadedFiles(uploadResult.fileIds); 
-
+      // Store for order creation
       setCurrentView('pricing');
       setTimeout(() => {
         pricingRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -43,18 +51,52 @@ export default function Home() {
     }
   };
 
-  const handlePackageSelect = (pkgId: string) => {
+  const handlePackageSelect = async (pkgId: string) => {
     console.log('Selected package:', pkgId);
-    // Simulate processing
-    setCurrentView('results');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    try {
+      // Create order with referral code if available
+      const orderData = {
+        packageId: pkgId,
+        config: uploadData?.config || { adults: 1, children: 0, pets: 0 },
+        originalImages: uploadData?.fileUrls || [],
+        referralCode: referralCode || undefined,
+        useCredit: false // User chooses this in checkout
+      };
+
+      const order = await api.createOrder(orderData);
+      console.log('Order created:', order);
+
+      // TODO: Integrate Stripe/MercadoPago checkout
+      // For now, simulate success
+      setCurrentView('results');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (error) {
+      console.error('Order creation failed:', error);
+      alert('Something went wrong. Please try again.');
+    }
+  };
+
+  const scrollToReferrals = () => {
+    setCurrentView('landing');
+    setTimeout(() => {
+      referralRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   return (
     <main className="min-h-screen bg-slate-950 text-white selection:bg-blue-500/30">
+      {/* Navbar */}
+      <Navbar language={language} onLanguageChange={switchLanguage} onReferralsClick={scrollToReferrals} />
+
+      {/* Music Toggle */}
+      <MusicToggle />
 
       {/* Hero Section */}
       <Hero language={language} onStart={handleStart} />
+
+      {/* Examples Gallery */}
+      <ExamplesGallery />
 
       {/* Upload Wizard Section */}
       <div ref={uploadRef} className={`transition-all duration-1000 ${currentView === 'landing' ? 'opacity-50 blur-sm pointer-events-none' : 'opacity-100'}`}>
@@ -69,23 +111,24 @@ export default function Home() {
       {/* Pricing Section */}
       <div ref={pricingRef}>
         {(currentView === 'pricing' || currentView === 'results') && (
-          <PricingSection onSelect={handlePackageSelect} />
+          <PricingSection onSelect={handlePackageSelect} config={uploadData?.config} />
         )}
       </div>
 
-      {/* Results Section (Simulated) */}
+      {/* Results Section */}
       {currentView === 'results' && (
         <section className="animate-fade-in">
           <ResultsGallery />
         </section>
       )}
 
+      {/* Referral Section */}
+      <div ref={referralRef}>
+        <ReferralSection />
+      </div>
+
       {/* Footer */}
-      <footer className="py-12 border-t border-slate-800 mt-24">
-        <div className="max-w-7xl mx-auto px-4 text-center text-slate-500">
-          <p>© 2024 Nexora Christmas Studio. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer language={language} />
     </main>
   );
 }

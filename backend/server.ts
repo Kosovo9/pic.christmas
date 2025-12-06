@@ -4,6 +4,9 @@ import dotenv from 'dotenv';
 import connectDB from './config/db';
 import ordersRoutes from './routes/orders.routes';
 import paymentsRoutes from './routes/payments.routes';
+import referralsRoutes from './routes/referrals.routes';
+import promptsRoutes from './routes/prompts.routes';
+import aiRoutes from './routes/ai.routes';
 import { v2 as cloudinary } from 'cloudinary';
 import Stripe from 'stripe';
 import MercadoPagoConfig, { Preference } from 'mercadopago';
@@ -29,7 +32,7 @@ cloudinary.config({
 
 // Stripe
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-11-20.acacia' as any, // Cast to any to avoid type mismatch with installed types
+  apiVersion: '2024-11-20.acacia' as any,
   typescript: true,
 });
 
@@ -46,7 +49,6 @@ export const generationQueue = new Queue('image-generation', { connection: redis
 
 // --- Middleware ---
 app.use(cors());
-// Webhook handling requires raw body for signature verification
 app.use(express.json({
   verify: (req: any, res, buf) => {
     req.rawBody = buf;
@@ -56,12 +58,16 @@ app.use(express.json({
 // --- Routes ---
 app.use('/api/orders', ordersRoutes);
 app.use('/api/payments', paymentsRoutes);
+app.use('/api/referrals', referralsRoutes);
+app.use('/api/prompts', promptsRoutes);
+app.use('/api/ai', aiRoutes);
 
 app.get('/', (req, res) => {
-  res.send('Pic.Christmas API is running 🎄 (Real Backend Active)');
+  res.send('Pic.Christmas API is running 🎄 (All Features Active)');
 });
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log('🔌 Connected to: MongoDB, Redis, Cloudinary, Stripe, MercadoPago');
+  console.log('✨ Features: Orders, Payments, Referrals, AI Enhancement, Christmas Catalog');
 });

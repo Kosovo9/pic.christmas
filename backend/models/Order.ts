@@ -42,6 +42,24 @@ const orderSchema = new mongoose.Schema({
     paymentProvider: {
         type: String,
         enum: ['stripe', 'mercadopago', 'paypal']
+    },
+    referralCode: {
+        type: String,
+        uppercase: true,
+        trim: true
+    },
+    pricingBreakdown: {
+        basePrice: { type: Number, default: 0 },
+        extraAdults: { type: Number, default: 0 },
+        extraChildren: { type: Number, default: 0 },
+        extraPets: { type: Number, default: 0 },
+        subtotal: { type: Number, default: 0 },
+        referralDiscount: { type: Number, default: 0 },
+        total: { type: Number, default: 0 }
+    },
+    usedCredit: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true
