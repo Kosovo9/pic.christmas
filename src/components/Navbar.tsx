@@ -51,20 +51,40 @@ export const Navbar: React.FC<NavbarProps> = ({ language, onLanguageChange, onRe
                             </SignedIn>
 
                             {/* Language Switcher */}
-                            <div className="flex items-center bg-slate-800/50 rounded-full p-1 border border-slate-700/50">
-                                <button
-                                    onClick={() => onLanguageChange('es')}
-                                    className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${language === 'es' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
-                                >
-                                    ES
+                            <div className="relative group">
+                                <button className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
+                                    <span className="text-xs font-medium text-white uppercase">{language}</span>
+                                    <svg className="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                                 </button>
-                                <button
-                                    onClick={() => onLanguageChange('en')}
-                                    className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${language === 'en' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
-                                >
-                                    EN
-                                </button>
+
+                                <div className="absolute right-0 mt-2 w-32 bg-slate-900 border border-slate-800 rounded-xl shadow-xl overflow-hidden hidden group-hover:block animate-fade-in">
+                                    <div className="py-1">
+                                        {[
+                                            { code: 'en', label: 'English' },
+                                            { code: 'es', label: 'Español' },
+                                            { code: 'fr', label: 'Français' },
+                                            { code: 'de', label: 'Deutsch' },
+                                            { code: 'it', label: 'Italiano' },
+                                            { code: 'pt', label: 'Português' },
+                                            { code: 'ru', label: 'Русский' },
+                                            { code: 'zh', label: '中文' },
+                                            { code: 'ja', label: '日本語' },
+                                            { code: 'ar', label: 'العربية' }
+                                        ].map((lang) => (
+                                            <button
+                                                key={lang.code}
+                                                onClick={() => onLanguageChange(lang.code as any)}
+                                                className={`block w-full text-left px-4 py-2 text-sm hover:bg-slate-800 transition-colors
+                                                    ${language === lang.code ? 'text-blue-400 font-medium' : 'text-slate-400'}
+                                                `}
+                                            >
+                                                {lang.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>

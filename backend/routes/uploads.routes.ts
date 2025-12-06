@@ -18,9 +18,9 @@ const upload = multer({
 // @desc    Upload photos
 // @route   POST /api/uploads
 // @access  Public
-router.post('/', upload.array('photos', 5), async (req, res) => {
+router.post('/', upload.array('photos', 5), async (req: any, res) => {
     try {
-        const files = req.files as Express.Multer.File[];
+        const files = req.files;
 
         if (!files || files.length === 0) {
             return res.status(400).json({ message: 'No files uploaded' });
