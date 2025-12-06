@@ -19,6 +19,7 @@ import { FAQ } from '../components/FAQ';
 import { PageTransition } from '../components/PageTransition';
 import { StickyCTA } from '../components/StickyCTA';
 import { MissionSection } from '../components/MissionSection';
+import { SecurityShield } from '../components/SecurityShield';
 
 export default function Home() {
   // ...
@@ -151,6 +152,7 @@ export default function Home() {
   return (
     <PageTransition>
       <main className="min-h-screen bg-slate-950 text-white selection:bg-blue-500/30">
+        <SecurityShield />
         {/* Navbar */}
         <Navbar language={language} onLanguageChange={switchLanguage} onReferralsClick={scrollToReferrals} />
 
