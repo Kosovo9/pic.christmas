@@ -11,3 +11,4 @@ services:
         value: 3001
     # Las demás variables de entorno se agregan manualmente en el dashboard de Render
 
+

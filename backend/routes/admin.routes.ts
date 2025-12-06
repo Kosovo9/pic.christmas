@@ -1,5 +1,6 @@
 import express from 'express';
 import Order from '../models/Order';
+import { generationQueue } from '../config/clients';
 import { requireAuth } from '../middleware/auth.middleware';
 
 const router = express.Router();
@@ -43,11 +44,37 @@ router.get('/stats', requireAdmin, async (req, res) => {
 });
 
 // @desc    Retry Failed Job
+// @desc    Retry Failed Job
 // @route   POST /api/admin/retry/:orderId
 router.post('/retry/:orderId', requireAdmin, async (req, res) => {
-    // Logic to re-add to BullMQ
-    // ...
-    res.json({ message: 'Retry logic not implemented yet' });
+    try {
+        const order = await Order.findById(req.params.orderId);
+        if (!order) return res.status(404).json({ message: 'Order not found' });
+
+        // Reset status
+        order.status = 'processing';
+        await order.save();
+
+        // Check if queue is connected
+        if (!generationQueue) {
+            console.error("Critical: Generation Queue client not initialized in router");
+            return res.status(500).json({ message: "Queue system unavailable" });
+        }
+
+        // Re-add to Queue
+        await generationQueue.add('generate-images', {
+            orderId: order._id,
+            config: order.config,
+            originalImages: order.originalImages || [], // Ensure array
+            packageId: order.packageId || 'starter' // Fallback
+        });
+
+        console.log(`[Admin] Retried order ${order._id}`);
+        res.json({ message: 'Order re-queued successfully', orderId: order._id });
+    } catch (error: any) {
+        console.error("Retry Error:", error);
+        res.status(500).json({ message: error.message });
+    }
 });
 
 export default router;

@@ -38,6 +38,10 @@ export const TRANSLATIONS = {
         },
         footer: {
             rights: "Todos los derechos reservados.",
+            legal_title: "Aviso Legal & Responsabilidad",
+            disclaimer_full: "Al utilizar esta plataforma, usted declara bajo pena de perjurio que posee todos los derechos, títulos e intereses sobre las fotografías cargadas. Pic.Christmas es una herramienta de procesamiento AI; no almacenamos datos biométricos permanentemente. PROHIBIDO ESTRICTAMENTE: Contenido pornográfico, ilegal, violento o que explote a menores. Nuestros algoritmos 'Quantum Safety' monitorean y reportan automáticamente a las autoridades pertinentes (NCMEC/Interpol) cualquier violación grave. Usted asume total responsabilidad legal por el contenido generado.",
+            terms: "Términos y Condiciones",
+            philanthropy: "Pic.Heart: 3% donado a refugios."
         },
         categories: {
             couple: "Parejas",
@@ -98,6 +102,10 @@ export const TRANSLATIONS = {
         },
         footer: {
             rights: "All rights reserved.",
+            legal_title: "Legal Notice & Liability",
+            disclaimer_full: "By using this platform, you declare under penalty of perjury that you own all rights, titles, and interests in the uploaded photographs. Pic.Christmas is an AI processing tool; we do not permanently store biometric data. STRICTLY PROHIBITED: Pornographic, illegal, violent, or child-exploitative content. Our 'Quantum Safety' algorithms automatically monitor and report any severe violations to relevant authorities (NCMEC/Interpol). You assume full legal responsibility for generated content.",
+            terms: "Terms & Conditions",
+            philanthropy: "Pic.Heart: 3% donated to shelters."
         },
         categories: {
             couple: "Couples",

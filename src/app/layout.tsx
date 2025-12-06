@@ -14,8 +14,32 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nexora Christmas Studio | Professional AI Photos",
-  description: "Transform your photos into hyper-realistic Christmas portraits in minutes. The #1 AI Christmas Photo Generator.",
+  metadataBase: new URL('https://www.pic.christmas'),
+  title: {
+    default: "Nexora Christmas Studio | Professional AI Photos",
+    template: "%s | Nexora Christmas Studio"
+  },
+  description: "Transform your photos into hyper-realistic Christmas portraits in minutes. The #1 AI Christmas Photo Generator trusted by thousands.",
+  keywords: ["AI Christmas Photos", "Christmas Card Generator", "Family Christmas Photo AI", "Pet Christmas Photo"],
+  authors: [{ name: "Nexora Studio" }],
+  creator: "Nexora Studio",
+  publisher: "Nexora Studio",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  manifest: '/site.webmanifest',
+  icons: {
+    icon: '/favicon.png',
+    apple: '/apple-touch-icon.png',
+  },
   openGraph: {
     title: "Nexora Christmas Studio 🎄",
     description: "Create magical Christmas photos with AI. Try it now!",
@@ -23,7 +47,7 @@ export const metadata: Metadata = {
     siteName: "Nexora Christmas",
     images: [
       {
-        url: "https://pic.christmas/og-image.jpg",
+        url: "https://pic.christmas/og-image.png",
         width: 1200,
         height: 630,
         alt: "Nexora Christmas AI",
@@ -36,9 +60,29 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Nexora Christmas Studio 🎄",
     description: "Create magical Christmas photos with AI.",
-    images: ["https://pic.christmas/og-image.jpg"],
+    images: ["https://pic.christmas/og-image.png"],
+    creator: "@pic_christmas",
+  },
+  alternates: {
+    canonical: 'https://www.pic.christmas',
+    languages: {
+      'en-US': 'https://www.pic.christmas',
+      'es-ES': 'https://www.pic.christmas/es',
+    },
   },
 };
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Nexora Christmas Studio',
+  url: 'https://www.pic.christmas',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://www.pic.christmas/search?q={search_term_string}',
+    'query-input': 'required name=search_term_string'
+  }
+}
 
 import { ClerkProvider } from '@clerk/nextjs'
 import { ToastProvider } from "@/context/ToastContext";
@@ -58,6 +102,10 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-slate-950 text-white overflow-x-hidden`}
         >
           <ToastProvider>
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <CountdownBanner />
             <Snowfall />
             <SocialProof />

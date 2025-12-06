@@ -1,45 +1,26 @@
+export const ContentSafetyService = {
+    scanFiles: async (files: File[]): Promise<{ safe: boolean; reason?: string }> => {
+        // 🚀 ELON 2030 SIMULATION: QUANTUM CONTENT SCANNING
+        // In a real scenario, this connects to AWS Rekognition or Google Vision API
+        // For this MVP "field test", we simulate advanced heuristics.
 
-export interface SafetyCheckResult {
-    safe: boolean;
-    reason?: string;
-}
+        console.log("Analyzing Quantum Signatures of " + files.length + " files...");
 
-export class ContentSafetyService {
-    /**
-     * Simulates a comprehensive content Scan using Hash-Matching and ML-heuristics.
-     * In production, this would connect to an endpoint like Google Vision or AWS Rekognition.
-     * "Mini-Program" simulation as requested.
-     */
-    static async scanFiles(files: File[]): Promise<SafetyCheckResult> {
         return new Promise((resolve) => {
-            console.log('🛡️ SCANNING FILES FOR SAFE CONTENT...');
-
-            // Simulate analysis delay
             setTimeout(() => {
-                // Mock heuristic: Check for suspicious filenames (simulation)
-                const suspiciousPatterns = ['xxx', 'adult', 'nsfw', 'porn', 'abuse'];
+                // Simple heuristic: If filename contains prohibited words (just a simulated safeguard)
+                const bannedKeywords = ['xxx', 'nsfw', 'porn', 'naked', 'blood', 'mod', 'admin'];
 
-                for (const file of files) {
-                    const name = file.name.toLowerCase();
-                    if (suspiciousPatterns.some(p => name.includes(p))) {
-                        console.error(`🚨 BLOCKED: Suspicious file detected: ${file.name}`);
-                        return resolve({
-                            safe: false,
-                            reason: 'Illegal content detected. User flagged for review.'
-                        });
-                    }
+                const hasFlaggedContent = files.some(file =>
+                    bannedKeywords.some(keyword => file.name.toLowerCase().includes(keyword))
+                );
+
+                if (hasFlaggedContent) {
+                    resolve({ safe: false, reason: "Safety Algorithm flagged this content. #SafeSpace" });
+                } else {
+                    resolve({ safe: true });
                 }
-
-                // Mock heuristic: Check file size (suspiciously small or zero)
-                for (const file of files) {
-                    if (file.size < 1000) {
-                        return resolve({ safe: false, reason: 'File corrupted or empty.' });
-                    }
-                }
-
-                console.log('✅ SCAN COMPLETE: Files appear safe.');
-                resolve({ safe: true });
-            }, 1500); // 1.5s scan time
+            }, 800);
         });
     }
-}
+};

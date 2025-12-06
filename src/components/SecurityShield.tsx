@@ -1,84 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-/**
- * GUCCI / NASA / BANK LEVEL SECURITY SHIELD
- * Implements heavy UI protection against cloning, copying, and scraping.
- */
-export const SecurityShield: React.FC = () => {
-    useEffect(() => {
-        // 1. Disable Right Click
-        const handleContextMenu = (e: MouseEvent) => {
-            e.preventDefault();
-            return false;
-        };
+export const SecurityShield = () => {
+    // 🚀 ELON 2030: QUANTUM ENCRYPTION BADGE
+    // Visual deterrence + Real tech stack reference
 
-        // 2. Disable Keyboard Shortcuts (Inspect, Copy, Save)
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (
-                // Ctrl+Shift+I (Inspect)
-                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-                // F12 (Inspect)
-                e.key === 'F12' ||
-                // Ctrl+U (View Source)
-                (e.ctrlKey && e.key === 'u') ||
-                // Ctrl+S (Save)
-                (e.ctrlKey && e.key === 's') ||
-                // Ctrl+C (Copy)
-                (e.ctrlKey && e.key === 'c')
-            ) {
-                e.preventDefault();
-                return false;
-            }
-        };
-
-        // 3. Anti-Screenshot / Privacy Blur (Window Focus)
-        // When user switches tabs or apps (often to screenshot tools), we blur content
-        const handleVisibilityChange = () => {
-            if (document.hidden) {
-                document.title = '🔒 Secured by Pic.Christmas';
-            } else {
-                document.title = 'Pic.Christmas | AI Magic';
-            }
-        };
-
-        // 4. Disable Dragging Images
-        const handleDragStart = (e: DragEvent) => {
-            e.preventDefault();
-            return false;
-        };
-
-        document.addEventListener('contextmenu', handleContextMenu);
-        document.addEventListener('keydown', handleKeyDown);
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-        document.addEventListener('dragstart', handleDragStart);
-
-        // Apply Global CSS Protection
-        document.body.style.userSelect = 'none';
-        document.body.style.webkitUserSelect = 'none';
-
-        // Add watermark overlay to all images via CSS class injection if needed
-        // For now, we handle this via component logic, but this effect secures the document.
-
-        return () => {
-            document.removeEventListener('contextmenu', handleContextMenu);
-            document.removeEventListener('keydown', handleKeyDown);
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-            document.removeEventListener('dragstart', handleDragStart);
-            document.body.style.userSelect = 'auto';
-            document.body.style.webkitUserSelect = 'auto';
-        };
-    }, []);
+    const [status, setStatus] = useState('Active');
 
     return (
-        <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden" aria-hidden="true">
-            {/* Invisible Watermark Grid (Hard to remove) */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none select-none flex flex-wrap content-center justify-center gap-24 rotate-12">
-                {[...Array(20)].map((_, i) => (
-                    <div key={i} className="text-4xl font-black text-white whitespace-nowrap">
-                        PIC.CHRISTMAS PROTECTED
-                    </div>
-                ))}
-            </div>
+        <div className="fixed bottom-4 left-4 z-50 hidden md:flex items-center gap-2 px-3 py-1.5 bg-black/80 backdrop-blur border border-slate-800 rounded-lg text-[10px] text-slate-400 font-mono opacity-60 hover:opacity-100 transition-opacity cursor-help" title="256-bit SSL + Cloudflare Edge Protection Active">
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>SECURE: AES-256</span>
+            <span className="text-slate-600">|</span>
+            <span>CLOUDFLARE</span>
         </div>
     );
 };

@@ -10,6 +10,7 @@ import aiRoutes from './routes/ai.routes';
 import uploadsRoutes from './routes/uploads.routes';
 import adminRoutes from './routes/admin.routes';
 import affiliateAssetsRoutes from './routes/affiliateAssets.routes';
+import emailRoutes from './routes/email.routes';
 import { v2 as cloudinary } from 'cloudinary';
 import { stripe } from './config/clients'; // Import strictly to verify connection if needed
 import './workers/imageGeneration.worker'; // Start worker
@@ -79,17 +80,15 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/uploads', uploadsRoutes);
 app.use('/api/affiliate-assets', affiliateAssetsRoutes);
+app.use('/api/email', emailRoutes);
 
 app.get('/', (req, res) => {
   res.send('Pic.Christmas API is running 🎄 (All Features Active)');
 });
 
-// Import Worker to ensure it starts processing
-import './workers/imageGeneration.worker';
-
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log('🔌 Connected to: MongoDB, Redis, Cloudinary, Stripe, MercadoPago');
-  console.log('✨ Features: Orders, Payments, Referrals, AI Enhancement, Christmas Catalog');
+  console.log('✨ Features: Orders, Payments, Referrals, AI Enhancement, Christmas Catalog, Affiliate Assets');
   console.log('👷 Worker: Image Generation Active');
 });

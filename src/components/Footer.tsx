@@ -16,11 +16,25 @@ export const Footer: React.FC<FooterProps> = () => {
                     </span>
                 </div>
 
-                {/* Dynamic Legal Disclaimer */}
-                <div className="max-w-4xl mx-auto mb-6 p-4 bg-slate-900/50 rounded-lg border border-slate-800/50">
-                    <p className="text-slate-400 text-xs leading-relaxed uppercase tracking-wide">
-                        {t('footer.disclaimer')}
-                    </p>
+                {/* Dynamic Legal Disclaimer & Safety Shield 🛡️ */}
+                <div className="max-w-5xl mx-auto mb-8 p-6 bg-slate-900/80 backdrop-blur-md rounded-2xl border border-slate-800 shadow-xl">
+                    <div className="flex flex-col md:flex-row items-center gap-6 text-left">
+                        <div className="text-4xl">⚖️</div>
+                        <div className="flex-1">
+                            <h4 className="text-slate-200 font-bold mb-2 uppercase tracking-widest text-xs">
+                                {t('footer.legal_title')}
+                            </h4>
+                            <p className="text-slate-400 text-xs leading-relaxed">
+                                {t('footer.disclaimer_full')}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Philanthropy Badge 🐾 */}
+                <div className="mb-8 inline-flex items-center gap-3 px-4 py-2 bg-emerald-900/20 border border-emerald-500/30 rounded-full text-emerald-400 hover:bg-emerald-900/30 transition-all cursor-pointer">
+                    <span>🐶</span>
+                    <span className="text-xs font-bold tracking-wide">PIC.HEART: 3% DONATED TO ANIMAL SHELTERS</span>
                 </div>
 
                 <p className="text-slate-500 text-sm mb-2">

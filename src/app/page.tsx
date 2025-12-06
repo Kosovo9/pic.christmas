@@ -20,6 +20,7 @@ import { PageTransition } from '../components/PageTransition';
 import { StickyCTA } from '../components/StickyCTA';
 import { MissionSection } from '../components/MissionSection';
 import { SecurityShield } from '../components/SecurityShield';
+import { CharitySection } from '../components/CharitySection';
 
 export default function Home() {
   // ...
@@ -197,6 +198,7 @@ export default function Home() {
 
         {/* Mission & Philanthropy */}
         <MissionSection />
+        <CharitySection />
 
         {/* Referral Section */}
         <div ref={referralRef}>
