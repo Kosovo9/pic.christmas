@@ -14,6 +14,9 @@ import { useReferral } from '../hooks/useReferral';
 import { useI18n } from '../hooks/useI18n';
 import { api } from '../services/api';
 import guidelinesData from '../data/guidelines.json';
+import { BeforeAfter } from '../components/BeforeAfter';
+import { FAQ } from '../components/FAQ';
+import { PageTransition } from '../components/PageTransition';
 
 export default function Home() {
   const { language, switchLanguage } = useI18n();
@@ -143,53 +146,54 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white selection:bg-blue-500/30">
-      {/* Navbar */}
-      <Navbar language={language} onLanguageChange={switchLanguage} onReferralsClick={scrollToReferrals} />
+    <PageTransition>
+      <main className="min-h-screen bg-slate-950 text-white selection:bg-blue-500/30">
+        {/* Navbar */}
+        <Navbar language={language} onLanguageChange={switchLanguage} onReferralsClick={scrollToReferrals} />
 
-      {/* Music Toggle */}
-      <MusicToggle />
+        {/* Music Toggle */}
+        <MusicToggle />
 
-      {/* Hero Section */}
-      <Hero language={language} onStart={handleStart} />
+        {/* Hero Section */}
+        <Hero language={language} onStart={handleStart} />
 
-      {/* Guidelines Modal */}
-      <GuidelinesModal />
+        {/* Guidelines Modal */}
+        <GuidelinesModal />
 
-      {/* Examples Gallery */}
-      <ExamplesGallery />
+        {/* Examples Gallery */}
+        <ExamplesGallery />
 
-      {/* Upload Wizard Section */}
-      <div ref={uploadRef} className={`transition-all duration-1000 ${currentView === 'landing' ? 'opacity-50 blur-sm pointer-events-none' : 'opacity-100'}`}>
-        {currentView !== 'landing' && (
-          <section className="py-24 relative">
-            <div className="absolute inset-0 bg-slate-900/50 skew-y-3 transform origin-top-left -z-10" />
-            <UploadWizard onComplete={handleUploadComplete} />
+        {/* Upload Wizard Section */}
+        <div ref={uploadRef} className={`transition-all duration-1000 ${currentView === 'landing' ? 'opacity-50 blur-sm pointer-events-none' : 'opacity-100'}`}>
+          {currentView !== 'landing' && (
+            <section className="py-24 relative">
+              <div className="absolute inset-0 bg-slate-900/50 skew-y-3 transform origin-top-left -z-10" />
+              <UploadWizard onComplete={handleUploadComplete} />
+            </section>
+          )}
+        </div>
+
+        {/* Pricing Section */}
+        <div ref={pricingRef}>
+          {(currentView === 'pricing' || currentView === 'results') && (
+            <PricingSection onSelect={handlePackageSelect} config={uploadData?.config} />
+          )}
+        </div>
+
+        {/* Results Section */}
+        {currentView === 'results' && (
+          <section className="animate-fade-in">
+            <ResultsGallery />
           </section>
         )}
-      </div>
 
-      {/* Pricing Section */}
-      <div ref={pricingRef}>
-        {(currentView === 'pricing' || currentView === 'results') && (
-          <PricingSection onSelect={handlePackageSelect} config={uploadData?.config} />
-        )}
-      </div>
+        {/* Referral Section */}
+        <div ref={referralRef}>
+          <ReferralSection />
+        </div>
 
-      {/* Results Section */}
-      {currentView === 'results' && (
-        <section className="animate-fade-in">
-          <ResultsGallery />
-        </section>
-      )}
-
-      {/* Referral Section */}
-      <div ref={referralRef}>
-        <ReferralSection />
-      </div>
-
-      {/* Footer */}
-      <Footer language={language} />
-    </main>
-  );
+        {/* Footer */}
+        <Footer language={language} />
+      </main>
+      );
 }

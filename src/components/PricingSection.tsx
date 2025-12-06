@@ -163,7 +163,24 @@ export const PricingSection: React.FC<PricingProps> = ({ onSelect, config }) => 
                 </div>
 
                 <div className="text-center mt-12 text-slate-400 text-sm">
-                    <p>💳 Secure checkout with Stripe • 🔒 100% Safe • 🎄 Instant delivery</p>
+                    <p className="flex items-center justify-center gap-4 mb-6">
+                        <span className="flex items-center gap-1"><svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> 100% Satisfaction Guarantee</span>
+                        <span className="flex items-center gap-1"><svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg> Secure SSL Payment</span>
+                        <span className="flex items-center gap-1"><svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg> 24h Delivery</span>
+                    </p>
+
+                    <div className="inline-flex items-center gap-3 bg-slate-800/50 px-4 py-2 rounded-full border border-slate-700 cursor-pointer hover:bg-slate-800 transition">
+                        <input type="checkbox" className="w-4 h-4 rounded border-slate-600 text-blue-600 focus:ring-blue-500" />
+                        <span className="text-white font-medium">Buying as a gift? 🎁</span>
+                    </div>
+
+                    <div className="mt-8 flex justify-center gap-4 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+                        {/* Mock Payment Icons */}
+                        <div className="h-8 w-12 bg-white rounded flex items-center justify-center font-bold text-slate-900 text-[10px]">VISA</div>
+                        <div className="h-8 w-12 bg-white rounded flex items-center justify-center font-bold text-slate-900 text-[10px]">MC</div>
+                        <div className="h-8 w-12 bg-white rounded flex items-center justify-center font-bold text-slate-900 text-[10px]">AMEX</div>
+                        <div className="h-8 w-12 bg-white rounded flex items-center justify-center font-bold text-slate-900 text-[10px]">Pay</div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -42,6 +42,9 @@ export const metadata: Metadata = {
 
 import { ClerkProvider } from '@clerk/nextjs'
 import { ToastProvider } from "@/context/ToastContext";
+import { Snowfall } from "@/components/Snowfall";
+import { SocialProof } from "@/components/SocialProof";
+import { CountdownBanner } from "@/components/CountdownBanner";
 
 export default function RootLayout({
   children,
@@ -55,6 +58,9 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-slate-950 text-white overflow-x-hidden`}
         >
           <ToastProvider>
+            <CountdownBanner />
+            <Snowfall />
+            <SocialProof />
             {children}
           </ToastProvider>
 
