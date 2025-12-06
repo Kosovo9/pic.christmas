@@ -18,6 +18,7 @@ import { BeforeAfter } from '../components/BeforeAfter';
 import { FAQ } from '../components/FAQ';
 import { PageTransition } from '../components/PageTransition';
 import { StickyCTA } from '../components/StickyCTA';
+import { MissionSection } from '../components/MissionSection';
 
 export default function Home() {
   // ...
@@ -191,6 +192,9 @@ export default function Home() {
             <ResultsGallery />
           </section>
         )}
+
+        {/* Mission & Philanthropy */}
+        <MissionSection />
 
         {/* Referral Section */}
         <div ref={referralRef}>
