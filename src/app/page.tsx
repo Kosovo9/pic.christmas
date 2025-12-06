@@ -204,7 +204,7 @@ export default function Home() {
         <Footer language={language} />
 
         {/* Mobile Sticky CTA */}
-        <StickyCTA onClick={scrollToUpload} />
+        <StickyCTA onClick={realStart} />
       </main>
     </PageTransition>
   );

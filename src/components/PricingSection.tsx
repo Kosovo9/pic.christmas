@@ -15,6 +15,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
 
 export const PricingSection: React.FC<PricingProps> = ({ onSelect, config }) => {
     const [calculatedPrice, setCalculatedPrice] = useState<number>(9.99);
+    const [isGift, setIsGift] = useState(false);
 
     useEffect(() => {
         if (config) {
@@ -156,7 +157,7 @@ export const PricingSection: React.FC<PricingProps> = ({ onSelect, config }) => 
                                     }
                 `}
                             >
-                                Select Package 🎁
+                                {isGift ? `🎁 Gift ${pkg.name}` : 'Select Package 🎁'}
                             </button>
                         </div>
                     ))}
