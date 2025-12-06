@@ -4,7 +4,11 @@ export type Language =
     | 'zh' // Simplified Chinese
     | 'fr' // French
     | 'de' // German
-    | 'pt'; // Portuguese
+    | 'pt' // Portuguese
+    | 'it' // Italian
+    | 'ru' // Russian
+    | 'ja' // Japanese
+    | 'ar'; // Arabic
 
 export type MediaType = 'image' | 'video';
 
