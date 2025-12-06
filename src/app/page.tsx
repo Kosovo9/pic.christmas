@@ -157,6 +157,9 @@ export default function Home() {
         {/* Hero Section */}
         <Hero language={language} onStart={handleStart} />
 
+        {/* Before/After Magic Mirror */}
+        <BeforeAfter />
+
         {/* Guidelines Modal */}
         <GuidelinesModal />
 
@@ -192,8 +195,12 @@ export default function Home() {
           <ReferralSection />
         </div>
 
+        {/* FAQ Section */}
+        <FAQ />
+
         {/* Footer */}
         <Footer language={language} />
       </main>
-      );
+    </PageTransition>
+  );
 }
