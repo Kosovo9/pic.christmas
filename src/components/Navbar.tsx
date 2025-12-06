@@ -3,10 +3,11 @@ import { Language } from '../types';
 
 interface NavbarProps {
     language: Language;
-    setLanguage: (lang: Language) => void;
+    onLanguageChange: (lang: Language) => void;
+    onReferralsClick?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ language, setLanguage }) => {
+export const Navbar: React.FC<NavbarProps> = ({ language, onLanguageChange, onReferralsClick }) => {
     return (
         <nav className="fixed top-0 w-full z-50 bg-[#050811]/80 backdrop-blur-md border-b border-white/5">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -24,16 +25,26 @@ export const Navbar: React.FC<NavbarProps> = ({ language, setLanguage }) => {
                         </span>
                     </div>
 
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-6">
+                        {/* Referral Link */}
+                        {onReferralsClick && (
+                            <button
+                                onClick={onReferralsClick}
+                                className="hidden md:block text-sm text-slate-300 hover:text-white transition-colors"
+                            >
+                                Referrals
+                            </button>
+                        )}
+
                         <div className="flex items-center bg-slate-800/50 rounded-full p-1 border border-slate-700/50">
                             <button
-                                onClick={() => setLanguage('es')}
+                                onClick={() => onLanguageChange('es')}
                                 className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${language === 'es' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
                             >
                                 ES
                             </button>
                             <button
-                                onClick={() => setLanguage('en')}
+                                onClick={() => onLanguageChange('en')}
                                 className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${language === 'en' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
                             >
                                 EN
