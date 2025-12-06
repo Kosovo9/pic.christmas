@@ -117,25 +117,51 @@ router.post('/webhook', async (req: any, res) => {
             try {
                 const order = await Order.findById(orderId);
                 if (order) {
-                    order.status = 'paid';
-                    order.paymentId = session.payment_intent as string; // Standardize payment ID
-                    order.paymentProvider = 'stripe';
-                    await order.save();
+                    // ...
+                    console.log(`Checkout Session for order ${orderId} was successful!`);
 
-                    // Trigger Image Generation Job
-                    const job = await generationQueue.add('generate-images', {
-                        orderId: order._id,
-                        config: order.config,
-                        originalImages: order.originalImages,
-                        packageId: order.packageId
-                    });
+                    try {
+                        const order = await Order.findById(orderId);
+                        if (order) {
+                            order.status = 'paid';
+                            order.paymentId = session.payment_intent as string;
+                            order.paymentProvider = 'stripe';
+                            // Capture email from Stripe Customer Details
+                            if (session.customer_details?.email) {
+                                order.email = session.customer_details.email;
+                            }
+                            await order.save();
+                            // Credit Affiliate Integration 💰 (35% Commission)
+                            if (order.referralCode) {
+                                try {
+                                    const Referral = require('../models/Referral').default;
+                                    const referrer = await Referral.findOne({ code: order.referralCode });
+                                    if (referrer) {
+                                        const commission = order.amount * 0.35;
+                                        referrer.earnings = (referrer.earnings || 0) + commission;
+                                        referrer.usageCount = (referrer.usageCount || 0) + 1;
+                                        await referrer.save();
+                                        console.log(`💰 Affiliate Commission credited: $${commission} to code ${order.referralCode}`);
+                                    }
+                                } catch (refError) {
+                                    console.error('Failed to credit affiliate:', refError);
+                                }
+                            }
 
-                    console.log(`Job added to queue: ${job.id}`);
-                }
-            } catch (err) {
-                console.error('Error updating order/queue:', err);
-            }
-            break;
+                            // Trigger Image Generation Job
+                            const job = await generationQueue.add('generate-images', {
+                                orderId: order._id,
+                                config: order.config,
+                                originalImages: order.originalImages,
+                                packageId: order.packageId
+                            });
+
+                            console.log(`Job added to queue: ${job.id}`);
+                        }
+                    } catch (err) {
+                        console.error('Error updating order/queue:', err);
+                    }
+                    break;
 
         case 'payment_intent.succeeded':
             // Legacy support or if we use Elements elsewhere

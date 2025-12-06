@@ -18,32 +18,36 @@ export const metadata: Metadata = {
   description: "Transform your photos into hyper-realistic Christmas portraits.",
 };
 
+import { ClerkProvider } from '@clerk/nextjs'
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-slate-950 text-white overflow-x-hidden`}
-      >
-        {children}
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-slate-950 text-white overflow-x-hidden`}
+        >
+          {children}
 
-        {/* Anti-copy / anti-right-click basic protection */}
-        <Script id="anti-scraping" strategy="afterInteractive">
-          {`
-            document.addEventListener('contextmenu', function (e) {
-              e.preventDefault();
-            });
-            ['copy', 'cut', 'selectstart'].forEach(function (ev) {
-              document.addEventListener(ev, function (e) {
+          {/* Anti-copy / anti-right-click basic protection */}
+          <Script id="anti-scraping" strategy="afterInteractive">
+            {`
+              document.addEventListener('contextmenu', function (e) {
                 e.preventDefault();
               });
-            });
-          `}
-        </Script>
-      </body>
-    </html>
+              ['copy', 'cut', 'selectstart'].forEach(function (ev) {
+                document.addEventListener(ev, function (e) {
+                  e.preventDefault();
+                });
+              });
+            `}
+          </Script>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

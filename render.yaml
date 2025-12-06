@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: pic-christmas-backend
+    env: node
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+    # Las demás variables de entorno se agregan manualmente en el dashboard de Render
+

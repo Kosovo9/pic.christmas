@@ -48,7 +48,34 @@ const redisConnection = new IORedis(process.env.REDIS_URL || 'redis://localhost:
 
 export const generationQueue = new Queue('image-generation', { connection: redisConnection });
 
+import helmet from 'helmet';
+import compression from 'compression';
+import morgan from 'morgan';
+import rateLimit from 'express-rate-limit';
+
+// ... other imports ...
+
 // --- Middleware ---
+app.set('trust proxy', 1); // Essential for Render/Heroku/Vercel proxies
+
+// 1. Security Headers 🛡️
+app.use(helmet());
+
+// 2. Rate Limiting (DDoS Protection) 🛑
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api/', limiter); // Apply to API routes
+
+// 3. Performance (Gzip) 🚀
+app.use(compression());
+
+// 4. Logging (Observability) 👁️
+app.use(morgan('combined')); // Standard Apache log format
+
 app.use(cors());
 app.use(express.json({
   verify: (req: any, res, buf) => {
@@ -57,11 +84,16 @@ app.use(express.json({
 }));
 
 // --- Routes ---
+import adminRoutes from './routes/admin.routes';
+
+// ... 
+
 app.use('/api/orders', ordersRoutes);
 app.use('/api/payments', paymentsRoutes);
 app.use('/api/referrals', referralsRoutes);
 app.use('/api/prompts', promptsRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/admin', adminRoutes); // Admin routes registered
 
 app.get('/', (req, res) => {
   res.send('Pic.Christmas API is running 🎄 (All Features Active)');

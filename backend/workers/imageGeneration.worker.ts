@@ -3,6 +3,8 @@ import Replicate from 'replicate';
 import { v2 as cloudinary } from 'cloudinary';
 import Order from '../models/Order';
 import dotenv from 'dotenv';
+import { watermarkService } from '../services/watermark.service';
+import { emailService } from '../services/email.service';
 
 dotenv.config();
 
@@ -75,28 +77,78 @@ export const imageGenerationWorker = new Worker(
                 );
                 console.log(`[Worker] Replicate output received for image ${i + 1}/${count}`);
 
-                const imageUrl = (output as string[])[0]; // Replicate returns array usually
+                const imageUrl = (output as string[])[0];
 
-                // 2. Upload to Cloudinary
-                // Note: In production we might want to download and stream to Cloudinary to avoid hotlinking issues
-                // For MVP, we pass the Replicate URL to Cloudinary
-                console.log(`[Worker] Uploading to Cloudinary: ${imageUrl.substring(0, 30)}...`);
-                const uploadResult = await cloudinary.uploader.upload(imageUrl, {
-                    folder: `pic-christmas/orders/${orderId}`,
-                    tags: ['generated', 'christmas']
-                });
-                console.log(`[Worker] Upload successful: ${uploadResult.secure_url}`);
+                // 2. Apply Watermark 🛡️ (100x Protection)
+                console.log(`[Worker] Applying 'NEXORA' watermark...`);
+                let finalImageToUpload: string | Buffer = imageUrl;
 
-                generatedUrls.push(uploadResult.secure_url);
+                try {
+                    const watermarkedBuffer = await watermarkService.applyWatermark(imageUrl);
+                    finalImageToUpload = watermarkedBuffer;
+                } catch (wmError) {
+                    console.error('Watermarking failed, using original', wmError);
+                }
 
-                // Update progress via job
+                // 3. Upload to Cloudinary (Watermarked)
+                console.log(`[Worker] Uploading to Cloudinary...`);
+
+                // For Buffer upload, we need a stream or promise. Cloudinary SDK supports file path or url primarily in v2.uploader.upload
+                // To upload buffer, we might need a stream wrapper or write to temp file.
+                // OPTIMIZATION: Use a simple write-to-disk approach for reliability in Node environments, or stream.
+                // For MVP Speed + Reliability:
+                // We'll use a Promise wrapper for stream upload if using buffer.
+
+                const uploadToCloudinary = (buffer: Buffer) => {
+                    return new Promise<any>((resolve, reject) => {
+                        const uploadStream = cloudinary.uploader.upload_stream(
+                            { folder: `pic-christmas/orders/${orderId}`, tags: ['generated', 'christmas', 'watermarked'] },
+                            (error, result) => {
+                                if (error) reject(error);
+                                else resolve(result);
+                            }
+                        );
+                        // Write buffer to stream
+                        const stream = require('stream');
+                        const bufferStream = new stream.PassThrough();
+                        bufferStream.end(buffer);
+                        bufferStream.pipe(uploadStream);
+                    });
+                };
+
+                // If it's a buffer (watermarked), use stream upload. If URL (fallback), use standard upload.
+                let secureUrl;
+                if (Buffer.isBuffer(finalImageToUpload)) {
+                    const result = await uploadToCloudinary(finalImageToUpload);
+                    secureUrl = result.secure_url;
+                } else {
+                    const result = await cloudinary.uploader.upload(finalImageToUpload as string, {
+                        folder: `pic-christmas/orders/${orderId}`,
+                        tags: ['generated', 'christmas']
+                    });
+                    secureUrl = result.secure_url;
+                }
+
+                console.log(`[Worker] Upload successful: ${secureUrl}`);
+                generatedUrls.push(secureUrl);
+
                 await job.updateProgress(((i + 1) / count) * 100);
             }
 
-            // 3. Save results
+            // 4. Save results & Notify 📧
             order.generatedImages = generatedUrls;
             order.status = 'completed';
             await order.save();
+
+            // Send Email if available
+            if (order.email) {
+                console.log(`[Worker] Sending email to ${order.email}...`);
+                await emailService.sendOrderReadyEmail(
+                    order.email,
+                    order._id.toString(),
+                    `${process.env.FRONTEND_URL}/success?orderId=${order._id}`
+                );
+            }
 
             console.log(`Job ${job.id} completed. Generated ${generatedUrls.length} images.`);
             return { success: true, images: generatedUrls };

@@ -5,6 +5,10 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: false // Optional for guest checkout
     },
+    email: {
+        type: String,
+        required: false
+    },
     packageId: {
         type: String,
         required: true,
