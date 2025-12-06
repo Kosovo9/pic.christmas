@@ -6,6 +6,8 @@ export interface IReferral extends Document {
     email?: string;
     conversions: string[]; // Array of Order IDs
     credits: number;
+    earnings: number;
+    usageCount: number;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -37,6 +39,15 @@ const ReferralSchema: Schema = new Schema(
             default: 0,
             min: 0,
         },
+        earnings: {
+            type: Number,
+            default: 0,
+            min: 0
+        },
+        usageCount: {
+            type: Number,
+            default: 0
+        }
     },
     {
         timestamps: true,

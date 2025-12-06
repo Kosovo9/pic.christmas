@@ -106,5 +106,26 @@ export const api = {
             body: JSON.stringify({ basePrompt, count })
         });
         return res.json();
+    },
+
+    // Admin
+    getAdminStats: async (token: string) => {
+        // Requires Clerk Token (or secret for MVP)
+        const res = await fetch(`${API_BASE}/admin/stats`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return res.json();
+    },
+
+    retryOrder: async (orderId: string, token: string) => {
+        const res = await fetch(`${API_BASE}/admin/retry/${orderId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return res.json();
     }
 };

@@ -77,12 +77,14 @@ router.get('/:code', async (req, res) => {
         const conversions = referral.conversions.length;
         const progress = conversions % referralConfig.conversions_required;
         const creditsEarned = referral.credits;
+        const earnings = referral.earnings || 0;
 
         res.json({
             code: referral.code,
             conversions,
             progress,
             creditsEarned,
+            earnings,
             nextRewardAt: referralConfig.conversions_required - progress,
             config: {
                 conversionsRequired: referralConfig.conversions_required,

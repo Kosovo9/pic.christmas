@@ -1,0 +1,62 @@
+{
+    "en": {
+        "title": "📸 How to get the best results",
+        "tips": [
+            "Use good lighting (natural light is best)",
+            "Avoid blur or shaky photos",
+            "Ensure the face is clearly visible",
+            "No sunglasses or hats covering the face",
+            "One person per photo (unless it's a couple/family shot)"
+        ]
+    },
+    "es": {
+        "title": "📸 Cómo obtener los mejores resultados",
+        "tips": [
+            "Usa buena iluminación (luz natural es mejor)",
+            "Evita fotos borrosas o movidas",
+            "Asegúrate de que la cara sea claramente visible",
+            "Sin gafas de sol o sombreros que cubran la cara",
+            "Una persona por foto (a menos que sea foto de pareja/familia)"
+        ]
+    },
+    "fr": {
+        "title": "📸 Comment obtenir les meilleurs résultats",
+        "tips": [
+            "Utilisez un bon éclairage",
+            "Évitez les photos floues",
+            "Assurez-vous que le visage est visible",
+            "Pas de lunettes de soleil",
+            "Une personne par photo"
+        ]
+    },
+    "de": {
+        "title": "📸 Wie man die besten Ergebnisse erzielt",
+        "tips": [
+            "Gute Beleuchtung verwenden",
+            "Vermeiden Sie unscharfe Fotos",
+            "Gesicht muss sichtbar sein",
+            "Keine Sonnenbrillen",
+            "Eine Person pro Foto"
+        ]
+    },
+    "it": {
+        "title": "📸 Come ottenere i migliori risultati",
+        "tips": [
+            "Usa una buona illuminazione",
+            "Evita foto sfocate",
+            "Assicurati che il viso sia visibile",
+            "Niente occhiali da sole",
+            "Una persona per foto"
+        ]
+    },
+    "pt": {
+        "title": "📸 Como obter os melhores resultados",
+        "tips": [
+            "Use boa iluminação",
+            "Evite fotos tremidas",
+            "Rosto bem visível",
+            "Sem óculos escuros",
+            "Uma pessoa por foto"
+        ]
+    }
+}

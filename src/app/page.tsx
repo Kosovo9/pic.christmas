@@ -13,21 +13,35 @@ import { ExamplesGallery } from '../components/ExamplesGallery';
 import { useReferral } from '../hooks/useReferral';
 import { useI18n } from '../hooks/useI18n';
 import { api } from '../services/api';
+import guidelinesData from '../data/guidelines.json';
 
 export default function Home() {
   const { language, switchLanguage } = useI18n();
   const { referralCode } = useReferral();
   const [currentView, setCurrentView] = useState<'landing' | 'upload' | 'pricing' | 'results'>('landing');
   const [uploadData, setUploadData] = useState<any>(null);
+  const [showGuidelines, setShowGuidelines] = useState(false);
 
   const uploadRef = useRef<HTMLDivElement>(null);
   const pricingRef = useRef<HTMLDivElement>(null);
   const referralRef = useRef<HTMLDivElement>(null);
 
-  const handleStart = () => {
+  const realStart = () => {
+    setShowGuidelines(false);
     setCurrentView('upload');
     setTimeout(() => {
       uploadRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
+  const handleStart = () => {
+    setShowGuidelines(true);
+  };
+
+  const scrollToReferrals = () => {
+    setCurrentView('landing');
+    setTimeout(() => {
+      referralRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
   };
 
@@ -79,7 +93,7 @@ export default function Home() {
       // 2. Initiate Payment (Stripe by default for now)
       // You can add a UI selector for payment method here later
       console.log('Initiating payment...');
-      const payment = await api.createPaymentIntent(order._id); // Now returns { url: ... }
+      const payment = await api.createPaymentIntent(order._id);
 
       if (payment.url) {
         // Redirect to Stripe Checkout
@@ -94,11 +108,38 @@ export default function Home() {
     }
   };
 
-  const scrollToReferrals = () => {
-    setCurrentView('landing');
-    setTimeout(() => {
-      referralRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
+  const GuidelinesModal = () => {
+    const currentGuidelines = guidelinesData[language as keyof typeof guidelinesData] || guidelinesData['en'];
+
+    if (!showGuidelines) return null;
+
+    return (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in" onClick={() => setShowGuidelines(false)}>
+        <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 relative shadow-2xl shadow-purple-500/20" onClick={e => e.stopPropagation()}>
+          <button onClick={() => setShowGuidelines(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">✕</button>
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-3xl">📸</span>
+            </div>
+            <h3 className="text-xl font-bold text-white">{currentGuidelines.title}</h3>
+          </div>
+          <ul className="space-y-4 mb-8">
+            {currentGuidelines.tips.map((tip, idx) => (
+              <li key={idx} className="flex items-start gap-3 text-slate-300">
+                <span className="text-emerald-400 mt-0.5 font-bold">✓</span>
+                <span>{tip}</span>
+              </li>
+            ))}
+          </ul>
+          <button
+            onClick={realStart}
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-4 rounded-xl transition-all transform hover:scale-[1.02] shadow-lg"
+          >
+            I understand, let's go! 🚀
+          </button>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -111,6 +152,9 @@ export default function Home() {
 
       {/* Hero Section */}
       <Hero language={language} onStart={handleStart} />
+
+      {/* Guidelines Modal */}
+      <GuidelinesModal />
 
       {/* Examples Gallery */}
       <ExamplesGallery />
