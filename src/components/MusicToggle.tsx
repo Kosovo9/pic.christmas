@@ -4,11 +4,23 @@ export const MusicToggle: React.FC = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const audioRef = useRef<HTMLAudioElement>(null);
 
+    const safePlay = () => {
+        if (audioRef.current) {
+            const playPromise = audioRef.current.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log('Audio autoplay prevented or interrupted:', error);
+                    setIsPlaying(false);
+                });
+            }
+        }
+    };
+
     useEffect(() => {
         // Check localStorage for music preference
         const savedPreference = localStorage.getItem('christmasMusic');
-        if (savedPreference === 'enabled' && audioRef.current) {
-            audioRef.current.play();
+        if (savedPreference === 'enabled') {
+            safePlay();
             setIsPlaying(true);
         }
     }, []);
@@ -19,12 +31,12 @@ export const MusicToggle: React.FC = () => {
         if (isPlaying) {
             audioRef.current.pause();
             localStorage.setItem('christmasMusic', 'disabled');
+            setIsPlaying(false);
         } else {
-            audioRef.current.play();
+            safePlay();
             localStorage.setItem('christmasMusic', 'enabled');
+            setIsPlaying(true);
         }
-
-        setIsPlaying(!isPlaying);
     };
 
     return (
