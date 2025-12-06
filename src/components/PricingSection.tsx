@@ -83,13 +83,31 @@ export const PricingSection: React.FC<PricingProps> = ({ onSelect, config }) => 
                     <p className="text-slate-400 text-xl">Simple pricing for magical Christmas memories</p>
 
                     {config && (
-                        <div className="mt-6 inline-block bg-blue-900/30 border border-blue-500/30 rounded-xl px-6 py-3">
-                            <p className="text-blue-400 font-medium">
-                                💡 Your Price: <span className="text-2xl font-bold text-white">${calculatedPrice.toFixed(2)}</span>
-                                <span className="text-sm text-slate-400 ml-2">
-                                    ({config.adults} adults + {config.children} kids + {config.pets} pets)
-                                </span>
-                            </p>
+                        <div className="mt-6 flex flex-col items-center gap-4">
+                            <div className="inline-block bg-blue-900/30 border border-blue-500/30 rounded-xl px-6 py-3">
+                                <p className="text-blue-400 font-medium">
+                                    💡 Your Price: <span className="text-2xl font-bold text-white">${calculatedPrice.toFixed(2)}</span>
+                                    <span className="text-sm text-slate-400 ml-2">
+                                        ({config.adults} adults + {config.children} kids + {config.pets} pets)
+                                    </span>
+                                </p>
+                            </div>
+
+                            {/* Promo Code Input */}
+                            <div className="flex items-center gap-2 max-w-xs w-full">
+                                <input
+                                    type="text"
+                                    placeholder="Promo Code"
+                                    className="bg-slate-800/50 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white w-full focus:outline-none focus:border-blue-500"
+                                    onChange={(e) => {
+                                        if (e.target.value.toUpperCase() === 'SANTA25') {
+                                            setCalculatedPrice(prev => prev * 0.75);
+                                            // Simplistic logic, in real world we'd validate against API or more robust state
+                                        }
+                                    }}
+                                />
+                                <button className="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded-lg transition">Apply</button>
+                            </div>
                         </div>
                     )}
                 </div>
