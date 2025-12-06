@@ -271,7 +271,6 @@ const translations: Record<Language, Record<string, string>> = {
         'legal.upload_text': 'أشهد أنني أملك الحقوق. أتحمل المسؤولية الكاملة. يمنع منعا باتا الإباحية والكراهية وسوء المعاملة. الانتهاك سيؤدي إلى الحظر الفوري.',
         'legal.checkbox': 'أوافق على الشروط والمسؤولية.',
     }
-}
 };
 
 const languageNames: Record<Language, string> = {

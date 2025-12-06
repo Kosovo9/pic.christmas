@@ -360,6 +360,246 @@ export const TRANSLATIONS = {
             title: 'Catálogo de estilos',
             subtitle: 'Explore os estilos disponíveis e escolha o seu favorito',
         }
+    },
+    it: {
+        hero: {
+            title: "Crea foto di Natale iperrealistiche in pochi minuti",
+            subtitle: "Per coppie, famiglie, animali domestici e profili professionali.",
+            ctaUpload: "Carica le tue foto",
+            ctaExamples: "Vedi esempi",
+        },
+        upload: {
+            title: "Carica le tue foto",
+            dragDrop: "Trascina le tue foto qui, o clicca per selezionare",
+            limit: "Massimo 5 foto (JPG/PNG)",
+            selectScenario: "Scegli il tuo scenario natalizio",
+            generateBtn: "Genera Ritratti",
+            generating: "Creando la magia di Natale...",
+            customPromptPlaceholder: "O scrivi la tua istruzione (es: 'Aggiungi un filtro retrò')",
+            disclaimer: "Continuando, accetti di possedere le foto. Nessun contenuto offensivo, sessuale o violento.",
+            acceptPolicy: "Accetto la politica d'uso",
+            formatTitle: "Formato",
+            formats: {
+                square: "Quadrato (1:1)",
+                portrait: "Verticale (9:16) - TikTok/Reels",
+                landscape: "Orizzontale (16:9)"
+            }
+        },
+        results: {
+            title: "La Tua Galleria di Natale",
+            download: "Scarica Originale (HD)",
+            watermark: "",
+        },
+        chat: {
+            title: "Nexora AI Help Desk 24/7",
+            subtitle: "Assistente virtuale per domande sulla tua sessione",
+            placeholder: "Scrivi la tua domanda...",
+            thinking: "Scrivendo...",
+        },
+        footer: {
+            rights: "Tutti i diritti riservati.",
+        },
+        categories: {
+            couple: "Coppie",
+            family: "Famiglia",
+            pet: "Animali",
+            professional: "Professionale",
+            video: "Video",
+            custom: "Modifica Libera",
+        },
+        pricing: {
+            title: 'Prezzi di Lancio',
+            subtitle: 'Offerta speciale valida per i primi 10 giorni',
+            packages: [
+                { id: 'single', title: 'Foto Singola', description: '1 ritratto in alta definizione', price: '$5 USD', cta: 'Acquista' },
+                { id: 'family', title: 'Sessione Famiglia', description: 'Sessione per max 4 persone', price: '$10 USD', cta: 'Acquista' }
+            ],
+            note: 'Prezzi in USD. I gateway convertono automaticamente.'
+        },
+        catalog: {
+            title: 'Catalogo Stili',
+            subtitle: 'Esplora gli stili disponibili e scegli il tuo preferito',
+        }
+    },
+    ru: {
+        hero: {
+            title: "Превратите фото в рождественские портреты за минуты",
+            subtitle: "Для пар, семей, питомцев и профи.",
+            ctaUpload: "Загрузить фото",
+            ctaExamples: "Смотреть примеры",
+        },
+        upload: {
+            title: "Загрузите ваши фото",
+            dragDrop: "Перетащите фото сюда или нажмите для выбора",
+            limit: "Макс 5 фото (JPG/PNG)",
+            selectScenario: "Выберите сценарий",
+            generateBtn: "Создать портреты",
+            generating: "Создаем магию...",
+            customPromptPlaceholder: "Или введите свою инструкцию",
+            disclaimer: "Вы подтверждаете права на фото.",
+            acceptPolicy: "Принимаю условия",
+            formatTitle: "Формат",
+            formats: {
+                square: "Квадрат (1:1)",
+                portrait: "Вертикально (9:16)",
+                landscape: "Горизонтально (16:9)"
+            }
+        },
+        results: {
+            title: "Ваша Галерея",
+            download: "Скачать (HD)",
+            watermark: "",
+        },
+        chat: {
+            title: "Nexora AI Поддержка 24/7",
+            subtitle: "Виртуальный помощник",
+            placeholder: "Ваш вопрос...",
+            thinking: "Печатает...",
+        },
+        footer: {
+            rights: "Все права защищены.",
+        },
+        categories: {
+            couple: "Пары",
+            family: "Семья",
+            pet: "Питомцы",
+            professional: "Профи",
+            video: "Видео",
+            custom: "Свой стиль",
+        },
+        pricing: {
+            title: 'Цены запуска',
+            subtitle: 'Спецпредложение на 10 дней',
+            packages: [
+                { id: 'single', title: 'Одно фото', description: '1 HD портрет', price: '$5 USD', cta: 'Купить' },
+                { id: 'family', title: 'Семейная сессия', description: 'До 4 человек', price: '$10 USD', cta: 'Купить' }
+            ],
+            note: 'Цены в USD.'
+        },
+        catalog: {
+            title: 'Каталог стилей',
+            subtitle: 'Выберите любимый стиль',
+        }
+    },
+    ja: {
+        hero: {
+            title: "数分で写真をクリスマスの思い出に",
+            subtitle: "カップル、家族、ペット、プロフィール用。",
+            ctaUpload: "写真をアップロード",
+            ctaExamples: "例を見る",
+        },
+        upload: {
+            title: "写真をアップロード",
+            dragDrop: "ドラッグ＆ドロップまたはクリックして選択",
+            limit: "最大5枚 (JPG/PNG)",
+            selectScenario: "シナリオを選択",
+            generateBtn: "生成する",
+            generating: "魔法を作成中...",
+            customPromptPlaceholder: "独自の指示を入力",
+            disclaimer: "写真の権利を所有していることに同意します。",
+            acceptPolicy: "利用規約に同意",
+            formatTitle: "フォーマット",
+            formats: {
+                square: "正方形 (1:1)",
+                portrait: "縦 (9:16)",
+                landscape: "横 (16:9)"
+            }
+        },
+        results: {
+            title: "クリスマスギャラリー",
+            download: "HDをダウンロード",
+            watermark: "",
+        },
+        chat: {
+            title: "Nexora AI ヘルプ 24/7",
+            subtitle: "バーチャルアシスタント",
+            placeholder: "質問を入力...",
+            thinking: "入力中...",
+        },
+        footer: {
+            rights: "All rights reserved.",
+        },
+        categories: {
+            couple: "カップル",
+            family: "家族",
+            pet: "ペット",
+            professional: "プロ",
+            video: "ビデオ",
+            custom: "カスタム",
+        },
+        pricing: {
+            title: '発売記念価格',
+            subtitle: '最初の10日間限定',
+            packages: [
+                { id: 'single', title: '1枚の写真', description: '高画質ポートレート1枚', price: '$5 USD', cta: '購入' },
+                { id: 'family', title: 'ファミリーセッション', description: '4人まで', price: '$10 USD', cta: '購入' }
+            ],
+            note: '価格は米ドルです。'
+        },
+        catalog: {
+            title: 'スタイルカタログ',
+            subtitle: 'お気に入りのスタイルを選択',
+        }
+    },
+    ar: {
+        hero: {
+            title: "حول صورك إلى صور عيد ميلاد احترافية",
+            subtitle: "للأزواج والعائلات والحيوانات الأليفة.",
+            ctaUpload: "رفع الصور",
+            ctaExamples: "رؤية أمثلة",
+        },
+        upload: {
+            title: "رفع الصور",
+            dragDrop: "سحب وإفلات الصور هنا",
+            limit: "حد أقصى 5 صور",
+            selectScenario: "اختر السيناريو",
+            generateBtn: "إنشاء صور",
+            generating: "جاري الإنشاء...",
+            customPromptPlaceholder: "أو اكتب تعليماتك",
+            disclaimer: "أنت توافق على أنك تملك الصور.",
+            acceptPolicy: "أوافق على الشروط",
+            formatTitle: "صيغة",
+            formats: {
+                square: "مربع (1:1)",
+                portrait: "عمودي (9:16)",
+                landscape: "أفقي (16:9)"
+            }
+        },
+        results: {
+            title: "معرض الصور",
+            download: "تحميل HD",
+            watermark: "",
+        },
+        chat: {
+            title: "مساعدة Nexora AI",
+            subtitle: "مساعد افتراضي",
+            placeholder: "اكتب سؤالك...",
+            thinking: "يكتب...",
+        },
+        footer: {
+            rights: "جميع الحقوق محفوظة.",
+        },
+        categories: {
+            couple: "أزواج",
+            family: "عائلة",
+            pet: "حيوانات أليفة",
+            professional: "مهني",
+            video: "فيديو",
+            custom: "تعديل حر",
+        },
+        pricing: {
+            title: 'أسعار الإطلاق',
+            subtitle: 'عرض خاص لأول 10 أيام',
+            packages: [
+                { id: 'single', title: 'صورة واحدة', description: 'صورة عالية الجودة', price: '$5 USD', cta: 'شراء' },
+                { id: 'family', title: 'جلسة عائلية', description: 'حتى 4 أشخاص', price: '$10 USD', cta: 'شراء' }
+            ],
+            note: 'الأسعار بالدولار الأمريكي.'
+        },
+        catalog: {
+            title: 'كتالوج الأنماط',
+            subtitle: 'اختر نمطك المفضل',
+        }
     }
 };
 

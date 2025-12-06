@@ -17,9 +17,9 @@ export type AspectRatio = '1:1' | '9:16' | '16:9';
 export interface PromptItem {
     id: string;
     category: 'couple' | 'family' | 'pet' | 'professional' | 'video' | 'custom';
-    title: Record<Language, string>;
-    description: Record<Language, string>;
-    fullPrompt: Record<Language, string>;
+    title: Partial<Record<Language, string>>;
+    description: Partial<Record<Language, string>>;
+    fullPrompt: Partial<Record<Language, string>>;
     type: MediaType;
     coverImage?: string;
 }
