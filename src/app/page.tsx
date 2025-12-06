@@ -55,22 +55,39 @@ export default function Home() {
     console.log('Selected package:', pkgId);
 
     try {
-      // Create order with referral code if available
+      // 1. Create order with referral code if available
       const orderData = {
         packageId: pkgId,
         config: uploadData?.config || { adults: 1, children: 0, pets: 0 },
         originalImages: uploadData?.fileUrls || [],
         referralCode: referralCode || undefined,
-        useCredit: false // User chooses this in checkout
+        useCredit: false // TODO: Add UI to toggle credit usage
       };
 
+      console.log('Creating order...', orderData);
       const order = await api.createOrder(orderData);
       console.log('Order created:', order);
 
-      // TODO: Integrate Stripe/MercadoPago checkout
-      // For now, simulate success
-      setCurrentView('results');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (order.totalAmount === 0) {
+        // Free order (credits)
+        // Redirect directly to results/processing
+        setCurrentView('results');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      // 2. Initiate Payment (Stripe by default for now)
+      // You can add a UI selector for payment method here later
+      console.log('Initiating payment...');
+      const payment = await api.createPaymentIntent(order._id); // Now returns { url: ... }
+
+      if (payment.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = payment.url;
+      } else {
+        throw new Error('No payment URL returned');
+      }
+
     } catch (error) {
       console.error('Order creation failed:', error);
       alert('Something went wrong. Please try again.');
