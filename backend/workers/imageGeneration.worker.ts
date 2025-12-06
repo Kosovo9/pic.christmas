@@ -50,17 +50,17 @@ export const imageGenerationWorker = new Worker(
 
                 if (config) {
                     if (config.pets > 0) {
-                        subjectDirectives += "hyper-realistic pet photography, detailed fur texture, bright expressive eyes, shallow depth of field, ";
+                        subjectDirectives += "hyper-realistic pet photography, detailed fur texture, bright expressive eyes, shallow depth of field, wearing cute festive Christmas sweater or scarf, ";
                     }
                     if (config.children > 0) {
-                        subjectDirectives += "adorable happy child, soft skin tones, magical sparkle in eyes, candid moment, ";
+                        subjectDirectives += "adorable happy child, soft skin tones, magical sparkle in eyes, candid moment, wearing traditional Christmas clothing, ";
                     }
                     if (config.adults > 0 && config.children === 0 && config.pets === 0) {
-                        subjectDirectives += "professional portrait, elegant attire, warm skin tones, cinematic lighting, ";
+                        subjectDirectives += "professional portrait, elegant attire, wearing sophisticated Christmas gala outfit or cozy holiday sweater, warm skin tones, cinematic lighting, ";
                     }
                 }
 
-                const finalPrompt = `${subjectDirectives} ${enhancedPrompt}, Christmas magic, cozy holiday atmosphere, 8k resolution, highly detailed, photorealistic, cinematic lighting, bokeh background`;
+                const finalPrompt = `${subjectDirectives} ${enhancedPrompt}, wearing festive Christmas attire, Christmas magic, cozy holiday atmosphere, 8k resolution, highly detailed, photorealistic, cinematic lighting, bokeh background`;
 
                 // Using Flux-schnell for speed and quality
                 const output = await replicate.run(
