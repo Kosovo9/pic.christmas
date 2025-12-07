@@ -84,6 +84,9 @@ const jsonLd = {
   }
 }
 
+import { Providers } from "@/components/Providers";
+import { Snowfall } from "@/components/Snowfall";
+import { SocialProof } from "@/components/SocialProof";
 import { ChatWidget } from "@/components/ChatWidget";
 
 export default function RootLayout({
