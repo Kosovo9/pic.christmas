@@ -101,9 +101,11 @@ export const PricingSection: React.FC<PricingProps> = ({ onSelect, config }) => 
                                     placeholder="Promo Code"
                                     className="bg-slate-800/50 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white w-full focus:outline-none focus:border-blue-500"
                                     onChange={(e) => {
-                                        if (e.target.value.toUpperCase() === 'SANTA25') {
+                                        const code = e.target.value.toUpperCase();
+                                        if (code === 'SANTA25') {
                                             setCalculatedPrice(prev => prev * 0.75);
-                                            // Simplistic logic, in real world we'd validate against API or more robust state
+                                        } else if (code === 'ELON100') {
+                                            setCalculatedPrice(0); // FREE TEST MODE
                                         }
                                     }}
                                 />
@@ -157,7 +159,7 @@ export const PricingSection: React.FC<PricingProps> = ({ onSelect, config }) => 
                                     }
                 `}
                             >
-                                {isGift ? `🎁 Gift ${pkg.name}` : 'Select Package 🎁'}
+                                {isGift ? `🎁 Gift ${pkg.name}` : (calculatedPrice === 0 ? 'Claim Free Token 🎟️' : 'Select Package 🎁')}
                             </button>
                         </div>
                     ))}
@@ -170,9 +172,6 @@ export const PricingSection: React.FC<PricingProps> = ({ onSelect, config }) => 
                         <span className="flex items-center gap-1"><svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg> 24h Delivery</span>
                     </p>
 
-                    const [isGift, setIsGift] = useState(false);
-
-                    // ... inside render ...
                     <div className="inline-flex items-center gap-3 bg-slate-800/50 px-4 py-2 rounded-full border border-slate-700 cursor-pointer hover:bg-slate-800 transition select-none" onClick={() => setIsGift(!isGift)}>
                         <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isGift ? 'bg-blue-500 border-blue-500' : 'border-slate-600'}`}>
                             {isGift && <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>}
@@ -180,12 +179,32 @@ export const PricingSection: React.FC<PricingProps> = ({ onSelect, config }) => 
                         <span className="text-white font-medium">Buying as a gift? 🎁</span>
                     </div>
 
-                    <div className="mt-8 flex justify-center gap-4 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-                        {/* Mock Payment Icons */}
-                        <div className="h-8 w-12 bg-white rounded flex items-center justify-center font-bold text-slate-900 text-[10px]">VISA</div>
-                        <div className="h-8 w-12 bg-white rounded flex items-center justify-center font-bold text-slate-900 text-[10px]">MC</div>
-                        <div className="h-8 w-12 bg-white rounded flex items-center justify-center font-bold text-slate-900 text-[10px]">AMEX</div>
-                        <div className="h-8 w-12 bg-white rounded flex items-center justify-center font-bold text-slate-900 text-[10px]">Pay</div>
+                    <div className="mt-8 flex justify-center gap-6 opacity-80 hover:opacity-100 transition-all duration-300">
+                        {/* 4 Major Payment Systems */}
+                        <div className="flex flex-col items-center gap-1">
+                            <div className="h-10 w-16 bg-white rounded flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform">
+                                <span className="font-bold text-indigo-600 text-lg">Stripe</span>
+                            </div>
+                            <span className="text-[10px] uppercase tracking-wide">Cards</span>
+                        </div>
+                        <div className="flex flex-col items-center gap-1">
+                            <div className="h-10 w-16 bg-white rounded flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform">
+                                <span className="font-bold text-blue-500 text-lg">PayPal</span>
+                            </div>
+                            <span className="text-[10px] uppercase tracking-wide">Wallet</span>
+                        </div>
+                        <div className="flex flex-col items-center gap-1">
+                            <div className="h-10 w-16 bg-white rounded flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform">
+                                <span className="font-bold text-sky-500 text-xs text-center leading-none">Mercado<br />Pago</span>
+                            </div>
+                            <span className="text-[10px] uppercase tracking-wide">LatAm</span>
+                        </div>
+                        <div className="flex flex-col items-center gap-1">
+                            <div className="h-10 w-16 bg-slate-800 border border-slate-600 rounded flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform">
+                                <span className="font-bold text-orange-500 text-lg">₿</span>
+                            </div>
+                            <span className="text-[10px] uppercase tracking-wide">Crypto</span>
+                        </div>
                     </div>
                 </div>
             </div>
