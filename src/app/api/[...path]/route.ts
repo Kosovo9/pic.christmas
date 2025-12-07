@@ -180,69 +180,89 @@ function createErrorResponse(
 
 // ========================================
 // MAIN HANDLER
-body = await req.text();
-            } catch (e) {
-    console.warn('[PROXY] Could not read request body');
-}
-        }
+// ========================================
+export async function handler(req: NextRequest) {
+    const startTime = Date.now();
+    const method = req.method;
+    const url = new URL(req.url);
+    const pathSegments = url.pathname.split('/api/').pop() || '';
+    const backendPath = `/${pathSegments}`;
+    // 🚑 FIX: Ensure /api prefix is added for backend request
+    const fullUrl = `${BACKEND_URL}/api${backendPath}${url.search}`;
 
-// Prepare headers
-const headers = new Headers();
-headers.set('Content-Type', 'application/json');
-
-// Forward auth if present
-if (req.headers.get('authorization')) {
-    headers.set('authorization', req.headers.get('authorization')!);
-}
-
-// Forward user-agent
-if (req.headers.get('user-agent')) {
-    headers.set('user-agent', req.headers.get('user-agent')!);
-}
-
-// Execute fetch with retry
-const response = await fetchWithRetry(
-    fullUrl,
-    {
-        method,
-        headers,
-        body,
-    },
-    method
-);
-
-const duration = Date.now() - startTime;
-
-// Logging: Success
-console.log(
-    `[PROXY] ${method.padEnd(6)} ${backendPath.slice(0, 60).padEnd(60)} | ${response.status} | ${duration}ms ✅`
-);
-
-// Apply cache headers
-const cacheHeader = getCacheHeader(backendPath, method);
-const responseData = await response.json().catch(() => ({}));
-
-// Create response
-const finalResponse = NextResponse.json(responseData, {
-    status: response.status,
-});
-
-if (cacheHeader) {
-    finalResponse.headers.set('Cache-Control', cacheHeader);
-}
-
-return finalResponse;
-    } catch (error) {
-    const duration = Date.now() - startTime;
-    const { status, body } = createErrorResponse(error, duration);
-
-    // Logging: Error
-    console.error(
-        `[PROXY] ${method.padEnd(6)} ${backendPath.slice(0, 60).padEnd(60)} | ERROR | ${duration}ms ❌`
+    // Logging: Start
+    console.log(
+        `[PROXY] ${method.padEnd(6)} /api${backendPath.slice(0, 60).padEnd(60)} | START`
     );
 
-    return NextResponse.json(body, { status });
-}
+    try {
+        // Prepare request body
+        let body: string | undefined;
+        if (method !== 'GET' && method !== 'HEAD') {
+            try {
+                body = await req.text();
+            } catch (e) {
+                console.warn('[PROXY] Could not read request body');
+            }
+        }
+
+        // Prepare headers
+        const headers = new Headers();
+        headers.set('Content-Type', 'application/json');
+
+        // Forward auth if present
+        if (req.headers.get('authorization')) {
+            headers.set('authorization', req.headers.get('authorization')!);
+        }
+
+        // Forward user-agent
+        if (req.headers.get('user-agent')) {
+            headers.set('user-agent', req.headers.get('user-agent')!);
+        }
+
+        // Execute fetch with retry
+        const response = await fetchWithRetry(
+            fullUrl,
+            {
+                method,
+                headers,
+                body,
+            },
+            method
+        );
+
+        const duration = Date.now() - startTime;
+
+        // Logging: Success
+        console.log(
+            `[PROXY] ${method.padEnd(6)} /api${backendPath.slice(0, 60).padEnd(60)} | ${response.status} | ${duration}ms ✅`
+        );
+
+        // Apply cache headers
+        const cacheHeader = getCacheHeader(backendPath, method);
+        const responseData = await response.json().catch(() => ({}));
+
+        // Create response
+        const finalResponse = NextResponse.json(responseData, {
+            status: response.status,
+        });
+
+        if (cacheHeader) {
+            finalResponse.headers.set('Cache-Control', cacheHeader);
+        }
+
+        return finalResponse;
+    } catch (error) {
+        const duration = Date.now() - startTime;
+        const { status, body } = createErrorResponse(error, duration);
+
+        // Logging: Error
+        console.error(
+            `[PROXY] ${method.padEnd(6)} /api${backendPath.slice(0, 60).padEnd(60)} | ERROR | ${duration}ms ❌`
+        );
+
+        return NextResponse.json(body, { status });
+    }
 }
 
 // Export for both GET and POST (all methods)
