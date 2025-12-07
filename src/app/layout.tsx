@@ -84,9 +84,7 @@ const jsonLd = {
   }
 }
 
-import { Providers } from "@/components/Providers";
-import { Snowfall } from "@/components/Snowfall";
-import { SocialProof } from "@/components/SocialProof";
+import { ChatWidget } from "@/components/ChatWidget";
 
 export default function RootLayout({
   children,
@@ -103,9 +101,6 @@ export default function RootLayout({
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
-          import {ChatWidget} from "@/components/ChatWidget";
-
-          // ... inside provider
           <Snowfall />
           <SocialProof />
           <ChatWidget />

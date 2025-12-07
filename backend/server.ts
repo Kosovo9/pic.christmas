@@ -1,5 +1,20 @@
 import express from 'express';
 import cors from 'cors';
+import dotenv from 'dotenv';
+import connectDB from './config/db';
+import ordersRoutes from './routes/orders.routes';
+import paymentsRoutes from './routes/payments.routes';
+import referralsRoutes from './routes/referrals.routes';
+import promptsRoutes from './routes/prompts.routes';
+import aiRoutes from './routes/ai.routes';
+import uploadsRoutes from './routes/uploads.routes';
+import adminRoutes from './routes/admin.routes';
+import affiliateAssetsRoutes from './routes/affiliateAssets.routes';
+import emailRoutes from './routes/email.routes';
+import chatRoutes from './routes/chat.routes';
+import { v2 as cloudinary } from 'cloudinary';
+import { stripe } from './config/clients'; // Import strictly to verify connection if needed
+import './workers/imageGeneration.worker'; // Start worker
 
 dotenv.config();
 
@@ -22,8 +37,6 @@ import helmet from 'helmet';
 import compression from 'compression';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
-
-// ... other imports ...
 
 // --- Middleware ---
 app.set('trust proxy', 1); // Essential for Render/Heroku/Vercel proxies
@@ -59,9 +72,6 @@ app.use(express.json({
 
 // --- Routes ---
 
-
-// ... 
-
 app.use('/api/orders', ordersRoutes);
 app.use('/api/payments', paymentsRoutes);
 app.use('/api/referrals', referralsRoutes);
@@ -71,6 +81,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/uploads', uploadsRoutes);
 app.use('/api/affiliate-assets', affiliateAssetsRoutes);
 app.use('/api/email', emailRoutes);
+app.use('/api/chat', chatRoutes);
 
 app.get('/', (req, res) => {
   res.send('Pic.Christmas API is running 🎄 (All Features Active)');
@@ -79,6 +90,6 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log('🔌 Connected to: MongoDB, Redis, Cloudinary, Stripe, MercadoPago');
-  console.log('✨ Features: Orders, Payments, Referrals, AI Enhancement, Christmas Catalog, Affiliate Assets');
+  console.log('✨ Features: Orders, Payments, Referrals, AI Enhancement, Christmas Catalog, Affiliate Assets, Chat Agent');
   console.log('👷 Worker: Image Generation Active');
 });
