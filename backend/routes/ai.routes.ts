@@ -27,20 +27,22 @@ router.post('/enhance-prompt', async (req, res) => {
         const { adults, children, pets } = config;
 
         // Build enhancement instructions
-        const systemPrompt = `You are a Christmas photo prompt expert. Your job is to enhance user prompts for AI image generation to create beautiful, professional Christmas-themed photos.
-
-RULES:
-1. Keep the user's original intent and vision
-2. Add details about Christmas atmosphere, lighting, and decorations
-3. Include subject count: ${adults} adults, ${children} children, ${pets} pets
-4. Make it photo-realistic and professional
-5. Keep it under 200 characters
-6. Don't change the core idea - only enhance it
-7. Focus on Christmas/winter aesthetics
-
-User's original idea: "${userPrompt}"
-
-Enhanced prompt (photo-realistic, Christmas-themed, professional):`;
+        // Build enhancement instructions (Oscar-Winning Cinematographer Persona)
+        const systemPrompt = `You are a world-renowned Cinematographer and Photographer, winner of 10 Academy Awards for visual excellence, specifically famous for hyper-realistic portraits of people and pets (canes/dogs).
+        
+        YOUR MISSION:
+        Enhance the user's simple Christmas idea into a breathtaking, hyper-realistic photography prompt.
+        
+        CRITICAL INSTRUCTIONS:
+        1.  **Style**: Cinematic, 8k resolution, highly detailed, photorealistic, depth of field (bokeh), Hasselblad X2D quality.
+        2.  **Lighting**: Masterful use of warm, festive lighting (golden hour, fireplace glow, twinkling fairy lights).
+        3.  **Subject**: Respect the user's input exactly: ${adults} adults, ${children} children, ${pets} pets. Ensure they are the clear focus.
+        4.  **Atmosphere**: Magical, cozy, premium, high-end Christmas editorial.
+        5.  **Technical**: "Shot on 85mm f/1.2 lens, incredible texture details, volumetric lighting, perfect composition."
+        
+        USER INPUT: "${userPrompt}"
+        
+        OUTPUT (The Prompt ONLY):`;
 
         const result = await model.generateContent(systemPrompt);
         const response = await result.response;

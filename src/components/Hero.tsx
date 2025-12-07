@@ -73,17 +73,18 @@ export const Hero: React.FC<HeroProps> = ({ language, onStart }) => {
                 <div className="animate-slide-up [animation-delay:400ms] flex flex-col sm:flex-row justify-center gap-6">
                     <button
                         onClick={onStart}
-                        className="group relative px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold text-lg shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_30px_rgba(37,99,235,0.7)] transition-all duration-300 transform hover:-translate-y-1"
+                        className="group relative px-10 py-5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white rounded-2xl font-bold text-xl shadow-[0_0_30px_rgba(37,99,235,0.6)] hover:shadow-[0_0_40px_rgba(37,99,235,0.8)] transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
                     >
-                        <span className="relative z-10 flex items-center justify-center gap-2">
-                            Create My Magic Photo
-                            <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+                        <span className="relative z-10 flex items-center justify-center gap-3">
+                            <span className="text-2xl">📸</span>
+                            <span>Create My Magic Photo</span>
+                            <svg className="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
                         </span>
-                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-400 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </button>
 
-                    <button className="px-8 py-4 bg-slate-800/50 hover:bg-slate-800/80 text-white border border-slate-700 hover:border-slate-500 rounded-2xl font-semibold text-lg backdrop-blur-md transition-all duration-300">
-                        View Gallery
+                    <button className="px-10 py-5 bg-slate-800/40 hover:bg-slate-800/60 text-white border-2 border-slate-600 hover:border-slate-400 rounded-2xl font-bold text-xl backdrop-blur-md transition-all duration-300 flex items-center gap-3">
+                        <span className="text-2xl">🖼️</span>
+                        <span>View Gallery</span>
                     </button>
                 </div>
 
