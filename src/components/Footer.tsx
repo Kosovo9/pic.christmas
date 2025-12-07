@@ -35,7 +35,7 @@ export const Footer: React.FC<FooterProps> = () => {
                                 className="whitespace-nowrap px-6 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-xl text-white font-bold text-sm transition-all flex items-center gap-2"
                             >
                                 <span>🚀</span>
-                                <span>Start Now</span>
+                                <span>{t('footer.start_now')}</span>
                             </button>
                         </div>
                     </div>
@@ -44,14 +44,14 @@ export const Footer: React.FC<FooterProps> = () => {
                 {/* Philanthropy Badge 🐾 */}
                 <div className="mb-8 inline-flex items-center gap-3 px-4 py-2 bg-emerald-900/20 border border-emerald-500/30 rounded-full text-emerald-400 hover:bg-emerald-900/30 transition-all cursor-pointer">
                     <span>🐶</span>
-                    <span className="text-xs font-bold tracking-wide">PIC.HEART: 3% DONATED TO ANIMAL SHELTERS</span>
+                    <span className="text-xs font-bold tracking-wide">{t('footer.picheart_badge')}</span>
                 </div>
 
                 <p className="text-slate-500 text-sm mb-2">
                     © {new Date().getFullYear()} Nexora Studio. {t('footer.terms')}
                 </p>
                 <div className="mt-4 flex flex-wrap justify-center items-center gap-4 text-xs text-gray-400">
-                    <span>Pagos:</span>
+                    <span>{t('footer.payments')}:</span>
                     <span className="font-medium text-slate-300">Mercado&nbsp;Pago</span>
                     <span>|</span>
                     <span className="font-medium text-slate-300">PayPal</span>
@@ -61,7 +61,7 @@ export const Footer: React.FC<FooterProps> = () => {
                     <span className="font-medium text-slate-300">Lemon&nbsp;Squeezy</span>
                 </div>
                 <div className="mt-2 text-xs text-gray-500 italic">
-                    Afiliados: gana 30–35% de comisión por cada venta referida.
+                    {t('footer.affiliates')}
                 </div>
             </div>
         </footer>

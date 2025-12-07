@@ -54,8 +54,10 @@ router.post('/', async (req, res) => {
 
     } catch (error: any) {
         console.error('AI Chat Error:', error);
+        // Default to English if language is not available
+        const lang = req.body?.language || 'en';
         res.status(500).json({
-            reply: (language === 'es' ? "¡Oh! Mis circuitos se congelaron un poco. ¿Puedes intentarlo de nuevo?" : "Oh no! My circuits froze a bit. Can you try again?")
+            reply: (lang === 'es' ? "¡Oh! Mis circuitos se congelaron un poco. ¿Puedes intentarlo de nuevo?" : "Oh no! My circuits froze a bit. Can you try again?")
         });
     }
 });

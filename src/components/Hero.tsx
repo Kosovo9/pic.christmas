@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { trackEvent } from '../services/analytics';
 import { Language } from '../types';
+import { useI18n } from '../hooks/useI18n';
 
 interface HeroProps {
     language: Language;
     onStart: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ language, onStart }) => {
+export const Hero: React.FC<HeroProps> = ({ onStart }) => {
+    const { t } = useI18n();
+
     const heroImages: string[] = [
         'https://images.unsplash.com/photo-1543258103-a62bdc069871?q=80&w=1974&auto=format&fit=crop',
         'https://images.unsplash.com/photo-1512389142860-9c449e58a543?q=80&w=2069&auto=format&fit=crop',
@@ -52,21 +55,20 @@ export const Hero: React.FC<HeroProps> = ({ language, onStart }) => {
                 {/* Premium Badge */}
                 <div className="animate-fade-in inline-flex items-center px-4 py-2 rounded-full border border-blue-500/30 bg-blue-900/20 backdrop-blur-md text-blue-200 text-sm font-medium mb-8 shadow-[0_0_15px_rgba(59,130,246,0.3)]">
                     <span className="w-2 h-2 rounded-full bg-blue-400 mr-2 animate-pulse"></span>
-                    <span>Powered by Gemini 2.5 & Veo 3.1</span>
+                    <span>{t('hero.powered')}</span>
                 </div>
 
                 {/* Main Headline */}
                 <h1 className="animate-slide-up text-5xl sm:text-7xl md:text-8xl font-black text-white tracking-tight mb-8 leading-tight drop-shadow-2xl">
-                    Make This Christmas <br />
+                    {t('hero.title_start')} <br />
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-white to-blue-200 animate-shimmer bg-[length:200%_100%]">
-                        Unforgettable
+                        {t('hero.title_end')}
                     </span>
                 </h1>
 
                 {/* Subtitle */}
                 <p className="animate-slide-up [animation-delay:200ms] mt-6 max-w-2xl mx-auto text-xl sm:text-2xl text-slate-300 mb-12 font-light leading-relaxed">
-                    Transform your photos into hyper-realistic holiday portraits using next-gen AI.
-                    Perfect for families, couples, and pets.
+                    {t('hero.description')}
                 </p>
 
                 {/* CTA Buttons */}
@@ -77,20 +79,20 @@ export const Hero: React.FC<HeroProps> = ({ language, onStart }) => {
                     >
                         <span className="relative z-10 flex items-center justify-center gap-3">
                             <span className="text-2xl">📸</span>
-                            <span>Create My Magic Photo</span>
+                            <span>{t('hero.create_btn')}</span>
                             <svg className="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
                         </span>
                     </button>
 
                     <button className="px-10 py-5 bg-slate-800/40 hover:bg-slate-800/60 text-white border-2 border-slate-600 hover:border-slate-400 rounded-2xl font-bold text-xl backdrop-blur-md transition-all duration-300 flex items-center gap-3">
                         <span className="text-2xl">🖼️</span>
-                        <span>View Gallery</span>
+                        <span>{t('hero.gallery_btn')}</span>
                     </button>
                 </div>
 
                 {/* Social Proof / Trust Indicators */}
                 <div className="animate-fade-in [animation-delay:800ms] mt-16 pt-8 border-t border-white/10">
-                    <p className="text-slate-400 text-sm font-medium mb-4 uppercase tracking-widest">Trusted by 10,000+ Happy Elves</p>
+                    <p className="text-slate-400 text-sm font-medium mb-4 uppercase tracking-widest">{t('hero.trusted')}</p>
                     <div className="flex justify-center items-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
                         {/* Mock Logos - Replace with SVGs or Images */}
                         <div className="h-8 w-24 bg-white/20 rounded animate-pulse"></div>

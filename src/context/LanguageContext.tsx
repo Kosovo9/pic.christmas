@@ -10,21 +10,33 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-    const [language, setLanguage] = useState<Language>('es');
+    const [language, setLanguage] = useState<Language>('en');
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        // Load preference from localStorage
+        // 1. Initial Load
         const saved = localStorage.getItem('language') as Language;
         if (saved) {
             setLanguage(saved);
         }
         setIsLoaded(true);
+
+        // 2. Sync across tabs (if user changes lang in another tab)
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === 'language' && e.newValue) {
+                setLanguage(e.newValue as Language);
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => window.removeEventListener('storage', handleStorageChange);
     }, []);
 
     const handleSetLanguage = (lang: Language) => {
         setLanguage(lang);
         localStorage.setItem('language', lang);
+        // Force manual storage event for current tab (optional but good for some frameworks)
+        // window.dispatchEvent(new Event('storage')); 
     };
 
     return (

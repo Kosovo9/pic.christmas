@@ -14,7 +14,7 @@ import emailRoutes from './routes/email.routes';
 import chatRoutes from './routes/chat.routes';
 import { v2 as cloudinary } from 'cloudinary';
 import { stripe } from './config/clients'; // Import strictly to verify connection if needed
-import './workers/imageGeneration.worker'; // Start worker
+// import './workers/imageGeneration.worker'; // Start worker
 
 dotenv.config();
 

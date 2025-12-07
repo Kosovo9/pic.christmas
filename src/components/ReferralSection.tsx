@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useI18n } from '../hooks/useI18n';
 
 interface ReferralSectionProps {
     email?: string;
 }
 
 export const ReferralSection: React.FC<ReferralSectionProps> = ({ email }) => {
+    const { t } = useI18n();
     const [referralCode, setReferralCode] = useState<string>('');
     const [stats, setStats] = useState<any>(null);
     const [loading, setLoading] = useState(false);
@@ -72,10 +74,10 @@ export const ReferralSection: React.FC<ReferralSectionProps> = ({ email }) => {
                 {/* Header */}
                 <div className="text-center mb-12">
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                        🎁 Refer Friends, Earn Free Photos!
+                        {t('referral.section_title')}
                     </h2>
                     <p className="text-slate-400 text-xl">
-                        Share the magic and get rewarded for every 5 friends who create their Christmas photos
+                        {t('referral.section_subtitle')}
                     </p>
                 </div>
 
@@ -92,14 +94,14 @@ export const ReferralSection: React.FC<ReferralSectionProps> = ({ email }) => {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                                 </svg>
                             </div>
-                            <h3 className="text-2xl font-bold text-white mb-4">Get Your Referral Code</h3>
-                            <p className="text-slate-400 mb-8">Start earning free photos by sharing with friends & family</p>
+                            <h3 className="text-2xl font-bold text-white mb-4">{t('referral.generate_title')}</h3>
+                            <p className="text-slate-400 mb-8">{t('referral.generate_subtitle')}</p>
                             <button
                                 onClick={generateCode}
                                 disabled={loading}
                                 className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-xl font-bold shadow-lg shadow-blue-600/20 transition-all transform hover:scale-105 disabled:opacity-50"
                             >
-                                {loading ? 'Generating...' : 'Generate My Code'}
+                                {loading ? t('referral.loading') : t('referral.generate_btn')}
                             </button>
                         </div>
                     ) : (
@@ -107,7 +109,7 @@ export const ReferralSection: React.FC<ReferralSectionProps> = ({ email }) => {
                         <div className="relative z-10">
                             {/* Code Display */}
                             <div className="bg-slate-800/50 rounded-2xl p-6 mb-8 border border-slate-700">
-                                <p className="text-slate-400 text-sm mb-2">Your Referral Code</p>
+                                <p className="text-slate-400 text-sm mb-2">{t('referral.your_code')}</p>
                                 <div className="flex items-center justify-between gap-4">
                                     <code className="text-3xl font-mono font-bold text-blue-400">{referralCode}</code>
                                     <button
@@ -119,14 +121,14 @@ export const ReferralSection: React.FC<ReferralSectionProps> = ({ email }) => {
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                                 </svg>
-                                                Copied!
+                                                {t('referral.copied')}
                                             </>
                                         ) : (
                                             <>
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                                                 </svg>
-                                                Copy Link
+                                                {t('referral.copy_btn')}
                                             </>
                                         )}
                                     </button>
@@ -138,15 +140,15 @@ export const ReferralSection: React.FC<ReferralSectionProps> = ({ email }) => {
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                                     <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700">
                                         <div className="text-3xl font-bold text-white mb-1">{stats.conversions}</div>
-                                        <div className="text-slate-400 text-sm">Total Referrals</div>
+                                        <div className="text-slate-400 text-sm">{t('referral.stats_total')}</div>
                                     </div>
                                     <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700">
                                         <div className="text-3xl font-bold text-blue-400 mb-1">{stats.creditsEarned}</div>
-                                        <div className="text-slate-400 text-sm">Free Credits</div>
+                                        <div className="text-slate-400 text-sm">{t('referral.stats_credits')}</div>
                                     </div>
                                     <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700">
                                         <div className="text-3xl font-bold text-purple-400 mb-1">{stats.nextRewardAt}</div>
-                                        <div className="text-slate-400 text-sm">Until Next Credit</div>
+                                        <div className="text-slate-400 text-sm">{t('referral.stats_next')}</div>
                                     </div>
                                 </div>
                             )}
@@ -155,7 +157,7 @@ export const ReferralSection: React.FC<ReferralSectionProps> = ({ email }) => {
                             {stats && (
                                 <div className="mb-8">
                                     <div className="flex justify-between text-sm text-slate-400 mb-2">
-                                        <span>Progress to next reward</span>
+                                        <span>{t('referral.progress')}</span>
                                         <span>{stats.progress} / {stats.config.conversionsRequired}</span>
                                     </div>
                                     <div className="h-3 bg-slate-800 rounded-full overflow-hidden">
@@ -169,7 +171,7 @@ export const ReferralSection: React.FC<ReferralSectionProps> = ({ email }) => {
 
                             {/* Share Buttons */}
                             <div>
-                                <p className="text-slate-400 text-sm mb-4">Share with friends:</p>
+                                <p className="text-slate-400 text-sm mb-4">{t('referral.share_title')}</p>
                                 <div className="flex gap-4">
                                     <button
                                         onClick={shareOnTwitter}
@@ -199,18 +201,18 @@ export const ReferralSection: React.FC<ReferralSectionProps> = ({ email }) => {
                 <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                     <div>
                         <div className="text-4xl mb-3">🔗</div>
-                        <h4 className="text-white font-bold mb-2">1. Share Your Link</h4>
-                        <p className="text-slate-400 text-sm">Send your unique referral link to friends</p>
+                        <h4 className="text-white font-bold mb-2">{t('referral.step1_title')}</h4>
+                        <p className="text-slate-400 text-sm">{t('referral.step1_desc')}</p>
                     </div>
                     <div>
                         <div className="text-4xl mb-3">🎄</div>
-                        <h4 className="text-white font-bold mb-2">2. They Create Photos</h4>
-                        <p className="text-slate-400 text-sm">When they make their Christmas photos</p>
+                        <h4 className="text-white font-bold mb-2">{t('referral.step2_title')}</h4>
+                        <p className="text-slate-400 text-sm">{t('referral.step2_desc')}</p>
                     </div>
                     <div>
                         <div className="text-4xl mb-3">🎁</div>
-                        <h4 className="text-white font-bold mb-2">3. You Earn Credits</h4>
-                        <p className="text-slate-400 text-sm">Get 1 free photo pack every 5 referrals</p>
+                        <h4 className="text-white font-bold mb-2">{t('referral.step3_title')}</h4>
+                        <p className="text-slate-400 text-sm">{t('referral.step3_desc')}</p>
                     </div>
                 </div>
             </div>

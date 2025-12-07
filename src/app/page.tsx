@@ -21,9 +21,10 @@ import { StickyCTA } from '../components/StickyCTA';
 import { MissionSection } from '../components/MissionSection';
 import { SecurityShield } from '../components/SecurityShield';
 import { CharitySection } from '../components/CharitySection';
+import { LiveNotifications } from '../components/LiveNotifications';
+import { ExitIntentModal } from '../components/ExitIntentModal';
 
 export default function Home() {
-  // ...
   const { language, switchLanguage } = useI18n();
   const { referralCode } = useReferral();
   const [currentView, setCurrentView] = useState<'landing' | 'upload' | 'pricing' | 'results'>('landing');
@@ -164,7 +165,7 @@ export default function Home() {
         <Hero language={language} onStart={handleStart} />
 
         {/* Before/After Magic Mirror */}
-        {/* <BeforeAfter /> */}
+        <BeforeAfter />
 
         {/* Guidelines Modal */}
         <GuidelinesModal />
@@ -213,6 +214,10 @@ export default function Home() {
 
         {/* Mobile Sticky CTA */}
         <StickyCTA onClick={realStart} />
+
+        {/* 🚀 ELON GROWTH HACKS */}
+        <LiveNotifications />
+        <ExitIntentModal />
       </main>
     </PageTransition>
   );

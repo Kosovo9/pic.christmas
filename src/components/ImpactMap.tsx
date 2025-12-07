@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useI18n } from '../hooks/useI18n';
 
 export const ImpactMap: React.FC = () => {
     const { language } = useI18n();
+    const [dots, setDots] = useState<Array<{ w: string; h: string; top: string; left: string; op: number }>>([]);
 
     // Smart Proxy Data: Returns relevant stats based on language
     const localStats = useMemo(() => {
@@ -20,6 +21,18 @@ export const ImpactMap: React.FC = () => {
         };
         return map[language as string] || map['en'];
     }, [language]);
+
+    // Generate hydration-safe random dots locally
+    useEffect(() => {
+        const newDots = Array.from({ length: 20 }).map(() => ({
+            w: Math.random() * 4 + 2 + 'px',
+            h: Math.random() * 4 + 2 + 'px',
+            top: Math.random() * 100 + '%',
+            left: Math.random() * 100 + '%',
+            op: Math.random()
+        }));
+        setDots(newDots);
+    }, []);
 
     return (
         <div className="mt-16 bg-slate-900/50 border border-slate-700 rounded-3xl p-8 relative overflow-hidden group">
@@ -56,16 +69,16 @@ export const ImpactMap: React.FC = () => {
                 <div className="flex-1 w-full aspect-video relative bg-slate-800/50 rounded-2xl border border-slate-700 overflow-hidden flex items-center justify-center">
                     {/* Abstract World Dots */}
                     <div className="absolute inset-0 opacity-30">
-                        {[...Array(20)].map((_, i) => (
+                        {dots.map((dot, i) => (
                             <div
                                 key={i}
                                 className="absolute bg-slate-500 rounded-full"
                                 style={{
-                                    width: Math.random() * 4 + 2 + 'px',
-                                    height: Math.random() * 4 + 2 + 'px',
-                                    top: Math.random() * 100 + '%',
-                                    left: Math.random() * 100 + '%',
-                                    opacity: Math.random()
+                                    width: dot.w,
+                                    height: dot.h,
+                                    top: dot.top,
+                                    left: dot.left,
+                                    opacity: dot.op
                                 }}
                             />
                         ))}
