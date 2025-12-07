@@ -30,19 +30,17 @@ export const CharitySection = () => {
                 <div className="grid md:grid-cols-2 gap-16 items-center">
                     <div>
                         <div className="text-emerald-400 font-bold tracking-widest uppercase mb-4">
-                            Global Initiative · Fund A
+                            {t('charity.pretitle')}
                         </div>
                         <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                            Pic.Heart <span className="text-emerald-500">Program</span>
+                            {t('charity.title')}
                         </h2>
                         <p className="text-lg text-slate-300 mb-6 leading-relaxed">
-                            We believe technology should serve life. That's why
-                            <strong className="text-white"> 3% of every pixel generated</strong> goes directly to feeding and housing stray animals in your region.
-                            We don't just send money; we send food, blankets, and love.
+                            {t('charity.desc')}
                         </p>
 
                         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-8">
-                            <h3 className="text-white font-bold mb-4">Transparency Ledger (Live)</h3>
+                            <h3 className="text-white font-bold mb-4">{t('charity.ledger_title')}</h3>
                             <div className="space-y-3 text-sm text-slate-400 font-mono">
                                 <div className="flex justify-between">
                                     <span>TX_88a...9x1</span>
@@ -64,13 +62,13 @@ export const CharitySection = () => {
                                 onClick={() => setModalState('grant')}
                                 className="px-8 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full font-bold transition-all shadow-lg shadow-emerald-500/20 active:scale-95"
                             >
-                                Apply for Grant ➜
+                                {t('charity.apply_button')}
                             </button>
                             <button
                                 onClick={() => setModalState('report')}
                                 className="px-8 py-3 border border-slate-700 hover:border-emerald-500 text-slate-300 hover:text-white rounded-full font-bold transition-all active:scale-95"
                             >
-                                View Impact Report
+                                {t('charity.report_button')}
                             </button>
                         </div>
                     </div>
@@ -84,7 +82,7 @@ export const CharitySection = () => {
                         />
                         <div className="absolute -bottom-6 -left-6 bg-slate-900 p-4 rounded-xl border border-slate-700 shadow-xl">
                             <div className="text-2xl font-bold text-white">45,201</div>
-                            <div className="text-xs text-slate-400 uppercase tracking-widest">Meals Provided</div>
+                            <div className="text-xs text-slate-400 uppercase tracking-widest">{t('charity.report_meals')}</div>
                         </div>
                     </div>
                 </div>
@@ -100,20 +98,20 @@ export const CharitySection = () => {
 
                         <div className="mb-6">
                             <div className="w-12 h-12 bg-emerald-900/50 rounded-full flex items-center justify-center text-2xl mb-4 border border-emerald-500/30">📝</div>
-                            <h3 className="text-2xl font-bold text-white">Apply for Pic.Heart Grant</h3>
-                            <p className="text-slate-400 text-sm mt-1">We fund registered animal shelters and rescue groups.</p>
+                            <h3 className="text-2xl font-bold text-white">{t('charity.modal_apply_title')}</h3>
+                            <p className="text-slate-400 text-sm mt-1">{t('charity.modal_apply_desc')}</p>
                         </div>
 
                         {submitStatus === 'success' ? (
                             <div className="text-center py-12 animate-fade-in">
                                 <div className="text-5xl mb-4">✅</div>
-                                <h4 className="text-xl font-bold text-white mb-2">Application Received!</h4>
-                                <p className="text-slate-400">Our team will review your request within 48 hours.</p>
+                                <h4 className="text-xl font-bold text-white mb-2">{t('charity.modal_success_title')}</h4>
+                                <p className="text-slate-400">{t('charity.modal_success_desc')}</p>
                             </div>
                         ) : (
                             <form onSubmit={handleGrantSubmit} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-1">Organization Name</label>
+                                    <label className="block text-sm font-medium text-slate-300 mb-1">{t('charity.form_org')}</label>
                                     <input
                                         required
                                         type="text"
@@ -124,7 +122,7 @@ export const CharitySection = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-1">Official Email</label>
+                                    <label className="block text-sm font-medium text-slate-300 mb-1">{t('charity.form_email')}</label>
                                     <input
                                         required
                                         type="email"
@@ -135,7 +133,7 @@ export const CharitySection = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-1">How will you use the funds?</label>
+                                    <label className="block text-sm font-medium text-slate-300 mb-1">{t('charity.form_reason')}</label>
                                     <textarea
                                         required
                                         value={grantForm.reason}
@@ -148,7 +146,7 @@ export const CharitySection = () => {
                                     disabled={submitStatus === 'submitting'}
                                     className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                                 >
-                                    {submitStatus === 'submitting' ? 'Sending...' : 'Submit Application'}
+                                    {submitStatus === 'submitting' ? 'Sending...' : t('charity.form_submit')}
                                 </button>
                             </form>
                         )}
@@ -164,12 +162,12 @@ export const CharitySection = () => {
 
                         <div className="flex items-center justify-between mb-8">
                             <div>
-                                <h3 className="text-2xl font-bold text-white">2024 Impact Report</h3>
+                                <h3 className="text-2xl font-bold text-white">{t('charity.report_title')}</h3>
                                 <p className="text-emerald-400 text-sm font-mono">HASH: #882...99A</p>
                             </div>
                             <div className="text-right hidden sm:block">
                                 <div className="text-3xl font-bold text-white">12,402</div>
-                                <div className="text-xs text-slate-400 uppercase">Animals Helped</div>
+                                <div className="text-xs text-slate-400 uppercase">{t('charity.report_animals')}</div>
                             </div>
                         </div>
 
@@ -177,22 +175,22 @@ export const CharitySection = () => {
                             <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center">
                                 <div className="text-2xl mb-2">🥣</div>
                                 <div className="text-xl font-bold text-white">45.2k</div>
-                                <div className="text-xs text-slate-500">Meals Served</div>
+                                <div className="text-xs text-slate-500">{t('charity.report_meals')}</div>
                             </div>
                             <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center">
                                 <div className="text-2xl mb-2">💉</div>
                                 <div className="text-xl font-bold text-white">850+</div>
-                                <div className="text-xs text-slate-500">Vaccinations</div>
+                                <div className="text-xs text-slate-500">{t('charity.report_vaccines')}</div>
                             </div>
                             <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center">
                                 <div className="text-2xl mb-2">🏠</div>
                                 <div className="text-xl font-bold text-white">127</div>
-                                <div className="text-xs text-slate-500">Partner Shelters</div>
+                                <div className="text-xs text-slate-500">{t('charity.report_shelters')}</div>
                             </div>
                         </div>
 
                         <div className="bg-slate-950 rounded-xl p-6 border border-slate-800 mb-8">
-                            <h4 className="text-slate-300 font-bold mb-4 text-sm uppercase tracking-wider">Allocation of Funds</h4>
+                            <h4 className="text-slate-300 font-bold mb-4 text-sm uppercase tracking-wider">{t('charity.report_allocation')}</h4>
                             <div className="space-y-3">
                                 <div>
                                     <div className="flex justify-between text-sm mb-1">
@@ -227,7 +225,7 @@ export const CharitySection = () => {
                         <button
                             className="w-full border border-slate-700 hover:bg-slate-800 text-slate-300 hover:text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2"
                         >
-                            <span>📄</span> Download Full PDF Report (2.4MB)
+                            <span>📄</span> {t('charity.download_report')}
                         </button>
                     </div>
                 </div>

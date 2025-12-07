@@ -27,12 +27,6 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem('language', lang);
     };
 
-    if (!isLoaded) {
-        return <>{children}</>; // Render children with default (es) to avoid hydration mismatch blocking, or null? 
-        // Better to return children with default to ensure SEO content is present even if lang switches momentarily.
-        // Or actually, to avoid flash, we might accept that initial render is 'es'.
-    }
-
     return (
         <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage }}>
             {children}

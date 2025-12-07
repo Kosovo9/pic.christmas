@@ -9,6 +9,27 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ language, onLanguageChange, onReferralsClick }) => {
+    const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+    const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const handleLanguageSelect = (lang: Language) => {
+        onLanguageChange(lang);
+        setIsDropdownOpen(false);
+    };
+
     return (
         <nav className="fixed top-0 w-full z-50 bg-[#050811]/80 backdrop-blur-md border-b border-white/5">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -51,38 +72,43 @@ export const Navbar: React.FC<NavbarProps> = ({ language, onLanguageChange, onRe
                             </SignedIn>
 
                             {/* Language Switcher */}
-                            <div className="relative group">
-                                <button className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
+                            <div className="relative" ref={dropdownRef}>
+                                <button
+                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors ${isDropdownOpen ? 'bg-slate-700/50 border-slate-500' : 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-700/50'}`}
+                                >
                                     <span className="text-xs font-medium text-white uppercase">{language}</span>
-                                    <svg className="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                    <svg className={`w-3 h-3 text-slate-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                                 </button>
 
-                                <div className="absolute right-0 mt-2 w-32 bg-slate-900 border border-slate-800 rounded-xl shadow-xl overflow-hidden hidden group-hover:block animate-fade-in">
-                                    <div className="py-1">
-                                        {[
-                                            { code: 'en', label: 'English' },
-                                            { code: 'es', label: 'Español' },
-                                            { code: 'fr', label: 'Français' },
-                                            { code: 'de', label: 'Deutsch' },
-                                            { code: 'it', label: 'Italiano' },
-                                            { code: 'pt', label: 'Português' },
-                                            { code: 'ru', label: 'Русский' },
-                                            { code: 'zh', label: '中文' },
-                                            { code: 'ja', label: '日本語' },
-                                            { code: 'ar', label: 'العربية' }
-                                        ].map((lang) => (
-                                            <button
-                                                key={lang.code}
-                                                onClick={() => onLanguageChange(lang.code as any)}
-                                                className={`block w-full text-left px-4 py-2 text-sm hover:bg-slate-800 transition-colors
-                                                    ${language === lang.code ? 'text-blue-400 font-medium' : 'text-slate-400'}
-                                                `}
-                                            >
-                                                {lang.label}
-                                            </button>
-                                        ))}
+                                {isDropdownOpen && (
+                                    <div className="absolute right-0 mt-2 w-32 bg-slate-900 border border-slate-800 rounded-xl shadow-xl overflow-hidden z-50 animate-fade-in">
+                                        <div className="py-1 max-h-64 overflow-y-auto custom-scrollbar">
+                                            {[
+                                                { code: 'en', label: 'English' },
+                                                { code: 'es', label: 'Español' },
+                                                { code: 'fr', label: 'Français' },
+                                                { code: 'de', label: 'Deutsch' },
+                                                { code: 'it', label: 'Italiano' },
+                                                { code: 'pt', label: 'Português' },
+                                                { code: 'ru', label: 'Русский' },
+                                                { code: 'zh', label: '中文' },
+                                                { code: 'ja', label: '日本語' },
+                                                { code: 'ar', label: 'العربية' }
+                                            ].map((lang) => (
+                                                <button
+                                                    key={lang.code}
+                                                    onClick={() => handleLanguageSelect(lang.code as any)}
+                                                    className={`block w-full text-left px-4 py-2 text-sm hover:bg-slate-800 transition-colors
+                                                        ${language === lang.code ? 'text-blue-400 font-medium bg-slate-800/50' : 'text-slate-400'}
+                                                    `}
+                                                >
+                                                    {lang.label}
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
+                                )}
                             </div>
 
                         </div>
