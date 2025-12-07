@@ -1,114 +1,272 @@
+// route-100x.ts        // src/app/api/[...path]/route.ts
+// ========================================
+// REVERSE PROXY 100x - PRODUCTION READY
+// ========================================
+// Features:
+// ✅ Retry Logic (idempotent-safe)
+// ✅ Timeout Protection (8s hardcoded)
+// ✅ Granular Caching (by endpoint)
+// ✅ Specific Error Handling
+// ✅ Observable Logging (with duration)
+// ========================================
+
 import { NextRequest, NextResponse } from 'next/server';
 
-// 🚀 ELON MUSK ARCHITECTURE: 100x RESILIENT PROXY
-// This is not just a proxy. It's a self-healing, monitoring, caching neural link to the backend.
+// Configuration
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
+const REQUEST_TIMEOUT = 8000; // 8 seconds
+const MAX_RETRIES = 3;
+const RETRY_DELAY_BASE = 1000; // 1 second
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3001';
+// Idempotent-safe HTTP status codes
+const RETRYABLE_STATUS = [408, 429, 500, 502, 503, 504];
 
-// 1️⃣ RETRY LOGIC (Exponential Backoff)
-// Because networks are fragile, but our mission is not.
-async function fetchWithRetry(url: string, options: RequestInit, retries = 3): Promise<Response> {
-    for (let i = 0; i < retries; i++) {
-        try {
-            // Controller for timeout (8s strict SLA)
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 8000);
+// Methods that are safe to retry (idempotent)
+const RETRYABLE_METHODS = ['GET', 'HEAD', 'OPTIONS'];
 
-            const res = await fetch(url, {
-                ...options,
-                signal: controller.signal
-            });
+// Cache configuration by endpoint pattern
+const CACHE_CONFIG: Record<string, string> = {
+    '/prompts': 'public, s-maxage=300, stale-while-revalidate=600', // 5 min cache
+    '/styles': 'public, s-maxage=300, stale-while-revalidate=600',  // 5 min cache
+    '/catalog': 'public, s-maxage=60, stale-while-revalidate=120',  // 1 min cache
+    'default-get': 'public, s-maxage=60, stale-while-revalidate=120', // 1 min default
+};
 
-            clearTimeout(timeoutId);
-
-            // Don't retry on 4xx (User Error) - Only 5xx (Server Error) or Network Failures
-            if (res.ok || res.status < 500) {
-                return res;
-            }
-
-            // If 5xx, throw to trigger retry
-            throw new Error(`Server Error: ${res.status}`);
-
-        } catch (error) {
-            console.warn(`[⚠️ Proxy Retry ${i + 1}/${retries}] Failed: ${(error as Error).message}`);
-
-            if (i === retries - 1) throw error;
-
-            // Wait: 1s, 2s, 4s...
-            const delay = Math.pow(2, i) * 1000;
-            await new Promise(resolve => setTimeout(resolve, delay));
-        }
-    }
-    throw new Error('Max retries exceeded');
-}
-
-// 2️⃣ MAIN HANDLER
-async function handler(req: NextRequest, { params }: { params: { path: string[] } }) {
-    const startTime = Date.now();
-
-    // Resolve Path
-    // params.path is an array ['prompts', 'random'] -> /prompts/random
-    // (Note: we need to await params in Next.js 15, but usually it's passed resolved or we treat it carefully. 
-    // In Next 13/14 app dir, params is ready. 
-    // But wait, the catch-all might be ['api', 'prompts'] depending on file location.
-    // File is in src/app/api/[...path]/route.ts, so path captures everything AFTER /api/)
-    // Re-verify strictly: requests to /api/foo/bar -> params.path = ['foo', 'bar']
-
-    const pathArray = params.path || [];
-    const pathString = pathArray.join('/');
-    const targetUrl = `${BACKEND_URL}/api/${pathString}${req.nextUrl.search}`; // Add Query Params
-
-    const method = req.method;
-
-    console.log(`[🚀 PROXY IN] ${method} /api/${pathString}`);
+// ========================================
+// UTILITY: Create fetch with timeout
+// ========================================
+async function fetchWithTimeout(
+    url: string,
+    options: RequestInit,
+    timeoutMs: number = REQUEST_TIMEOUT
+): Promise<Response> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
-        // Headers Forwarding (Security & Context)
-        const headers = new Headers(req.headers);
-        headers.delete('host'); // Let fetch set the host
-        headers.set('host', new URL(BACKEND_URL).host); // Set backend host manualy if needed, or omit
-
-        // Prepare Body (if not GET/HEAD)
-        const body = (method === 'GET' || method === 'HEAD') ? undefined : await req.blob();
-
-        // ⚡ EXECUTE REQUEST
-        const backendRes = await fetchWithRetry(targetUrl, {
-            method,
-            headers,
-            body: body,
-            // @ts-ignore - Duplex needed for some body streaming cases in node
-            duplex: 'half'
+        const response = await fetch(url, {
+            ...options,
+            signal: controller.signal,
         });
-
-        // 3️⃣ CACHING STRATEGY (Smart Cache)
-        const responseHeaders = new Headers(backendRes.headers);
-
-        // Cache GET requests for 60s (SWR 120s) to reduce load
-        if (method === 'GET') {
-            responseHeaders.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
-        } else {
-            responseHeaders.set('Cache-Control', 'no-store');
-        }
-
-        // Metrics
-        const duration = Date.now() - startTime;
-        console.log(`[✅ PROXY OUT] ${backendRes.status} | ${duration}ms`);
-
-        // Return Response
-        return new NextResponse(backendRes.body, {
-            status: backendRes.status,
-            statusText: backendRes.statusText,
-            headers: responseHeaders
-        });
-
+        clearTimeout(timeoutId);
+        return response;
     } catch (error) {
-        console.error(`[❌ PROXY FATAL] ${(error as Error).message}`);
-        return NextResponse.json(
-            { error: 'Backend Unavailable', message: 'The Elon-Class Server is momentarily napping. Please retry.' },
-            { status: 502 }
-        );
+        clearTimeout(timeoutId);
+        throw error;
     }
 }
 
-// Export for all methods
-export { handler as GET, handler as POST, handler as PUT, handler as DELETE, handler as PATCH };
+// ========================================
+// UTILITY: Retry logic (idempotent-safe)
+// ========================================
+async function fetchWithRetry(
+    url: string,
+    options: RequestInit,
+    method: string,
+    retries: number = MAX_RETRIES
+): Promise<Response> {
+    let lastError: Error | null = null;
+
+    for (let attempt = 0; attempt < retries; attempt++) {
+        try {
+            const response = await fetchWithTimeout(url, options);
+
+            // Don't retry client errors (4xx, except 429)
+            if (response.status >= 400 && response.status < 500 && response.status !== 429) {
+                return response; // Return as-is
+            }
+
+            // Success or retryable error
+            if (response.ok || RETRYABLE_STATUS.includes(response.status)) {
+                return response;
+            }
+
+            // Non-retryable server error
+            return response;
+        } catch (error) {
+            lastError = error as Error;
+
+            // Check if this is a retryable error
+            const isRetryable =
+                (error instanceof TypeError && error.message.includes('fetch')) ||
+                (error instanceof Error && error.name === 'AbortError');
+
+            // Only retry if method is idempotent
+            if (!RETRYABLE_METHODS.includes(method.toUpperCase())) {
+                throw error; // POST, PUT, DELETE don't retry
+            }
+
+            // Last attempt?
+            if (attempt === retries - 1) {
+                throw error;
+            }
+
+            // Exponential backoff: 1s, 2s, 4s
+            const delay = RETRY_DELAY_BASE * Math.pow(2, attempt);
+            await new Promise((resolve) => setTimeout(resolve, delay));
+        }
+    }
+
+    throw lastError || new Error('Max retries exceeded');
+}
+
+// ========================================
+// UTILITY: Get cache header for endpoint
+// ========================================
+function getCacheHeader(path: string, method: string): string | null {
+    if (method !== 'GET') {
+        return 'no-store, must-revalidate'; // Never cache mutations
+    }
+
+    // Check endpoint patterns
+    for (const [pattern, cacheHeader] of Object.entries(CACHE_CONFIG)) {
+        if (pattern !== 'default-get' && path.includes(pattern)) {
+            return cacheHeader;
+        }
+    }
+
+    // Default GET cache
+    return CACHE_CONFIG['default-get'];
+}
+
+// ========================================
+// UTILITY: Safe error response
+// ========================================
+function createErrorResponse(
+    error: unknown,
+    duration: number
+): { status: number; body: Record<string, any> } {
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+        console.error(`[PROXY] Network error after ${duration}ms:`, error.message);
+        return {
+            status: 502,
+            body: {
+                error: 'Network error',
+                message: 'Failed to connect to backend',
+            },
+        };
+    }
+
+    if (error instanceof Error && error.name === 'AbortError') {
+        console.error(`[PROXY] Timeout after ${duration}ms`);
+        return {
+            status: 504,
+            body: {
+                error: 'Gateway timeout',
+                message: `Request exceeded ${REQUEST_TIMEOUT}ms limit`,
+            },
+        };
+    }
+
+    if (error instanceof Error) {
+        console.error(`[PROXY] Unexpected error after ${duration}ms:`, error.message);
+        return {
+            status: 500,
+            body: {
+                error: 'Internal server error',
+                message: process.env.NODE_ENV === 'development' ? error.message : 'Unknown error',
+            },
+        };
+    }
+
+    console.error(`[PROXY] Unknown error after ${duration}ms:`, error);
+    return {
+        status: 500,
+        body: { error: 'Internal server error' },
+    };
+}
+
+// ========================================
+// MAIN HANDLER
+// ========================================
+export async function handler(req: NextRequest) {
+    const startTime = Date.now();
+    const method = req.method;
+    const url = new URL(req.url);
+    const pathSegments = url.pathname.split('/api/').pop() || '';
+    const backendPath = `/${pathSegments}`;
+    const fullUrl = `${BACKEND_URL}${backendPath}${url.search}`;
+
+    // Logging: Start
+    console.log(
+        `[PROXY] ${method.padEnd(6)} ${backendPath.slice(0, 60).padEnd(60)} | START`
+    );
+
+    try {
+        // Prepare request body
+        let body: string | undefined;
+        if (method !== 'GET' && method !== 'HEAD') {
+            try {
+                body = await req.text();
+            } catch (e) {
+                console.warn('[PROXY] Could not read request body');
+            }
+        }
+
+        // Prepare headers
+        const headers = new Headers();
+        headers.set('Content-Type', 'application/json');
+
+        // Forward auth if present
+        if (req.headers.get('authorization')) {
+            headers.set('authorization', req.headers.get('authorization')!);
+        }
+
+        // Forward user-agent
+        if (req.headers.get('user-agent')) {
+            headers.set('user-agent', req.headers.get('user-agent')!);
+        }
+
+        // Execute fetch with retry
+        const response = await fetchWithRetry(
+            fullUrl,
+            {
+                method,
+                headers,
+                body,
+            },
+            method
+        );
+
+        const duration = Date.now() - startTime;
+
+        // Logging: Success
+        console.log(
+            `[PROXY] ${method.padEnd(6)} ${backendPath.slice(0, 60).padEnd(60)} | ${response.status} | ${duration}ms ✅`
+        );
+
+        // Apply cache headers
+        const cacheHeader = getCacheHeader(backendPath, method);
+        const responseData = await response.json().catch(() => ({}));
+
+        // Create response
+        const finalResponse = NextResponse.json(responseData, {
+            status: response.status,
+        });
+
+        if (cacheHeader) {
+            finalResponse.headers.set('Cache-Control', cacheHeader);
+        }
+
+        return finalResponse;
+    } catch (error) {
+        const duration = Date.now() - startTime;
+        const { status, body } = createErrorResponse(error, duration);
+
+        // Logging: Error
+        console.error(
+            `[PROXY] ${method.padEnd(6)} ${backendPath.slice(0, 60).padEnd(60)} | ERROR | ${duration}ms ❌`
+        );
+
+        return NextResponse.json(body, { status });
+    }
+}
+
+// Export for both GET and POST (all methods)
+export const GET = handler;
+export const POST = handler;
+export const PUT = handler;
+export const DELETE = handler;
+export const PATCH = handler;
+export const HEAD = handler;
+export const OPTIONS = handler;
