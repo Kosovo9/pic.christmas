@@ -256,10 +256,9 @@ export const UploadWizard: React.FC<UploadWizardProps> = ({ onComplete }) => {
                                     {selectedVibe === vibe.id && <div className="ml-auto text-blue-400">✓</div>}
                                 </button>
                             ))}
-                        </button>
+                        </div>
                     </div>
-                </div>
             )}
-        </div>
-    );
+                </div>
+            );
 };
