@@ -164,7 +164,7 @@ export default function Home() {
         <Hero language={language} onStart={handleStart} />
 
         {/* Before/After Magic Mirror */}
-        <BeforeAfter />
+        {/* <BeforeAfter /> */}
 
         {/* Guidelines Modal */}
         <GuidelinesModal />
