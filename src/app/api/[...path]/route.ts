@@ -15,7 +15,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export const runtime = 'edge'; // ⚡ Cloudflare Workers Optimization
 
 // Configuration
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3001';
 const REQUEST_TIMEOUT = 8000; // 8 seconds
 const MAX_RETRIES = 3;
 const RETRY_DELAY_BASE = 1000; // 1 second
