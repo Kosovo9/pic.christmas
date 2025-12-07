@@ -84,8 +84,7 @@ const jsonLd = {
   }
 }
 
-import { ClerkProvider } from '@clerk/nextjs'
-import { ToastProvider } from "@/context/ToastContext";
+import { Providers } from "@/components/Providers";
 import { Snowfall } from "@/components/Snowfall";
 import { SocialProof } from "@/components/SocialProof";
 import { CountdownBanner } from "@/components/CountdownBanner";
@@ -96,25 +95,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-slate-950 text-white overflow-x-hidden`}
-        >
-          <ToastProvider>
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
-            <CountdownBanner />
-            <Snowfall />
-            <SocialProof />
-            {children}
-          </ToastProvider>
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-slate-950 text-white overflow-x-hidden`}
+      >
+        <Providers>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+          {/* <CountdownBanner /> */}
+          <Snowfall />
+          <SocialProof />
+          {children}
+        </Providers>
 
-          {/* Anti-copy / anti-right-click basic protection */}
-          <Script id="anti-scraping" strategy="afterInteractive">
-            {`
+        {/* Anti-copy / anti-right-click basic protection */}
+        <Script id="anti-scraping" strategy="afterInteractive">
+          {`
               document.addEventListener('contextmenu', function (e) {
                 e.preventDefault();
               });
@@ -124,9 +122,8 @@ export default function RootLayout({
                 });
               });
             `}
-          </Script>
-        </body>
-      </html>
-    </ClerkProvider>
+        </Script>
+      </body>
+    </html>
   );
 }

@@ -4,6 +4,15 @@
 // The browser now talks to /api, and Next.js forwards it to Render.
 const API_BASE = '/api';
 
+const getHeaders = (extraHeaders: Record<string, string> = {}) => {
+    const lang = typeof localStorage !== 'undefined' ? localStorage.getItem('language') || 'en' : 'en';
+    return {
+        'Accept-Language': lang,
+        ...extraHeaders
+    };
+};
+
+
 export const api = {
     // Existing methods
     uploadPhotos: async (files: File[]) => {
@@ -21,7 +30,7 @@ export const api = {
     createOrder: async (orderData: any) => {
         const res = await fetch(`${API_BASE}/orders`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getHeaders({ 'Content-Type': 'application/json' }),
             body: JSON.stringify(orderData)
         });
         return res.json();
@@ -36,7 +45,7 @@ export const api = {
     createPaymentIntent: async (orderId: string) => {
         const res = await fetch(`${API_BASE}/payments/create-intent`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getHeaders({ 'Content-Type': 'application/json' }),
             body: JSON.stringify({ orderId })
         });
         return res.json();
@@ -135,7 +144,7 @@ export const api = {
     generateAffiliateAsset: async (data: { productName: string; ctaText: string; style?: string }) => {
         const res = await fetch(`${API_BASE}/affiliate-assets/generate`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getHeaders({ 'Content-Type': 'application/json' }),
             body: JSON.stringify(data)
         });
         return res.json();

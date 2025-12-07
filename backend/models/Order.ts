@@ -45,7 +45,7 @@ const orderSchema = new mongoose.Schema({
     },
     paymentProvider: {
         type: String,
-        enum: ['stripe', 'mercadopago', 'paypal']
+        enum: ['stripe', 'mercadopago', 'paypal', 'free_mode']
     },
     referralCode: {
         type: String,

@@ -41,8 +41,11 @@ router.post('/create-intent', async (req, res) => {
             });
         }
 
+        const locale = (req as any).language || 'en'; // Get locale from middleware
+
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
+            locale: locale, // 🌍 Dynamic Locale from Frontend
             line_items: [
                 {
                     price_data: {

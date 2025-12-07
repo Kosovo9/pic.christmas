@@ -1,6 +1,7 @@
 import express from 'express';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
+import { getTranslation } from '../utils/translations';
 
 dotenv.config();
 
@@ -135,9 +136,17 @@ router.post('/safety-check', async (req, res) => {
     try {
         const { image } = req.body; // Expects Base64 string (without prefix potentially, or handle it)
 
+        if (!process.env.GOOGLE_AI_API_KEY) {
+            console.error('Safety Check Critical Error: GOOGLE_AI_API_KEY is missing');
+            // Fail open or closed? For now, fail closed to be safe, but log heavily.
+            return res.status(500).json({ safe: false, reason: "Server configuration error (Safety API Key)" });
+        }
+
         if (!image) {
             return res.status(400).json({ message: 'Image data required' });
         }
+
+        console.log('🛡️ Safety Check: Received request to scan image...');
 
         // Clean base64 if needed (remove "data:image/jpeg;base64," prefix)
         const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
@@ -167,6 +176,7 @@ router.post('/safety-check', async (req, res) => {
 
         const response = await result.response;
         const text = response.text();
+        console.log('🛡️ Safety Check: AI Response received:', text.substring(0, 100) + '...');
 
         // Safe parsing
         let safetyResult;
@@ -183,16 +193,34 @@ router.post('/safety-check', async (req, res) => {
             }
         }
 
+        if (safetyResult.safe) {
+            console.log('✅ Safety Check: Passed');
+        } else {
+            console.warn('❌ Safety Check: Failed -', safetyResult.reason);
+        }
+
         res.json(safetyResult);
 
     } catch (error: any) {
         console.error('Safety Check Error:', error);
-        // Fail open or closed? Better fail safe (block) or allow with warning?
-        // For production, we might want to fail-closed, but for now allow if error is just connection.
-        // Actually, let's return error so frontend knows.
+
+        // Check for specific Google API errors including quota or service unavailable
+        let errorKey = "error.generic";
+        if (error.message?.includes('429')) {
+            errorKey = "error.safety_service_unavailable";
+        } else if (error.message?.includes('503') || error.message?.includes('500')) {
+            errorKey = "error.safety_service_unavailable";
+        } else if (error.message?.includes('Safety')) {
+            errorKey = "error.safety_check_failed";
+        }
+
+        const lang = (req as any).language || 'en';
+        const reason = getTranslation(lang, errorKey);
+
         res.status(500).json({
             safe: false,
-            reason: "Safety Service Error: " + error.message
+            reason: reason,
+            details: error.message // Include details for debugging in frontend (can be removed for prod)
         });
     }
 });

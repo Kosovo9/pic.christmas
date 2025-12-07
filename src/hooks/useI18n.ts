@@ -273,6 +273,8 @@ const translations: Record<Language, Record<string, string>> = {
     }
 };
 
+// ... translations object remains unchanged ...
+
 const languageNames: Record<Language, string> = {
     es: 'Español',
     en: 'English',
@@ -286,15 +288,10 @@ const languageNames: Record<Language, string> = {
     ar: 'العربية'
 };
 
-export function useI18n() {
-    const [language, setLanguage] = useState<Language>('es');
+import { useLanguage } from '../context/LanguageContext';
 
-    useEffect(() => {
-        const saved = localStorage.getItem('language') as Language;
-        if (saved && translations[saved]) {
-            setLanguage(saved);
-        }
-    }, []);
+export function useI18n() {
+    const { language, setLanguage } = useLanguage();
 
     const t = (key: string): string => {
         return translations[language][key] || key;
@@ -302,7 +299,6 @@ export function useI18n() {
 
     const switchLanguage = (lang: Language) => {
         setLanguage(lang);
-        localStorage.setItem('language', lang);
     };
 
     const getLanguageName = (lang: Language) => languageNames[lang];
