@@ -128,4 +128,73 @@ Each variation should be a complete photo prompt with different Christmas settin
     }
 });
 
+// @desc    Scan image for safety (NSFW, Violence, etc.)
+// @route   POST /api/ai/safety-check
+// @access  Public
+router.post('/safety-check', async (req, res) => {
+    try {
+        const { image } = req.body; // Expects Base64 string (without prefix potentially, or handle it)
+
+        if (!image) {
+            return res.status(400).json({ message: 'Image data required' });
+        }
+
+        // Clean base64 if needed (remove "data:image/jpeg;base64," prefix)
+        const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
+
+        const prompt = `Analyze this image strictly for safety moderation. 
+        Look for:
+        1. Nudity or sexual content
+        2. Graphic violence or gore
+        3. Hate symbols
+        4. Child exploitation materials (CSAM) - VERY CRITICAL
+        
+        Return ONLY a JSON object:
+        {
+            "safe": boolean,
+            "reason": "string (short explanation if unsafe, otherwise 'safe')"
+        }`;
+
+        const result = await model.generateContent([
+            prompt,
+            {
+                inlineData: {
+                    data: base64Data,
+                    mimeType: "image/jpeg",
+                },
+            },
+        ]);
+
+        const response = await result.response;
+        const text = response.text();
+
+        // Safe parsing
+        let safetyResult;
+        try {
+            const cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+            safetyResult = JSON.parse(cleaned);
+        } catch (e) {
+            // If JSON parse fails, check if text contains "safe": true
+            console.warn("Gemini Safety JSON parse failed, text:", text);
+            if (text.toLowerCase().includes('"safe": true') || text.toLowerCase().includes('safe: true')) {
+                safetyResult = { safe: true, reason: "Safe" };
+            } else {
+                safetyResult = { safe: false, reason: "AI Response Check Failed" };
+            }
+        }
+
+        res.json(safetyResult);
+
+    } catch (error: any) {
+        console.error('Safety Check Error:', error);
+        // Fail open or closed? Better fail safe (block) or allow with warning?
+        // For production, we might want to fail-closed, but for now allow if error is just connection.
+        // Actually, let's return error so frontend knows.
+        res.status(500).json({
+            safe: false,
+            reason: "Safety Service Error: " + error.message
+        });
+    }
+});
+
 export default router;

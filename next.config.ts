@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'images.unsplash.com', // Added for Unsplash assets (Charity Section)
+        hostname: 'images.unsplash.com',
       }
     ],
   },

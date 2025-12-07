@@ -26,7 +26,7 @@ export const PromptEnhancer: React.FC<PromptEnhancerProps> = ({
         setShowComparison(true);
 
         try {
-            const res = await fetch('http://localhost:3001/api/ai/enhance-prompt', {
+            const res = await fetch('/api/ai/enhance-prompt', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

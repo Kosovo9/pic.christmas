@@ -62,6 +62,7 @@ app.use(morgan('combined')); // Standard Apache log format
 
 app.use(cors());
 app.use(express.json({
+  limit: '10mb', // 🚀 ELON 10X: Support Base64 Image Analysis
   verify: (req: any, res, buf) => {
     req.rawBody = buf;
   }

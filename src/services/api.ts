@@ -1,6 +1,8 @@
 // API Service for pic.christmas backend
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+// 🚀 ELON 10X: Using Next.js Proxy (rewrites) to avoid CORS and env fragility.
+// The browser now talks to /api, and Next.js forwards it to Render.
+const API_BASE = '/api';
 
 export const api = {
     // Existing methods

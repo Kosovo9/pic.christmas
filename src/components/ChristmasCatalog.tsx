@@ -33,8 +33,8 @@ export const ChristmasCatalog: React.FC<ChristmasCatalogProps> = ({ onSelect, on
         setLoading(true);
         try {
             const url = selectedCategory === 'all'
-                ? 'http://localhost:3001/api/prompts'
-                : `http://localhost:3001/api/prompts/category/${selectedCategory}`;
+                ? '/api/prompts'
+                : `/api/prompts/category/${selectedCategory}`;
 
             const res = await fetch(url);
             const data = await res.json();
@@ -79,8 +79,8 @@ export const ChristmasCatalog: React.FC<ChristmasCatalogProps> = ({ onSelect, on
                         <button
                             onClick={() => setSelectedCategory('all')}
                             className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition ${selectedCategory === 'all'
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
                                 }`}
                         >
                             ✨ All
@@ -90,8 +90,8 @@ export const ChristmasCatalog: React.FC<ChristmasCatalogProps> = ({ onSelect, on
                                 key={cat.id}
                                 onClick={() => setSelectedCategory(cat.id)}
                                 className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition ${selectedCategory === cat.id
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                                    ? 'bg-blue-600 text-white'
+                                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
                                     }`}
                             >
                                 {cat.icon} {cat.name} ({cat.count})
