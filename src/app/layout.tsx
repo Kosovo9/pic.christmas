@@ -103,8 +103,12 @@ export default function RootLayout({
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
+          import {ChatWidget} from "@/components/ChatWidget";
+
+          // ... inside provider
           <Snowfall />
           <SocialProof />
+          <ChatWidget />
           {children}
         </Providers>
 

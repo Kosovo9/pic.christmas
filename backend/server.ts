@@ -1,19 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import connectDB from './config/db';
-import ordersRoutes from './routes/orders.routes';
-import paymentsRoutes from './routes/payments.routes';
-import referralsRoutes from './routes/referrals.routes';
-import promptsRoutes from './routes/prompts.routes';
-import aiRoutes from './routes/ai.routes';
-import uploadsRoutes from './routes/uploads.routes';
-import adminRoutes from './routes/admin.routes';
-import affiliateAssetsRoutes from './routes/affiliateAssets.routes';
-import emailRoutes from './routes/email.routes';
-import { v2 as cloudinary } from 'cloudinary';
-import { stripe } from './config/clients'; // Import strictly to verify connection if needed
-import './workers/imageGeneration.worker'; // Start worker
 
 dotenv.config();
 
