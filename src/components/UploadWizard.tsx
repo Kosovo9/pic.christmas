@@ -258,7 +258,31 @@ export const UploadWizard: React.FC<UploadWizardProps> = ({ onComplete }) => {
                             ))}
                         </div>
                     </div>
-            )}
+
+                    {/* Email Capture */}
+                    <div className="mt-8">
+                        <label className="block text-slate-400 mb-2">Email (for delivery)</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                            placeholder="santa@northpole.com"
+                            className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 placeholder-slate-600"
+                        />
+                    </div>
+
+                    <div className="mt-12 flex justify-between">
+                        <button onClick={() => setStep(1)} className="text-slate-400 hover:text-white transition-colors">← Back</button>
+                        <button
+                            onClick={handleFinalSubmit}
+                            disabled={!email}
+                            className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:opacity-50 text-white rounded-xl font-bold text-lg shadow-lg shadow-purple-500/20 transition-all"
+                        >
+                            See Packages 🚀
+                        </button>
+                    </div>
                 </div>
-            );
+            )}
+        </div>
+    );
 };
