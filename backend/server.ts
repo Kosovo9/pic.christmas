@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db';
 import ordersRoutes from './routes/orders.routes';
-import paymentsRoutes from './routes/payments.routes';
+import paymentsRoutes from './routes/payment.routes';
 import referralsRoutes from './routes/referrals.routes';
 import promptsRoutes from './routes/prompts.routes';
 import aiRoutes from './routes/ai.routes';
@@ -73,7 +73,9 @@ app.use(express.json({
 // --- Routes ---
 
 app.use('/api/orders', ordersRoutes);
-app.use('/api/payments', paymentsRoutes);
+app.use('/api/payments', paymentsRoutes); // This was already named paymentsRoutes but imported from the old file potentially.
+// Ensure the import lines up: 
+// import paymentsRoutes from './routes/payment.routes'; (Need to update top of file if it was different)
 app.use('/api/referrals', referralsRoutes);
 app.use('/api/prompts', promptsRoutes);
 app.use('/api/ai', aiRoutes);
