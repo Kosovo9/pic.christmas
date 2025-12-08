@@ -1,8 +1,11 @@
+
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useI18n } from '../hooks/useI18n';
 import { ContentSafetyService } from '../services/safety';
 import { CHRISTMAS_PROMPTS, ChristmasPromptCategory } from '../data/christmasPrompts';
+import { validateImage, ValidationResult } from '../utils/imageValidation';
+import { ReferralWidget } from './ReferralWidget';
 
 interface UploadWizardProps {
     onComplete: (data: any) => void;
@@ -30,24 +33,51 @@ export const UploadWizard: React.FC<UploadWizardProps> = ({ onComplete }) => {
     const [isScanning, setIsScanning] = useState(false);
     const [agreedToLegal, setAgreedToLegal] = useState(false);
 
+    // New Validation State
+    const [validationErrors, setValidationErrors] = useState<Record<number, string[]>>({});
+    const [qualityScores, setQualityScores] = useState<Record<number, number>>({});
+
     // Config State
     const [adults, setAdults] = useState(1);
     const [children, setChildren] = useState(0);
     const [pets, setPets] = useState(0);
     const [email, setEmail] = useState('');
 
-    const onDrop = useCallback((acceptedFiles: File[]) => {
+    const onDrop = useCallback(async (acceptedFiles: File[]) => {
         // Limit to 10 files max for now
         const newFiles = [...files, ...acceptedFiles].slice(0, 10);
+
+        // Validate each new file
+        const newValidationErrors: Record<number, string[]> = { ...validationErrors };
+        const newQualityScores: Record<number, number> = { ...qualityScores };
+
+        // Loop through NEW files only (offset by existing length)
+        const startIndex = files.length;
+
+        for (let i = 0; i < acceptedFiles.length; i++) {
+            const file = acceptedFiles[i];
+            const result = await validateImage(file);
+
+            if (!result.isValid) {
+                // Keep file but show error
+                newValidationErrors[startIndex + i] = result.errors;
+            } else if (result.warnings.length > 0) {
+                newValidationErrors[startIndex + i] = result.warnings;
+            }
+            newQualityScores[startIndex + i] = result.qualityScore;
+        }
+
+        setValidationErrors(newValidationErrors);
+        setQualityScores(newQualityScores);
         setFiles(newFiles);
 
         // Create previews
         const newPreviews = newFiles.map(file => URL.createObjectURL(file));
         setPreviews(prev => {
-            prev.forEach(url => URL.revokeObjectURL(url)); // Cleanup old
+            prev.forEach(url => URL.revokeObjectURL(url));
             return newPreviews;
         });
-    }, [files]);
+    }, [files, validationErrors, qualityScores]);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
@@ -61,6 +91,9 @@ export const UploadWizard: React.FC<UploadWizardProps> = ({ onComplete }) => {
         const newFiles = [...files];
         newFiles.splice(index, 1);
         setFiles(newFiles);
+        // Reset validation state for simplicity (or we'd need to shift indices)
+        setValidationErrors({});
+        setQualityScores({}); // Reset scores too to avoid mismatch
 
         const newPreviews = [...previews];
         URL.revokeObjectURL(newPreviews[index]);
@@ -231,17 +264,38 @@ export const UploadWizard: React.FC<UploadWizardProps> = ({ onComplete }) => {
                         <div className="mt-8">
                             <h3 className="text-white font-semibold mb-4">Selected Photos ({files.length})</h3>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                {previews.map((src, idx) => (
-                                    <div key={idx} className="relative aspect-square rounded-xl overflow-hidden group">
-                                        <img src={src} alt="preview" className="w-full h-full object-cover" />
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); handleRemoveFile(idx); }}
-                                            className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                                        >
-                                            ×
-                                        </button>
-                                    </div>
-                                ))}
+                                {previews.map((src, idx) => {
+                                    const score = qualityScores[idx] || 100;
+                                    const errors = validationErrors[idx] || [];
+                                    const hasError = errors.length > 0;
+
+                                    return (
+                                        <div key={idx} className={`relative aspect-square rounded-xl overflow-hidden group border-2 ${hasError ? 'border-red-500' : 'border-slate-700'}`}>
+                                            <img src={src} alt="preview" className="w-full h-full object-cover" />
+
+                                            {/* Quality Score Badge */}
+                                            {qualityScores[idx] !== undefined && (
+                                                <div className={`absolute bottom-0 left-0 right-0 p-1 text-xs text-center font-bold ${score > 70 ? 'bg-green-500/80 text-white' : 'bg-yellow-500/80 text-black'}`}>
+                                                    Quality: {score}%
+                                                </div>
+                                            )}
+
+                                            {/* Error Overlay */}
+                                            {hasError && (
+                                                <div className="absolute inset-0 bg-black/60 flex items-center justify-center p-2 text-center">
+                                                    <span className="text-red-400 text-xs font-bold">{errors[0]}</span>
+                                                </div>
+                                            )}
+
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); handleRemoveFile(idx); }}
+                                                className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     )}
@@ -300,6 +354,11 @@ export const UploadWizard: React.FC<UploadWizardProps> = ({ onComplete }) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                         {/* People Counters */}
                         <div className="space-y-6">
+                            {/* Referral Widget */}
+                            <div className="mb-6">
+                                <ReferralWidget />
+                            </div>
+
                             <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
                                 <label className="block text-slate-400 mb-2">{t('config.adults')}</label>
                                 <div className="flex items-center gap-4">

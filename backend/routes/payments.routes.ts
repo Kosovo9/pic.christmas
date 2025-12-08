@@ -11,7 +11,7 @@ router.post('/create-intent', async (req, res) => {
     const { orderId } = req.body;
     // 🚨 7-HOUR FREE MODE ACTIVE (For User & Friends Testing)
     // To disable, set this const to false.
-    const FREE_MODE_ACTIVE = true;
+    const FREE_MODE_ACTIVE = false;
 
     try {
         const order = await Order.findById(orderId);
