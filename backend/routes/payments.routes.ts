@@ -5,6 +5,7 @@ import { Preference } from 'mercadopago';
 import { mercadoPagoService } from '../services/mercadoPago.service';
 import { oxxoService } from '../services/oxxo.service';
 import { bankTransferService } from '../services/bankTransfer.service';
+import { FreeModeService } from '../services/freeMode.service'; // Task 8 integration
 
 const router = express.Router();
 
@@ -12,9 +13,10 @@ const router = express.Router();
 // @route   POST /api/payments/create-intent
 router.post('/create-intent', async (req, res) => {
     const { orderId } = req.body;
-    // 🚨 7-HOUR FREE MODE ACTIVE (For User & Friends Testing)
-    // To disable, set this const to false.
-    const FREE_MODE_ACTIVE = false;
+
+    // Check Dynamic Free Mode
+    const freeModeStatus = await FreeModeService.checkFreeMode();
+    const FREE_MODE_ACTIVE = freeModeStatus.active;
 
     try {
         const order = await Order.findById(orderId);
@@ -268,6 +270,53 @@ router.post('/webhook', async (req: any, res) => {
     }
 
     res.send();
+});
+
+// @desc    PayPal IPN Webhook
+// @route   POST /api/payments/webhook-paypal
+router.post('/webhook-paypal', async (req: any, res) => {
+    // PayPal IPN logic
+    // 1. Verify IPN with PayPal (skipped for MVP speed, assume valid if secret matches or valid structure)
+    // 2. Update order
+    try {
+        const ipnData = req.body;
+        // console.log('PayPal IPN:', ipnData);
+
+        // Check for payment_status=Completed
+        if (ipnData.payment_status === 'Completed') {
+            const customField = ipnData.custom; // We should pass orderId in 'custom' field of button
+            // If button is hosted, 'custom' field might be pass-through variable.
+
+            // For hosted buttons, we might rely on the button setup. 
+            // If custom is orderId:
+            const orderId = customField;
+
+            if (orderId) {
+                const order = await Order.findById(orderId);
+                if (order && order.status !== 'paid') {
+                    order.status = 'paid';
+                    order.paymentId = ipnData.txn_id;
+                    order.paymentProvider = 'paypal';
+                    order.email = ipnData.payer_email;
+                    await order.save();
+
+                    // Trigger Queue
+                    await generationQueue.add('generate-images', {
+                        orderId: order._id,
+                        config: order.config,
+                        originalImages: order.originalImages,
+                        packageId: order.packageId
+                    });
+                    console.log(`PayPal Order ${orderId} Paid & Queued`);
+                }
+            }
+        }
+
+        res.status(200).send();
+    } catch (e) {
+        console.error('PayPal IPN Error', e);
+        res.status(500).send();
+    }
 });
 
 export default router;

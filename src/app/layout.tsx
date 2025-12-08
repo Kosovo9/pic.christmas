@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  categories: ['Photography', 'Artificial Intelligence', 'Holidays', 'Design'],
+  category: 'photography',
   openGraph: {
     title: "🎄 Unlock Magic: Turn Selfies into Professional Christmas Photos (AI)",
     description: "Don't pay $500 for a photographer. Use the #1 AI Christmas Studio. 100+ Styles. Instant Delivery. 4.9/5 Stars.",

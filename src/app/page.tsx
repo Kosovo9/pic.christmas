@@ -27,6 +27,7 @@ import { SocialProof } from '../components/SocialProof';
 import { PaymentMethodSelector } from '../components/PaymentMethodSelector';
 import { OxxoPaymentUI } from '../components/OxxoPaymentUI';
 import { BankTransferUI } from '../components/BankTransferUI';
+import ExitBanner from '../components/ExitBanner'; // Task 9
 
 export default function Home() {
   const { language, switchLanguage } = useI18n();
@@ -37,11 +38,23 @@ export default function Home() {
   const [orderDetails, setOrderDetails] = useState<{ id: string; amount: number } | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
   const [paymentDetails, setPaymentDetails] = useState<any>(null); // For OXXO/Bank details
+  const [freeMode, setFreeMode] = useState<any>(null); // Task 8
+  const [showExitBanner, setShowExitBanner] = useState(false); // Task 9
 
   const uploadRef = useRef<HTMLDivElement>(null);
   const pricingRef = useRef<HTMLDivElement>(null);
   const referralRef = useRef<HTMLDivElement>(null);
   const paymentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Check Free Mode Status - Task 8
+    fetch('/api/viral/free-mode/status')
+      .then(res => res.json())
+      .then(data => {
+        if (data.active) setFreeMode(data);
+      })
+      .catch(err => console.error(err));
+  }, []);
 
   const realStart = () => {
     setShowGuidelines(false);
@@ -99,7 +112,8 @@ export default function Home() {
       const order = await api.createOrder(orderData);
       console.log('Order created:', order);
 
-      if (order.totalAmount === 0) {
+      // Free Mode Logic Override (Task 8)
+      if (order.totalAmount === 0 || freeMode?.active) {
         // Free order (credits)
         setCurrentView('results');
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -189,7 +203,15 @@ export default function Home() {
 
   return (
     <PageTransition>
-      <main className="min-h-screen bg-slate-950 text-white selection:bg-blue-500/30">
+      <main className="min-h-screen bg-slate-950 text-white selection:bg-blue-500/30 font-sans">
+
+        {/* FREE MODE BANNER - ELON STYLE (Task 8) */}
+        {freeMode?.active && (
+          <div className="fixed top-0 left-0 right-0 bg-yellow-400 text-black text-center py-2 font-black z-[200] animate-pulse cursor-pointer shadow-lg" onClick={realStart}>
+            🚀 VIRAL LAUNCH: FREE MODE ACTIVE — {freeMode.hoursRemaining}h {freeMode.minutesRemaining}m LEFT! GENERA AHORA (GRATIS) ⚡
+          </div>
+        )}
+
         <SecurityShield />
         <SocialProof />
         {/* Navbar */}
@@ -297,6 +319,7 @@ export default function Home() {
         {/* 🚀 ELON GROWTH HACKS */}
         <LiveNotifications />
         <ExitIntentModal />
+        <ExitBanner onDismiss={() => setShowExitBanner(false)} /> {/* Task 9 */}
       </main>
     </PageTransition>
   );
