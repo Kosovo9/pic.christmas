@@ -24,17 +24,24 @@ import { CharitySection } from '../components/CharitySection';
 import { LiveNotifications } from '../components/LiveNotifications';
 import { ExitIntentModal } from '../components/ExitIntentModal';
 import { SocialProof } from '../components/SocialProof';
+import { PaymentMethodSelector } from '../components/PaymentMethodSelector';
+import { OxxoPaymentUI } from '../components/OxxoPaymentUI';
+import { BankTransferUI } from '../components/BankTransferUI';
 
 export default function Home() {
   const { language, switchLanguage } = useI18n();
   const { referralCode } = useReferral();
-  const [currentView, setCurrentView] = useState<'landing' | 'upload' | 'pricing' | 'results'>('landing');
+  const [currentView, setCurrentView] = useState<'landing' | 'upload' | 'pricing' | 'payment' | 'results'>('landing');
   const [uploadData, setUploadData] = useState<any>(null);
   const [showGuidelines, setShowGuidelines] = useState(false);
+  const [orderDetails, setOrderDetails] = useState<{ id: string; amount: number } | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+  const [paymentDetails, setPaymentDetails] = useState<any>(null); // For OXXO/Bank details
 
   const uploadRef = useRef<HTMLDivElement>(null);
   const pricingRef = useRef<HTMLDivElement>(null);
   const referralRef = useRef<HTMLDivElement>(null);
+  const paymentRef = useRef<HTMLDivElement>(null);
 
   const realStart = () => {
     setShowGuidelines(false);
@@ -94,27 +101,55 @@ export default function Home() {
 
       if (order.totalAmount === 0) {
         // Free order (credits)
-        // Redirect directly to results/processing
         setCurrentView('results');
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
 
-      // 2. Initiate Payment (Stripe by default for now)
-      // You can add a UI selector for payment method here later
-      console.log('Initiating payment...');
-      const payment = await api.createPaymentIntent(order._id);
-
-      if (payment.url) {
-        // Redirect to Stripe Checkout
-        window.location.href = payment.url;
-      } else {
-        throw new Error('No payment URL returned');
-      }
+      setOrderDetails({ id: order._id, amount: order.totalAmount });
+      setCurrentView('payment');
+      setTimeout(() => {
+        paymentRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
 
     } catch (error) {
       console.error('Order creation failed:', error);
       alert('Something went wrong. Please try again.');
+    }
+  };
+
+  const handlePaymentMethodSelected = async (methodId: string) => {
+    setPaymentMethod(methodId);
+    if (!orderDetails) return;
+
+    // Logic to initiate payment based on method
+    // For simplified integration, we will assume backend call here if needed
+    // but for UI, we just show the relevant component or redirect
+    if (methodId === 'credit_debit' || methodId === 'paypal' || methodId === 'lemon_squeezy') {
+      // Redirect flow
+      const payment = await api.createPaymentIntent(orderDetails.id);
+      // Note: Backend needs updates to support method selection in createPaymentIntent or new endpoint
+      // For now, redirect strictly for stripe/legacy
+      if (payment.url) window.location.href = payment.url;
+    } else if (methodId === 'oxxo') {
+      // Create OXXO payment
+      // Call API to get OXXO details
+      const response = await fetch('/api/payments/oxxo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: orderDetails.id, amount: orderDetails.amount, email: 'user@example.com' })
+      });
+      const data = await response.json();
+      setPaymentDetails(data);
+    } else if (methodId === 'bank_transfer') {
+      // Create Bank Transfer
+      const response = await fetch('/api/payments/bank-transfer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: orderDetails.id, amount: orderDetails.amount, country: 'MX', email: 'user@example.com' })
+      });
+      const data = await response.json();
+      setPaymentDetails(data);
     }
   };
 
@@ -187,8 +222,50 @@ export default function Home() {
 
         {/* Pricing Section */}
         <div ref={pricingRef}>
-          {(currentView === 'pricing' || currentView === 'results') && (
+          {(currentView === 'pricing' || currentView === 'payment' || currentView === 'results') && (
             <PricingSection onSelect={handlePackageSelect} config={uploadData?.config} />
+          )}
+        </div>
+
+        {/* Payment Section */}
+        <div ref={paymentRef} className="max-w-4xl mx-auto px-4 py-8">
+          {currentView === 'payment' && orderDetails && (
+            <div className="bg-slate-900 border border-slate-700 rounded-2xl p-8 shadow-2xl">
+              {!paymentMethod ? (
+                <PaymentMethodSelector
+                  orderId={orderDetails.id}
+                  amount={orderDetails.amount}
+                  onPaymentMethodSelected={handlePaymentMethodSelected}
+                />
+              ) : (
+                <div>
+                  {paymentMethod === 'oxxo' && paymentDetails && (
+                    <OxxoPaymentUI
+                      orderId={orderDetails.id}
+                      amount={orderDetails.amount}
+                      reference={paymentDetails.reference}
+                      expiresAt={paymentDetails.expiresAt}
+                    />
+                  )}
+                  {paymentMethod === 'bank_transfer' && paymentDetails && (
+                    <BankTransferUI
+                      orderId={orderDetails.id}
+                      amount={orderDetails.amount}
+                      bankDetails={paymentDetails.bankDetails}
+                      conceptOfPayment={paymentDetails.conceptOfPayment}
+                      expiresAt={paymentDetails.expiresAt}
+                      country="MX"
+                    />
+                  )}
+                  {(paymentMethod === 'credit_debit' || paymentMethod === 'paypal' || paymentMethod === 'lemon_squeezy') && (
+                    <div className="text-center py-12">
+                      <div className="animate-spin text-4xl mb-4">🌀</div>
+                      <p>Redirecting to secure checkout...</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           )}
         </div>
 
