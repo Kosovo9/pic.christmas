@@ -79,14 +79,14 @@ export const GenerationProgress: React.FC<GenerationProgressProps> = ({ jobId, o
 
             {/* Tiny Log Console */}
             <div className="mt-8 bg-black/50 rounded-lg p-4 font-mono text-xs text-slate-500 h-32 overflow-y-auto custom-scrollbar border border-slate-800">
-                <div className="text-green-500">> Connected to Gift Factory v2.0</div>
-                <div className="text-slate-400">> Allocation: Flux.1 Pro (Turbo)</div>
-                {progress > 10 && <div>> Analyzing subject photos... OK</div>}
-                {progress > 20 && <div>> Extracting facial embeddings... OK</div>}
-                {progress > 40 && <div>> Generating base composition... OK</div>}
-                {progress > 60 && <div>> Applying InsightFace swap... OK</div>}
-                {progress > 80 && <div>> Upscaling and color grading...</div>}
-                {progress >= 100 && <div className="text-green-400">> DONE! Image ready.</div>}
+                <div className="text-green-500">&gt; Connected to Gift Factory v2.0</div>
+                <div className="text-slate-400">&gt; Allocation: Flux.1 Pro (Turbo)</div>
+                {progress > 10 && <div>&gt; Analyzing subject photos... OK</div>}
+                {progress > 20 && <div>&gt; Extracting facial embeddings... OK</div>}
+                {progress > 40 && <div>&gt; Generating base composition... OK</div>}
+                {progress > 60 && <div>&gt; Applying InsightFace swap... OK</div>}
+                {progress > 80 && <div>&gt; Upscaling and color grading...</div>}
+                {progress >= 100 && <div className="text-green-400">&gt; DONE! Image ready.</div>}
                 <div className="animate-pulse">_</div>
             </div>
         </div>

@@ -16,8 +16,7 @@ const orderSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        required: true,
-        enum: ['pending', 'paid', 'processing', 'completed', 'failed'],
+        enum: ['pending', 'pending_payment', 'paid', 'processing', 'completed', 'failed'],
         default: 'pending'
     },
     amount: {
@@ -45,7 +44,7 @@ const orderSchema = new mongoose.Schema({
     },
     paymentProvider: {
         type: String,
-        enum: ['stripe', 'mercadopago', 'paypal', 'free_mode']
+        enum: ['stripe', 'mercadopago', 'paypal', 'oxxo', 'bank_transfer', 'free_mode']
     },
     referralCode: {
         type: String,

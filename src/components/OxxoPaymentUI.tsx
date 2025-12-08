@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import QRCode from 'qrcode.react';
+import { QRCodeCanvas } from 'qrcode.react';
 
 interface OxxoPaymentUIProps {
     orderId: string;
@@ -82,7 +82,7 @@ export const OxxoPaymentUI: React.FC<OxxoPaymentUIProps> = ({
                 <div className="bg-slate-50 rounded-lg p-6 flex flex-col items-center justify-center">
                     <p className="text-slate-500 text-sm mb-3">Código QR (opcional)</p>
                     <div className="bg-white p-2 rounded shadow-sm">
-                        <QRCode value={reference} size={150} />
+                        <QRCodeCanvas value={reference} size={150} />
                     </div>
                 </div>
             </div>

@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db';
 import ordersRoutes from './routes/orders.routes';
-import paymentsRoutes from './routes/payment.routes';
+import paymentsRoutes from './routes/payments.routes';
 import referralsRoutes from './routes/referrals.routes';
 import promptsRoutes from './routes/prompts.routes';
 import aiRoutes from './routes/ai.routes';

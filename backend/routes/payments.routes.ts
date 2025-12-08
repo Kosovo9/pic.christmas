@@ -101,7 +101,7 @@ router.post('/create-preference', async (req, res) => {
 
         res.json({
             preferenceId: result.id,
-            initPoint: result.paymentUrl || result.initPoint,
+            initPoint: result.paymentUrl,
             provider: 'mercadopago',
             ...result
         });
