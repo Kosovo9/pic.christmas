@@ -81,42 +81,112 @@ router.post('/create-intent', async (req, res) => {
 // @desc    Create Preference (MercadoPago)
 // @route   POST /api/payments/create-preference
 router.post('/create-preference', async (req, res) => {
+    const { orderId, paymentMethod = 'credit_debit' } = req.body;
+
+    try {
+        const order = await Order.findById(orderId);
+        if (!order) return res.status(404).json({ message: 'Order not found' });
+
+        const { mercadoPagoService } = require('../services/mercadoPago.service');
+
+        const result = await mercadoPagoService.createPreference({
+            orderId: order._id.toString(),
+            amount: order.amount,
+            currency: 'MXN',
+            paymentMethod: paymentMethod,
+            description: `Pic.Christmas - ${order.packageId.toUpperCase()}`,
+            email: order.email || 'customer@example.com',
+        });
+
+        res.json({
+            preferenceId: result.id,
+            initPoint: result.paymentUrl || result.initPoint,
+            provider: 'mercadopago',
+            ...result
+        });
+    } catch (error: any) {
+        console.error('MercadoPago Error:', error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// @desc    Create OXXO Payment
+// @route   POST /api/payments/oxxo
+router.post('/oxxo', async (req, res) => {
     const { orderId } = req.body;
 
     try {
         const order = await Order.findById(orderId);
         if (!order) return res.status(404).json({ message: 'Order not found' });
 
-        const preference = new Preference(mpClient);
+        const { oxxoService } = require('../services/oxxo.service');
 
-        const result = await preference.create({
-            body: {
-                items: [
-                    {
-                        id: order.packageId,
-                        title: `Pic.Christmas - ${order.packageId.toUpperCase()}`,
-                        quantity: 1,
-                        unit_price: order.amount
-                    }
-                ],
-                external_reference: order._id.toString(),
-                back_urls: {
-                    success: `${process.env.FRONTEND_URL}/success`,
-                    failure: `${process.env.FRONTEND_URL}/failure`,
-                    pending: `${process.env.FRONTEND_URL}/pending`
-                },
-                auto_return: 'approved',
-            }
+        const result = await oxxoService.createOxxoPayment({
+            orderId: order._id.toString(),
+            amount: order.amount,
+            email: order.email || 'customer@example.com',
+            description: `Pic.Christmas - ${order.packageId.toUpperCase()}`,
         });
 
-        res.json({
-            preferenceId: result.id,
-            initPoint: result.init_point, // or sandbox_init_point for testing
-            provider: 'mercadopago'
-        });
+        res.json(result);
     } catch (error: any) {
-        console.error('MercadoPago Error:', error);
+        console.error('OXXO Payment Error:', error);
         res.status(500).json({ message: error.message });
+    }
+});
+
+// @desc    Create Bank Transfer Payment
+// @route   POST /api/payments/bank-transfer
+router.post('/bank-transfer', async (req, res) => {
+    const { orderId, country = 'MX' } = req.body;
+
+    try {
+        const order = await Order.findById(orderId);
+        if (!order) return res.status(404).json({ message: 'Order not found' });
+
+        if (!['MX', 'AR', 'CO'].includes(country)) {
+            return res.status(400).json({ message: 'Invalid country. Supported: MX, AR, CO' });
+        }
+
+        const { bankTransferService } = require('../services/bankTransfer.service');
+
+        const result = await bankTransferService.createBankTransfer({
+            orderId: order._id.toString(),
+            amount: order.amount,
+            country: country,
+            email: order.email || 'customer@example.com',
+            description: `Pic.Christmas - ${order.packageId.toUpperCase()}`,
+        });
+
+        res.json(result);
+    } catch (error: any) {
+        console.error('Bank Transfer Error:', error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// @desc    Mercado Pago Webhook
+// @route   POST /api/payments/webhook-mercadopago
+router.post('/webhook-mercadopago', async (req: any, res) => {
+    try {
+        const { mercadoPagoService } = require('../services/mercadoPago.service');
+        
+        // Mercado Pago sends notification with type and data
+        const notification = {
+            type: req.body.type || 'payment',
+            data: req.body.data || { id: req.body.data?.id || req.query.id },
+        };
+
+        const processed = await mercadoPagoService.handleWebhook(notification);
+
+        if (processed) {
+            res.status(200).json({ success: true });
+        } else {
+            res.status(400).json({ error: 'Webhook processing failed' });
+        }
+    } catch (error: any) {
+        console.error('Mercado Pago Webhook Error:', error);
+        res.status(500).json({ error: error.message });
     }
 });
 

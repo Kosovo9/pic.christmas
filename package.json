@@ -8,7 +8,8 @@
     "pages:build": "npx @cloudflare/next-on-pages@1",
     "start": "next start",
     "lint": "eslint",
-    "test:deployment": "node test-deployment.js"
+    "test:deployment": "node test-deployment.js",
+    "test:stress": "node stress-test.js"
   },
   "dependencies": {
     "@clerk/localizations": "^3.29.1",
