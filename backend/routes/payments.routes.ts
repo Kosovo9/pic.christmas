@@ -2,6 +2,9 @@ import express from 'express';
 import Order from '../models/Order';
 import { stripe, mpClient, generationQueue } from '../config/clients';
 import { Preference } from 'mercadopago';
+import { mercadoPagoService } from '../services/mercadoPago.service';
+import { oxxoService } from '../services/oxxo.service';
+import { bankTransferService } from '../services/bankTransfer.service';
 
 const router = express.Router();
 
@@ -87,8 +90,6 @@ router.post('/create-preference', async (req, res) => {
         const order = await Order.findById(orderId);
         if (!order) return res.status(404).json({ message: 'Order not found' });
 
-        const { mercadoPagoService } = require('../services/mercadoPago.service');
-
         const result = await mercadoPagoService.createPreference({
             orderId: order._id.toString(),
             amount: order.amount,
@@ -119,8 +120,6 @@ router.post('/oxxo', async (req, res) => {
         const order = await Order.findById(orderId);
         if (!order) return res.status(404).json({ message: 'Order not found' });
 
-        const { oxxoService } = require('../services/oxxo.service');
-
         const result = await oxxoService.createOxxoPayment({
             orderId: order._id.toString(),
             amount: order.amount,
@@ -148,8 +147,6 @@ router.post('/bank-transfer', async (req, res) => {
             return res.status(400).json({ message: 'Invalid country. Supported: MX, AR, CO' });
         }
 
-        const { bankTransferService } = require('../services/bankTransfer.service');
-
         const result = await bankTransferService.createBankTransfer({
             orderId: order._id.toString(),
             amount: order.amount,
@@ -169,8 +166,6 @@ router.post('/bank-transfer', async (req, res) => {
 // @route   POST /api/payments/webhook-mercadopago
 router.post('/webhook-mercadopago', async (req: any, res) => {
     try {
-        const { mercadoPagoService } = require('../services/mercadoPago.service');
-        
         // Mercado Pago sends notification with type and data
         const notification = {
             type: req.body.type || 'payment',
