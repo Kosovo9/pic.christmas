@@ -3,6 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 import { getTranslation } from '../utils/translations';
 import { AIPipelineService } from '../services/aiPipeline.service';
+import { generationLimiter } from '../middleware/rateLimiter';
 
 dotenv.config();
 
@@ -17,7 +18,7 @@ import { CHRISTMAS_PROMPTS } from '../config/christmasPrompts';
 // @desc    Generate a Hyper-Realistic Christmas Photo
 // @route   POST /api/ai/generate-christmas
 // @access  Public
-router.post('/generate-christmas', async (req, res) => {
+router.post('/generate-christmas', generationLimiter, async (req, res) => {
     try {
         const { promptId, config, fileUrls, tier = 'turbo' } = req.body;
 

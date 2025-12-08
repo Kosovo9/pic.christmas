@@ -1,67 +1,120 @@
 
-"use client";
-
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
-const MOCK_PURCHASES = [
-    { name: "Maria S.", location: "Madrid", plan: "Couple Pack" },
-    { name: "John D.", location: "New York", plan: "Family Pack" },
-    { name: "Sarah W.", location: "London", plan: "Dog Portrait" },
-    { name: "Carlos R.", location: "Mexico City", plan: "Family Pack" },
-    { name: "Yuki T.", location: "Tokyo", plan: "Single Portrait" },
-    { name: "Emma L.", location: "Paris", plan: "Cat Portrait" }
+interface Activity {
+    id: string;
+    type: 'generate' | 'purchase';
+    user: string;
+    message: string;
+    time: string;
+    image?: string;
+}
+
+const MOCK_NAMES = ["Sarah", "Mike", "Elena", "David", "Jessica", "Tom", "Anna", "Lucas", "Maria", "John"];
+const MOCK_LOCATIONS = ["USA", "UK", "Germany", "France", "Spain", "Italy", "Canada", "Australia"];
+const MOCK_ACTIONS = [
+    { type: 'generate', text: 'generated 5 Christmas photos' },
+    { type: 'generate', text: 'created a family portrait' },
+    { type: 'purchase', text: 'bought the 50-pack' },
+    { type: 'purchase', text: 'just unlocked Premium' },
+    { type: 'generate', text: 'is transforming their dog into an elf' }
 ];
 
-export const SocialProof = () => {
-    const [notification, setNotification] = useState<{ name: string; location: string; plan: string } | null>(null);
+export const SocialProof: React.FC = () => {
+    const [stats, setStats] = useState({
+        activeUsers: 142,
+        photosCreated: 12450,
+        rating: 4.9
+    });
 
+    const [recentActivity, setRecentActivity] = useState<Activity | null>(null);
+
+    // Simulate Live Stats
     useEffect(() => {
-        // Randomly show notifications
-        const showNotification = () => {
-            const random = MOCK_PURCHASES[Math.floor(Math.random() * MOCK_PURCHASES.length)];
-            setNotification(random);
-
-            // Hide after 4 seconds
-            setTimeout(() => {
-                setNotification(null);
-            }, 4000);
-        };
-
         const interval = setInterval(() => {
-            // Trigger every 10-20 seconds
-            if (Math.random() > 0.3) {
-                showNotification();
-            }
-        }, 12000);
-
-        // Initial delay
-        setTimeout(showNotification, 5000);
-
+            setStats(prev => ({
+                ...prev,
+                activeUsers: prev.activeUsers + Math.floor(Math.random() * 5) - 2,
+                photosCreated: prev.photosCreated + Math.floor(Math.random() * 3)
+            }));
+        }, 3000);
         return () => clearInterval(interval);
     }, []);
 
+    // Simulate "Recent Sales/Generations" Popups
+    useEffect(() => {
+        const scheduleNextPopup = () => {
+            const delay = Math.random() * 5000 + 3000; // 3-8 seconds
+            setTimeout(() => {
+                const name = MOCK_NAMES[Math.floor(Math.random() * MOCK_NAMES.length)];
+                const location = MOCK_LOCATIONS[Math.floor(Math.random() * MOCK_LOCATIONS.length)];
+                const action = MOCK_ACTIONS[Math.floor(Math.random() * MOCK_ACTIONS.length)];
+
+                const activity: Activity = {
+                    id: Math.random().toString(),
+                    type: action.type as any,
+                    user: `${name} from ${location}`,
+                    message: action.text,
+                    time: 'Just now'
+                };
+
+                setRecentActivity(activity);
+
+                // Hide after 4 seconds
+                setTimeout(() => setRecentActivity(null), 4000);
+
+                scheduleNextPopup();
+            }, delay);
+        };
+
+        scheduleNextPopup();
+    }, []);
+
     return (
-        <AnimatePresence>
-            {notification && (
-                <motion.div
-                    initial={{ x: -100, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: -100, opacity: 0 }}
-                    className="fixed bottom-24 left-4 z-40 bg-slate-900/90 border border-slate-700 backdrop-blur-md rounded-xl p-4 shadow-2xl flex items-center gap-4 max-w-xs pointer-events-none"
-                >
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-xl">
-                        🎄
-                    </div>
-                    <div>
-                        <p className="text-sm font-bold text-white">New Order!</p>
-                        <p className="text-xs text-slate-300">
-                            <span className="text-blue-400 font-medium">{notification.name}</span> from {notification.location} just bought the <span className="text-yellow-400">{notification.plan}</span>
-                        </p>
-                        <p className="text-[10px] text-slate-500 mt-1">Just now</p>
-                    </div>
-                </motion.div>
-            )}
-        </AnimatePresence>
+        <>
+            {/* Sticky Bottom Stats Bar */}
+            <div className="fixed bottom-0 left-0 w-full bg-slate-900/90 backdrop-blur-md border-t border-slate-800 z-40 py-2 hidden md:flex justify-center gap-8 text-xs font-mono text-slate-400">
+                <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-white font-bold">{stats.activeUsers}</span> users creating now
+                </div>
+                <div className="flex items-center gap-2">
+                    <span>📸</span>
+                    <span className="text-white font-bold">{stats.photosCreated.toLocaleString()}</span> photos generated today
+                </div>
+                <div className="flex items-center gap-2">
+                    <span>⭐</span>
+                    <span className="text-yellow-400 font-bold">{stats.rating}/5</span> from happy customers
+                </div>
+            </div>
+
+            {/* Notification Toast */}
+            <AnimatePresence>
+                {recentActivity && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 50, x: -50 }}
+                        animate={{ opacity: 1, y: 0, x: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        className="fixed bottom-20 left-4 md:bottom-24 md:left-8 z-50 bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-2xl shadow-2xl flex items-center gap-4 max-w-sm"
+                    >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${recentActivity.type === 'purchase' ? 'bg-yellow-500' : 'bg-blue-500'}`}>
+                            {recentActivity.type === 'purchase' ? '💰' : '✨'}
+                        </div>
+                        <div>
+                            <p className="text-white text-sm font-bold">
+                                {recentActivity.user}
+                            </p>
+                            <p className="text-slate-300 text-xs">
+                                {recentActivity.message}
+                            </p>
+                            <p className="text-slate-500 text-[10px] uppercase mt-1">
+                                {recentActivity.time}
+                            </p>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     );
 };

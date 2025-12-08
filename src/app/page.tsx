@@ -23,6 +23,7 @@ import { SecurityShield } from '../components/SecurityShield';
 import { CharitySection } from '../components/CharitySection';
 import { LiveNotifications } from '../components/LiveNotifications';
 import { ExitIntentModal } from '../components/ExitIntentModal';
+import { SocialProof } from '../components/SocialProof';
 
 export default function Home() {
   const { language, switchLanguage } = useI18n();
@@ -155,6 +156,7 @@ export default function Home() {
     <PageTransition>
       <main className="min-h-screen bg-slate-950 text-white selection:bg-blue-500/30">
         <SecurityShield />
+        <SocialProof />
         {/* Navbar */}
         <Navbar language={language} onLanguageChange={switchLanguage} onReferralsClick={scrollToReferrals} />
 

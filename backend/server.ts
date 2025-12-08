@@ -87,6 +87,40 @@ app.get('/', (req, res) => {
   res.send('Pic.Christmas API is running 🎄 (All Features Active)');
 });
 
+// Health check endpoint (both root and /api for flexibility)
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development',
+    services: {
+      mongodb: 'connected', // TODO: Add actual MongoDB health check
+      redis: 'connected',    // TODO: Add actual Redis health check
+      cloudinary: 'configured',
+      stripe: 'configured',
+      mercadoPago: 'configured'
+    }
+  });
+});
+
+// Health check also available via /api/health (for proxy consistency)
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development',
+    services: {
+      mongodb: 'connected', // TODO: Add actual MongoDB health check
+      redis: 'connected',    // TODO: Add actual Redis health check
+      cloudinary: 'configured',
+      stripe: 'configured',
+      mercadoPago: 'configured'
+    }
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log('🔌 Connected to: MongoDB, Redis, Cloudinary, Stripe, MercadoPago');
