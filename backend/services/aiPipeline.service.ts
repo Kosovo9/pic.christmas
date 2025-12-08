@@ -110,8 +110,16 @@ export class AIPipelineService {
         userFileUrl: string,
         tier: 'turbo' | 'premium' = 'turbo'
     ): Promise<string> {
-        // 1. Logic: Replace placeholder with optimized description
-        const finalPrompt = promptTemplate.replace('[Subject]', 'a highly detailed majestic person');
+        // 1. Logic: Analyze Subject & Enhance Prompt
+        const traits = await this.analyzeSubject(userFileUrl);
+        const subjectDesc = traits.description;
+
+        // Replace placeholder with optimized description or append
+        let finalPrompt = promptTemplate.includes('[Subject]')
+            ? promptTemplate.replace('[Subject]', subjectDesc)
+            : `${promptTemplate}, featuring ${subjectDesc}`;
+
+        console.log(`✨ Enhanced Prompt: ${finalPrompt}`);
 
         // 2. Creation: Generate base image with selected tier
         const baseImage = await this.generateBaseImage(finalPrompt, tier);

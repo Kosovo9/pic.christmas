@@ -13,6 +13,7 @@
     "@clerk/localizations": "^3.29.1",
     "@clerk/nextjs": "^6.36.0",
     "@clerk/themes": "^2.4.42",
+    "@cloudflare/next-on-pages": "^1.13.16",
     "@stripe/react-stripe-js": "^5.4.1",
     "@stripe/stripe-js": "^8.5.3",
     "@supabase/supabase-js": "^2.86.2",
