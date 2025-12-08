@@ -1,16 +1,13 @@
 import { Worker, Job } from 'bullmq';
-import Replicate from 'replicate';
 import { v2 as cloudinary } from 'cloudinary';
 import Order from '../models/Order';
 import dotenv from 'dotenv';
 import { watermarkService } from '../services/watermark.service';
 import { emailService } from '../services/email.service';
+import { GenerationPipeline } from '../services/generationPipeline.service';
+import { FaceEmbeddingService } from '../services/faceEmbedding.service';
 
 dotenv.config();
-
-const replicate = new Replicate({
-    auth: process.env.REPLICATE_API_TOKEN,
-});
 
 // Configure Cloudinary
 cloudinary.config({
@@ -40,44 +37,43 @@ export const imageGenerationWorker = new Worker(
 
             const generatedUrls: string[] = [];
 
+            // Pre-load valid seed images
+            const seedImages = order.originalImages || [];
+            if (seedImages.length === 0) {
+                console.warn("No seed images found, using fallback/text-only generation mode if possible.");
+                // Fallback or error? For Nuclear Stack, we really want seed images.
+            }
+
             for (let i = 0; i < count; i++) {
-                // 1. Generate with Replicate (Flux Pro or SDXL)
-                const { config } = job.data;
+                // Select seed image cyclically
+                const seedImageUrl = seedImages.length > 0 ? seedImages[i % seedImages.length] : null;
 
-                // Advanced Prompt Engineering Logic 100x 🚀
-                let enhancedPrompt = prompt;
-                let subjectDirectives = "";
+                // 1. Generate with Nuclear Stack Pipeline
+                // Using the specific Christmas Prompt + Face Lock
+                console.log(`[Worker] Generating image ${i + 1}/${count} using Nuclear Stack...`);
 
-                if (config) {
-                    if (config.pets > 0) {
-                        subjectDirectives += "award-winning studio photography of a cute pet, hyper-detailed fur texture, individual hairs visible, bright expressive looking at camera, shallow depth of field, f/1.8, soft studio lighting, wearing cute festive Christmas sweater, ";
+                let imageUrl: string;
+
+                try {
+                    if (seedImageUrl) {
+                        const style = "Christmas Realistic"; // Default high quality style
+                        const context = prompt || "Cozy Christmas atmosphere";
+
+                        const result = await GenerationPipeline.generateRealisticPhoto(
+                            seedImageUrl,
+                            style,
+                            context
+                        );
+                        imageUrl = result.imageUrl;
+                        console.log(`[Worker] Generation complete. Score: ${result.verificationScore}%`);
+                    } else {
+                        // Fallback Text-Only (shouldn't happen in 100x flow usually)
+                        throw new Error("Seed image required for Face-Locked generation");
                     }
-                    if (config.children > 0) {
-                        subjectDirectives += "portrait of an adorable happy child, authentic candid moment, genuine smile, soft skin texture, magical sparkle in eyes, wearing traditional Christmas clothing, soft volumetric lighting, ";
-                    }
-                    if (config.adults > 0 && config.children === 0 && config.pets === 0) {
-                        subjectDirectives += "high-fashion editorial portrait, elegant sophisticated attire, Christmas gala atmosphere, 85mm lens, incredibly detailed skin texture, warm skin tones, cinematic lighting, ";
-                    }
+                } catch (genError) {
+                    console.error("Generation failed, skipping this image:", genError);
+                    continue; // Skip to next
                 }
-
-                const finalPrompt = `${subjectDirectives} ${enhancedPrompt}, christmas masterpiece, 8k resolution, raw photo, ultra-realistic, photorealistic, cinematic lighting, bokeh background, detailed textures, sharp focus, high dynamic range, perfect composition, shot on Sony A7R IV`;
-
-                // Using Flux-schnell for speed and quality
-                const output = await replicate.run(
-                    "black-forest-labs/flux-schnell",
-                    {
-                        input: {
-                            prompt: finalPrompt,
-                            num_outputs: 1,
-                            aspect_ratio: "1:1",
-                            output_format: "jpg",
-                            output_quality: 100 // Cranked to 100 for max quality
-                        }
-                    }
-                );
-                console.log(`[Worker] Replicate output received for image ${i + 1}/${count}`);
-
-                const imageUrl = (output as string[])[0];
 
                 // 2. Apply Watermark 🛡️ (100x Protection)
                 console.log(`[Worker] Applying 'NEXORA' watermark...`);
@@ -93,22 +89,15 @@ export const imageGenerationWorker = new Worker(
                 // 3. Upload to Cloudinary (Watermarked)
                 console.log(`[Worker] Uploading to Cloudinary...`);
 
-                // For Buffer upload, we need a stream or promise. Cloudinary SDK supports file path or url primarily in v2.uploader.upload
-                // To upload buffer, we might need a stream wrapper or write to temp file.
-                // OPTIMIZATION: Use a simple write-to-disk approach for reliability in Node environments, or stream.
-                // For MVP Speed + Reliability:
-                // We'll use a Promise wrapper for stream upload if using buffer.
-
                 const uploadToCloudinary = (buffer: Buffer) => {
                     return new Promise<any>((resolve, reject) => {
                         const uploadStream = cloudinary.uploader.upload_stream(
-                            { folder: `pic-christmas/orders/${orderId}`, tags: ['generated', 'christmas', 'watermarked'] },
+                            { folder: `pic-christmas/orders/${orderId}`, tags: ['generated', 'christmas', 'watermarked', 'face-locked'] },
                             (error, result) => {
                                 if (error) reject(error);
                                 else resolve(result);
                             }
                         );
-                        // Write buffer to stream
                         const stream = require('stream');
                         const bufferStream = new stream.PassThrough();
                         bufferStream.end(buffer);
@@ -116,7 +105,6 @@ export const imageGenerationWorker = new Worker(
                     });
                 };
 
-                // If it's a buffer (watermarked), use stream upload. If URL (fallback), use standard upload.
                 let secureUrl;
                 if (Buffer.isBuffer(finalImageToUpload)) {
                     const result = await uploadToCloudinary(finalImageToUpload);
@@ -124,7 +112,7 @@ export const imageGenerationWorker = new Worker(
                 } else {
                     const result = await cloudinary.uploader.upload(finalImageToUpload as string, {
                         folder: `pic-christmas/orders/${orderId}`,
-                        tags: ['generated', 'christmas']
+                        tags: ['generated', 'christmas', 'face-locked']
                     });
                     secureUrl = result.secure_url;
                 }
@@ -136,22 +124,30 @@ export const imageGenerationWorker = new Worker(
             }
 
             // 4. Save results & Notify 📧
-            order.generatedImages = generatedUrls;
-            order.status = 'completed';
-            await order.save();
+            if (generatedUrls.length > 0) {
+                // Append new images instead of overwriting if doing batches? 
+                // Currently overwrite logic in old worker, let's keep it safe or append.
+                // Mongoose array push is safer if concurrent? 
+                // But simplified:
+                order.generatedImages = generatedUrls;
+                order.status = 'completed';
+                await order.save();
 
-            // Send Email if available
-            if (order.email) {
-                console.log(`[Worker] Sending email to ${order.email}...`);
-                await emailService.sendOrderReadyEmail(
-                    order.email,
-                    order._id.toString(),
-                    `${process.env.FRONTEND_URL}/success?orderId=${order._id}`
-                );
+                // Send Email if available
+                if (order.email) {
+                    console.log(`[Worker] Sending email to ${order.email}...`);
+                    await emailService.sendOrderReadyEmail(
+                        order.email,
+                        order._id.toString(),
+                        `${process.env.FRONTEND_URL}/success?orderId=${order._id}`
+                    );
+                }
+
+                console.log(`Job ${job.id} completed. Generated ${generatedUrls.length} images.`);
+                return { success: true, images: generatedUrls };
+            } else {
+                throw new Error("No images generated successfully");
             }
-
-            console.log(`Job ${job.id} completed. Generated ${generatedUrls.length} images.`);
-            return { success: true, images: generatedUrls };
 
         } catch (error: any) {
             console.error(`Job ${job.id} failed:`, error);
@@ -170,3 +166,4 @@ export const imageGenerationWorker = new Worker(
         concurrency: 5 // Process 5 images in parallel
     }
 );
+

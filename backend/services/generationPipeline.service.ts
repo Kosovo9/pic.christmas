@@ -1,5 +1,6 @@
-
 import { FaceEmbeddingService } from './faceEmbedding.service';
+import { PetEmbeddingService } from './petEmbedding.service';
+import { FaceLockVerificationService } from './faceLockVerification.service';
 import { FluxPromptService } from './fluxPrompt.service';
 import { replicate } from '../config/clients';
 
@@ -11,32 +12,49 @@ export class GenerationPipeline {
     static async generateRealisticPhoto(
         seedImageUrl: string,
         style: string,
-        context: string
-    ) {
+        context: string,
+        retryCount = 0
+    ): Promise<any> {
         try {
             console.log('🎯 STEP 1: Extracting face identity...');
             const faceProfile = await FaceEmbeddingService.extractFaceProfile(seedImageUrl);
 
-            console.log('📝 STEP 2: Generating face-locked prompt...');
-            const finalPrompt = FluxPromptService.generatePrompt(
+            console.log('🐕 STEP 2: Detecting pets...');
+            // In a real scenario we'd detect if there ARE pets first, or just run valid extraction
+            const petProfile = await PetEmbeddingService.extractPetProfile(seedImageUrl);
+            const hasPet = petProfile.type !== 'other'; // Basic check
+
+            console.log('📝 STEP 3: Generating face-locked prompt...');
+            let finalPrompt = FluxPromptService.generatePrompt(
                 faceProfile,
                 style,
                 context
             );
 
-            console.log('🎨 STEP 3: Generating with Flux.1 (Replicate)...');
+            if (hasPet) {
+                finalPrompt += `\n\nPET PRESERVATION: ${petProfile.colors.join(', ')} ${petProfile.type}, detailed fur/feathers, exact markings.`;
+            }
+
+            console.log('🎨 STEP 4: Generating with Flux.1 (Replicate)...');
             const generatedImageUrl = await this.callFlux(finalPrompt, seedImageUrl);
 
             console.log('✅ Image generated:', generatedImageUrl);
 
-            // Step 4: Verification (Mocked for speed/MVP, real impl requires comparing embeddings again)
-            const verificationScore = 96.5; // Simulated high score for launch
+            console.log('🔍 STEP 5: Verifying facial identity...');
+            const verificationScore = await FaceLockVerificationService.verifyFaceLock(seedImageUrl, generatedImageUrl);
+
+            // Auto-Retry Logic (Max 2 retries)
+            if (verificationScore < 85 && retryCount < 2) {
+                console.warn(`⚠️ Verification Score ${verificationScore}% too low. Retrying (Attempt ${retryCount + 2}/3)...`);
+                return this.generateRealisticPhoto(seedImageUrl, style, context + " ensure exact face match, high fidelity", retryCount + 1);
+            }
 
             return {
                 success: true,
                 imageUrl: generatedImageUrl,
                 verificationScore,
                 faceProfile,
+                petProfile: hasPet ? petProfile : null,
                 message: `Generated with ${verificationScore}% identity lock`
             };
 
@@ -49,33 +67,21 @@ export class GenerationPipeline {
     private static async callFlux(prompt: string, seedImage: string): Promise<string> {
         if (!process.env.REPLICATE_API_TOKEN) {
             console.warn("Using Mock Flux Generation (No Token)");
-            return "https://pic.christmas/mock-result.jpg";
+            return "https://pic.christmas/mock-result.jpg"; // Fallback for dev without keys
         }
 
-        // Using Flux.1 Pro (or Schnell for speed if configured)
-        // We can also use image-to-image to help guide structure if the model supports it 
-        // but Flux.1 is often Text-to-Image. 
-        // If we want structure preservation, we might use ControlNet or img2img with high strength.
-        // For now, relying on the "Face-Locked Prompt" description + Replicate.
-
-        // Model: black-forest-labs/flux-schnell or flux-pro
-        // Let's use flux-schnell for "Nuclear Speed" launch
         const output = await replicate.run(
             "black-forest-labs/flux-schnell",
             {
                 input: {
                     prompt: prompt,
-                    // image: seedImage, // Flux Schnell on Replicate is primarily txt2img, some implementations accept img.
-                    // If not supported, we rely purely on the detailed prompt.
-                    // To truly "Face Lock" with image input, we'd need Replicate's "PuLID" or similar adapter.
-                    // But based on prompt eng, we do our best.
                     aspect_ratio: "1:1",
-                    safety_tolerance: 2
+                    safety_tolerance: 2,
+                    output_quality: 100
                 }
             }
         );
 
-        // Output is usually an array of internal URLs or a string
         if (Array.isArray(output)) return output[0];
         return output as unknown as string;
     }

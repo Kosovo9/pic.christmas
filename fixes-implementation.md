@@ -432,3 +432,4 @@ curl -X POST https://pic-christmas-backend.onrender.com/api/orders \
 3. Run stress tests after each fix
 4. Deploy to staging for validation
 5. Monitor in production
+

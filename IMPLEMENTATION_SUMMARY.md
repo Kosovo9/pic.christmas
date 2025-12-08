@@ -160,3 +160,4 @@ POST /api/payments/webhook-mercadopago
 
 **Generado:** December 7, 2025  
 **Status:** ✅ BACKEND COMPLETE | ⏳ CONFIGURATION PENDING
+
