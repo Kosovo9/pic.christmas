@@ -33,8 +33,8 @@ try {
         retryStrategy(times) {
             const delay = Math.min(times * 50, 2000);
             if (times > 3) {
-                 console.warn('[Redis] Connection failed. Processing will be disabled.');
-                 return null; // Stop retrying
+                console.warn('[Redis] Connection failed. Processing will be disabled.');
+                return null; // Stop retrying
             }
             return delay;
         },
@@ -54,5 +54,20 @@ try {
         add: async () => { console.log('[MockQueue] Job ignored (No Redis)'); }
     } as any;
 }
+
+// Replicate
+import Replicate from 'replicate';
+export const replicate = new Replicate({
+    auth: process.env.REPLICATE_API_TOKEN || '',
+});
+
+// Cloudinary
+import { v2 as cloudinary } from 'cloudinary';
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+export { cloudinary };
 
 export const generationQueue = generationQueueExport;

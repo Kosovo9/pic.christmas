@@ -157,5 +157,15 @@ export const api = {
             body: JSON.stringify(data)
         });
         return res.json();
+    },
+
+    // 🚀 NEW 100X FEATURES
+    enhanceFace: async (imageUrl: string) => {
+        const res = await fetch(`${API_BASE}/enhance/face-restoration`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ imageUrl })
+        });
+        return res.json();
     }
 };
