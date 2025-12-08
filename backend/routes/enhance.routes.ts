@@ -27,4 +27,29 @@ router.post('/face-restoration', async (req, res) => {
     }
 });
 
+import { UpscalingService } from '../services/upscaling.service';
+
+// @desc    Upscale Image to 4K
+// @route   POST /api/enhance/upscale
+router.post('/upscale', async (req, res) => {
+    try {
+        const { imageUrl } = req.body;
+
+        if (!imageUrl) {
+            return res.status(400).json({ message: 'imageUrl is required' });
+        }
+
+        const upscaledUrl = await UpscalingService.upscaleImage(imageUrl);
+
+        res.json({
+            success: true,
+            originalUrl: imageUrl,
+            upscaledUrl: upscaledUrl
+        });
+
+    } catch (error: any) {
+        res.status(500).json({ message: 'Upscaling failed', error: error.message });
+    }
+});
+
 export default router;
