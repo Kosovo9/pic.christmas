@@ -13,6 +13,8 @@ import affiliateAssetsRoutes from './routes/affiliateAssets.routes';
 import emailRoutes from './routes/email.routes';
 import chatRoutes from './routes/chat.routes';
 import enhanceRoutes from './routes/enhance.routes';
+import batchRoutes from './routes/batch.routes';
+import viralRoutes from './routes/viral.routes';
 import { v2 as cloudinary } from 'cloudinary';
 import { stripe } from './config/clients'; // Import strictly to verify connection if needed
 // import './workers/imageGeneration.worker'; // Start worker
@@ -86,6 +88,8 @@ app.use('/api/affiliate-assets', affiliateAssetsRoutes);
 app.use('/api/email', emailRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/enhance', enhanceRoutes);
+app.use('/api/batch', batchRoutes);
+app.use('/api/viral', viralRoutes);
 
 app.get('/', (req, res) => {
   res.send('Pic.Christmas API is running 🎄 (All Features Active)');

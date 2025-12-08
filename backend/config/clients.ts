@@ -70,4 +70,13 @@ cloudinary.config({
 });
 export { cloudinary };
 
+// Supabase
+import { createClient } from '@supabase/supabase-js';
+const supabaseUrl = process.env.SUPABASE_URL || '';
+const supabaseKey = process.env.SUPABASE_KEY || ''; // Service role key ideally for backend
+export const supabase = (supabaseUrl && supabaseKey)
+    ? createClient(supabaseUrl, supabaseKey)
+    : null;
+
+export const redis = redisConnection;
 export const generationQueue = generationQueueExport;
