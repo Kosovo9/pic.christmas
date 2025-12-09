@@ -3,10 +3,26 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Lazy-load Supabase to avoid build-time errors
+let supabaseInstance: ReturnType<typeof createClient> | null = null;
+
+function getSupabase() {
+    if (!supabaseInstance) {
+        if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+            // Return a mock or throw depending on if we are in build mode, but better to just throw safely or return null? 
+            // Actually, usually throwing inside the function when called is better than top level.
+            // But if we are strict:
+            if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_SUPABASE_URL) {
+                console.error("Supabase Utils: Missing env vars");
+            }
+        }
+        supabaseInstance = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.SUPABASE_SERVICE_ROLE_KEY!
+        );
+    }
+    return supabaseInstance;
+}
 
 export interface RateLimitConfig {
     maxRequestsPerHour: number;
@@ -29,7 +45,7 @@ export const RATE_LIMIT_CONFIG: RateLimitConfig = {
 
 export const getKillSwitchStartTime = async (): Promise<Date> => {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await getSupabase()
             .from('system_config')
             .select('kill_switch_start_time')
             .single();
@@ -84,7 +100,7 @@ export const checkRateLimit = async (
     try {
         const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
 
-        const { data, error } = await supabase
+        const { data, error } = await getSupabase()
             .from('generation_requests')
             .select('id')
             .eq('user_id', userId)
@@ -115,7 +131,7 @@ export const getTotalSpendLast12Hours = async (): Promise<number> => {
     try {
         const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000);
 
-        const { data, error } = await supabase
+        const { data, error } = await getSupabase()
             .from('generation_requests')
             .select('price_usd')
             .gte('created_at', twelveHoursAgo.toISOString());
@@ -175,7 +191,7 @@ export const logGenerationRequest = async (
     imageUrl?: string
 ): Promise<void> => {
     try {
-        const { error } = await supabase.from('generation_requests').insert({
+        const { error } = await getSupabase().from('generation_requests').insert({
             user_id: userId,
             format_id: formatId,
             price_usd: priceUSD,
