@@ -1,0 +1,305 @@
+// lib/rateLimiter.ts
+// Sistema de rate limiting + kill switch para pic.christmas
+
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
+
+export interface RateLimitConfig {
+    maxRequestsPerHour: number;
+    maxRequestsPerDay: number;
+    killSwitchEnabled: boolean;
+    killSwitchDurationMinutes: number;
+    maxSpendUSD: number;
+    alertThresholdUSD: number;
+}
+
+// CONFIGURACIÓN DE SEGURIDAD
+export const RATE_LIMIT_CONFIG: RateLimitConfig = {
+    maxRequestsPerHour: 10,
+    maxRequestsPerDay: 50,
+    killSwitchEnabled: true,
+    killSwitchDurationMinutes: 12 * 60,
+    maxSpendUSD: 50,
+    alertThresholdUSD: 30
+};
+
+export const getKillSwitchStartTime = async (): Promise<Date> => {
+    try {
+        const { data, error } = await supabase
+            .from('system_config')
+            .select('kill_switch_start_time')
+            .single();
+
+        if (data?.kill_switch_start_time) {
+            return new Date(data.kill_switch_start_time);
+        }
+    } catch (e) {
+        console.log('Kill switch time not in DB, using env or now');
+    }
+
+    const envTime = process.env.KILL_SWITCH_START_TIME;
+    return envTime ? new Date(envTime) : new Date();
+};
+
+export const isKillSwitchActive = async (): Promise<boolean> => {
+    if (!RATE_LIMIT_CONFIG.killSwitchEnabled) return false;
+
+    try {
+        const startTime = await getKillSwitchStartTime();
+        const now = new Date();
+        const elapsedMinutes = (now.getTime() - startTime.getTime()) / (1000 * 60);
+
+        const isActive = elapsedMinutes < RATE_LIMIT_CONFIG.killSwitchDurationMinutes;
+
+        return isActive;
+    } catch (e) {
+        console.error('Error checking kill switch:', e);
+        return false;
+    }
+};
+
+export const getKillSwitchTimeRemaining = async (): Promise<number> => {
+    try {
+        const startTime = await getKillSwitchStartTime();
+        const now = new Date();
+        const elapsedMinutes = (now.getTime() - startTime.getTime()) / (1000 * 60);
+        const remainingMinutes = Math.max(
+            0,
+            RATE_LIMIT_CONFIG.killSwitchDurationMinutes - elapsedMinutes
+        );
+
+        return Math.round(remainingMinutes);
+    } catch (e) {
+        return RATE_LIMIT_CONFIG.killSwitchDurationMinutes;
+    }
+};
+
+export const checkRateLimit = async (
+    userId: string
+): Promise<{ allowed: boolean; remaining: number; resetTime: Date }> => {
+    try {
+        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+
+        const { data, error } = await supabase
+            .from('generation_requests')
+            .select('id')
+            .eq('user_id', userId)
+            .gte('created_at', oneHourAgo.toISOString());
+
+        if (error) throw error;
+
+        const requestCount = data?.length || 0;
+        const allowed = requestCount < RATE_LIMIT_CONFIG.maxRequestsPerHour;
+        const remaining = Math.max(
+            0,
+            RATE_LIMIT_CONFIG.maxRequestsPerHour - requestCount
+        );
+        const resetTime = new Date(oneHourAgo.getTime() + 60 * 60 * 1000);
+
+        return { allowed, remaining, resetTime };
+    } catch (e) {
+        console.error('Rate limit check failed:', e);
+        return {
+            allowed: true,
+            remaining: RATE_LIMIT_CONFIG.maxRequestsPerHour,
+            resetTime: new Date()
+        };
+    }
+};
+
+export const getTotalSpendLast12Hours = async (): Promise<number> => {
+    try {
+        const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000);
+
+        const { data, error } = await supabase
+            .from('generation_requests')
+            .select('price_usd')
+            .gte('created_at', twelveHoursAgo.toISOString());
+
+        if (error) throw error;
+
+        const totalSpend = (data || []).reduce(
+            (sum, row) => sum + (row.price_usd || 0),
+            0
+        );
+
+        return parseFloat(totalSpend.toFixed(2));
+    } catch (e) {
+        console.error('Spend calculation failed:', e);
+        return 0;
+    }
+};
+
+export const checkSpendLimit = async (): Promise<{
+    allowed: boolean;
+    currentSpend: number;
+    limit: number;
+    percentage: number;
+}> => {
+    try {
+        const currentSpend = await getTotalSpendLast12Hours();
+        const limit = RATE_LIMIT_CONFIG.maxSpendUSD;
+        const allowed = currentSpend < limit;
+        const percentage = Math.round((currentSpend / limit) * 100);
+
+        if (
+            currentSpend >= RATE_LIMIT_CONFIG.alertThresholdUSD &&
+            currentSpend < limit
+        ) {
+            console.warn(
+                `⚠️ SPEND ALERT: $${currentSpend} de $${limit} gastados (${percentage}%)`
+            );
+        }
+
+        return { allowed, currentSpend, limit, percentage };
+    } catch (e) {
+        console.error('Spend limit check failed:', e);
+        return {
+            allowed: true,
+            currentSpend: 0,
+            limit: RATE_LIMIT_CONFIG.maxSpendUSD,
+            percentage: 0
+        };
+    }
+};
+
+export const logGenerationRequest = async (
+    userId: string,
+    formatId: string,
+    priceUSD: number,
+    promptLength: number,
+    imageUrl?: string
+): Promise<void> => {
+    try {
+        const { error } = await supabase.from('generation_requests').insert({
+            user_id: userId,
+            format_id: formatId,
+            price_usd: priceUSD,
+            prompt_length: promptLength,
+            image_url: imageUrl,
+            created_at: new Date().toISOString()
+        });
+
+        if (error) throw error;
+    } catch (e) {
+        console.error('Failed to log generation request:', e);
+    }
+};
+
+export const validateGenerationRequest = async (
+    userId: string
+): Promise<{
+    allowed: boolean;
+    reason?: string;
+    details: {
+        rateLimitOk: boolean;
+        spendLimitOk: boolean;
+        killSwitchActive: boolean;
+    };
+}> => {
+    try {
+        const killSwitchActive = await isKillSwitchActive();
+        const rateLimit = await checkRateLimit(userId);
+        const spendLimit = await checkSpendLimit();
+
+        if (!killSwitchActive) {
+            return {
+                allowed: false,
+                reason: 'Oferta gratuita terminada. El sistema vuelve a precios normales.',
+                details: {
+                    rateLimitOk: false,
+                    spendLimitOk: false,
+                    killSwitchActive: false
+                }
+            };
+        }
+
+        if (!rateLimit.allowed) {
+            return {
+                allowed: false,
+                reason: `Has alcanzado el límite de ${RATE_LIMIT_CONFIG.maxRequestsPerHour} generaciones por hora. Intenta en ${Math.round((rateLimit.resetTime.getTime() - Date.now()) / 60000)} minutos.`,
+                details: {
+                    rateLimitOk: false,
+                    spendLimitOk: spendLimit.allowed,
+                    killSwitchActive
+                }
+            };
+        }
+
+        if (!spendLimit.allowed) {
+            return {
+                allowed: false,
+                reason: `Se ha alcanzado el límite de gastos ($${spendLimit.currentSpend}/$${spendLimit.limit}). El sistema está protegido. Intenta más tarde.`,
+                details: {
+                    rateLimitOk: true,
+                    spendLimitOk: false,
+                    killSwitchActive
+                }
+            };
+        }
+
+        return {
+            allowed: true,
+            details: {
+                rateLimitOk: true,
+                spendLimitOk: true,
+                killSwitchActive
+            }
+        };
+    } catch (e) {
+        console.error('Validation error:', e);
+        return {
+            allowed: true,
+            reason: 'Validation error (fail-open)',
+            details: {
+                rateLimitOk: true,
+                spendLimitOk: true,
+                killSwitchActive: true
+            }
+        };
+    }
+};
+
+export const getSystemStatus = async (): Promise<{
+    killSwitchActive: boolean;
+    timeRemaining: string;
+    currentSpend: number;
+    spendLimit: number;
+    spendPercentage: number;
+    rateLimitInfo: string;
+}> => {
+    try {
+        const killSwitchActive = await isKillSwitchActive();
+        const timeRemaining = await getKillSwitchTimeRemaining();
+        const spendInfo = await checkSpendLimit();
+
+        const hours = Math.floor(timeRemaining / 60);
+        const minutes = timeRemaining % 60;
+
+        return {
+            killSwitchActive,
+            timeRemaining:
+                killSwitchActive && timeRemaining > 0
+                    ? `${hours}h ${minutes}m restante`
+                    : 'Oferta terminada',
+            currentSpend: spendInfo.currentSpend,
+            spendLimit: spendInfo.limit,
+            spendPercentage: spendInfo.percentage,
+            rateLimitInfo: `Máximo ${RATE_LIMIT_CONFIG.maxRequestsPerHour} generaciones/hora`
+        };
+    } catch (e) {
+        console.error('Status check failed:', e);
+        return {
+            killSwitchActive: false,
+            timeRemaining: 'Error',
+            currentSpend: 0,
+            spendLimit: RATE_LIMIT_CONFIG.maxSpendUSD,
+            spendPercentage: 0,
+            rateLimitInfo: 'Error en validación'
+        };
+    }
+};

@@ -28,6 +28,8 @@ import { PaymentMethodSelector } from '../components/PaymentMethodSelector';
 import { OxxoPaymentUI } from '../components/OxxoPaymentUI';
 import { BankTransferUI } from '../components/BankTransferUI';
 import ExitBanner from '../components/ExitBanner'; // Task 9
+import { SystemStatus } from '../components/SystemStatus';
+
 
 export default function Home() {
   const { language, switchLanguage } = useI18n();
@@ -320,6 +322,9 @@ export default function Home() {
         <LiveNotifications />
         <ExitIntentModal />
         <ExitBanner onDismiss={() => setShowExitBanner(false)} /> {/* Task 9 */}
+
+        {/* 🛡️ SECURITY HUD */}
+        <SystemStatus />
       </main>
     </PageTransition>
   );

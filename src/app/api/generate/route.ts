@@ -1,57 +1,54 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateImage } from "@/lib/ai/generateChristmasPortrait";
+import {
+    validateGenerationRequest,
+    logGenerationRequest,
+    getSystemStatus
+} from '@/lib/rateLimiter';
 
 export const runtime = "edge"; // fast execution
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { refPhotos, presetId, language, prompt, width, height, quantity } = body;
+        // Extract userId if available (e.g. from cookies/auth), or use IP if not.
+        // For now trusting client-sent userId (needs authentication for real security but good for MVP)
+        // Or generate one if missing for guest users.
+        const userId = body.userId || 'guest_' + (req.headers.get('x-forwarded-for') || 'unknown');
+
+        const { refPhotos, presetId, language, prompt, width, height, quantity, formatId } = body;
+
+        // 1. VALIDAR KILL SWITCH + RATE LIMIT
+        const validation = await validateGenerationRequest(userId);
+
+        if (!validation.allowed) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: validation.reason || 'Solicitud rechazada',
+                    details: validation.details
+                },
+                { status: 429 }
+            );
+        }
 
         // Basic validation: Either presetId OR prompt must be present
         if (!presetId && !prompt) {
             return NextResponse.json({ error: "Missing presetId or prompt" }, { status: 400 });
         }
 
-        // Determine aspect ratio from width/height if provided, or default
+        // Determine aspect ratio logic from original file...
         let aspectRatio = "4:5";
         if (width && height) {
             const ratio = width / height;
-            // Map common ratios to Flux-friendly strings
-            if (ratio === 1) aspectRatio = "1:1";
-            else if (ratio > 1.7 && ratio < 1.8) aspectRatio = "16:9";
-            else if (ratio > 0.5 && ratio < 0.6) aspectRatio = "9:16";
-            // Add more heuristics if needed, or rely on what front-end sends if we added it there.
-            // But front-end sends exact pixels.
-
-            // NOTE: Flux Schnell accepts specific enums. We should try to match closest.
-            // For 2K/4K landscape -> 16:9
-            // For Social Vertical -> 9:16
-            // For Square -> 1:1
+            if (width === 1080 && height === 1920) aspectRatio = "9:16";
+            else if (width === 1080 && height === 1080) aspectRatio = "1:1";
+            else if (width > height) aspectRatio = "16:9";
+            else if (height > width) aspectRatio = "9:16";
+            else aspectRatio = "1:1";
         }
 
-        // If 'ratio' string was passed in prompt or separately, we might parse it, 
-        // but looking at useFormatSelector, it appends "Aspect ratio 9:16" to the prompt text.
-        // We can also infer it if the frontend sent 'width' and 'height' which match specific formats.
-        // Since we have specific formats in imageFormats.ts, we can map them.
-
-        // Simple mapping based on the known formats in imageFormats.ts:
-        // 1080x1920 -> 9:16
-        // 1080x1080 -> 1:1
-        // 1920x1080 -> 16:9
-        // 1600x900 -> 16:9
-        // 2560x1440 -> 16:9
-        // 3840x2160 -> 16:9
-        // 2160x3840 -> 9:16
-        // 3840x3840 -> 1:1
-
-        if (width === 1080 && height === 1920) aspectRatio = "9:16";
-        else if (width === 1080 && height === 1080) aspectRatio = "1:1";
-        else if (width > height) aspectRatio = "16:9"; // Default landscape
-        else if (height > width) aspectRatio = "9:16"; // Default portrait
-        else aspectRatio = "1:1"; // Default square
-
-        // Call AI Service
+        // Call AI Service (Your existing logic)
         const result = await generateImage(refPhotos || [], {
             presetId,
             prompt,
@@ -59,9 +56,14 @@ export async function POST(req: NextRequest) {
             aspectRatio,
         });
 
+        // 3. REGISTRAR LA SOLICITUD (Log successful generation)
+        // Estimated price for Flux Schnell ~0.003, let's log 0.05 to be conservative/safe for the spend limit
+        const ESTIMATED_PRICE = 0.05;
+        await logGenerationRequest(userId, formatId || 'custom', ESTIMATED_PRICE, (prompt || '').length, result.url);
+
         return NextResponse.json({
             success: true,
-            imageUrl: result.url, // Simple return for the new frontend
+            imageUrl: result.url,
             images: [
                 {
                     id: crypto.randomUUID(),
@@ -70,11 +72,31 @@ export async function POST(req: NextRequest) {
                     variant: "A",
                 },
             ],
+            details: {
+                width,
+                height,
+                quantity,
+                formatId
+            }
         });
     } catch (error: any) {
         console.error("Generate API Error:", error);
         return NextResponse.json(
             { error: error.message || "Failed to generate image" },
+            { status: 500 }
+        );
+    }
+}
+
+// Endpoint para obtener el status del sistema
+export async function GET(req: NextRequest) {
+    try {
+        const status = await getSystemStatus();
+        return NextResponse.json(status);
+    } catch (error) {
+        console.error('Status error:', error);
+        return NextResponse.json(
+            { error: 'Error obteniendo status' },
             { status: 500 }
         );
     }
