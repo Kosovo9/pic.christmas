@@ -1,4 +1,3 @@
-import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import React from 'react';
 import { Language } from '../types';
 
@@ -59,18 +58,6 @@ export const Navbar: React.FC<NavbarProps> = ({ language, onLanguageChange, onRe
                         )}
 
                         <div className="flex items-center gap-4">
-                            {/* Auth Buttons */}
-                            <SignedOut>
-                                <SignInButton mode="modal">
-                                    <button className="text-sm font-medium text-white bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition-all">
-                                        Sign In
-                                    </button>
-                                </SignInButton>
-                            </SignedOut>
-                            <SignedIn>
-                                <UserButton afterSignOutUrl="/" />
-                            </SignedIn>
-
                             {/* Language Switcher */}
                             <div className="relative" ref={dropdownRef}>
                                 <button
