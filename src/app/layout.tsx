@@ -205,7 +205,7 @@ import { FlyingSanta3D } from "@/components/FlyingSanta3D";
 import { BrandHeader } from "@/components/BrandHeader";
 import { EarthFooter } from "@/components/EarthFooter";
 import ExitBanner from "@/components/ExitBanner";
-
+import { ShareIncentive } from "@/components/ShareIncentive";
 
 
 
@@ -233,6 +233,7 @@ export default function RootLayout({
           <MusicPlayer />
           <BrandHeader />
           <ExitBanner />
+          <ShareIncentive />
           {children}
           <EarthFooter />
         </Providers>

@@ -14,7 +14,16 @@ export const faqData = {
         { q: "Why does the AI look slightly different?", a: "AI takes artistic license to make you look your 'Christmas Best'. It's not a photocopy, it's a painting!" },
         { q: "Do I need an app?", a: "No! pic.christmas works directly in your browser on any phone or computer." },
         { q: "Can I print these?", a: "Yes! We provide High-Resolution (4K) downloads suitable for printing on cards, mugs, or canvas." },
-        { q: "My code isn't working.", a: "Check spelling! Common codes are SANTA25. If it still fails, chat with support." }
+        { q: "My code isn't working.", a: "Check spelling! Common codes are SANTA25. If it still fails, chat with support." },
+        { q: "What payment methods do you accept?", a: "We accept all major credit cards (Visa, Mastercard, Amex), PayPal, MercadoPago (LatAm), and crypto (BTC, ETH)." },
+        { q: "Can I edit the photos after generation?", a: "Yes! Download the high-res files and use any photo editor. We also offer a 'Regenerate' option if you want different styles." },
+        { q: "Do you offer bulk discounts?", a: "Yes! Contact us for corporate/wedding packages. We offer 20% off for orders of 50+ photos." },
+        { q: "What if the AI doesn't recognize my face?", a: "Ensure your photo is well-lit, front-facing, and shows your full face. Avoid heavy filters or extreme angles." },
+        { q: "Can I use old photos?", a: "Absolutely! As long as the face is clear, photos from any year work perfectly." },
+        { q: "Is there a mobile app?", a: "Not yet, but our website is fully mobile-optimized. Works perfectly on iPhone and Android browsers!" },
+        { q: "How do I cancel my order?", a: "Contact support@pic.christmas within 1 hour of purchase for a full refund. After processing starts, we cannot cancel." },
+        { q: "Can I get photos of my deceased loved one?", a: "Yes, with respect. Many customers create memorial Christmas photos. We handle these requests with care." },
+        { q: "What's the difference between styles?", a: "Each style has unique lighting, backgrounds, and artistic filters. Preview them in the configuration step!" }
     ],
     es: [
         { q: "¿Cuánto tiempo tarda?", a: "¡La mayoría de las fotos están listas en menos de 30 minutos! En alta demanda, hasta 2 horas." },
@@ -31,7 +40,16 @@ export const faqData = {
         { q: "¿Por qué me veo diferente?", a: "La IA te hace ver tu 'Mejor Versión Navideña'. ¡Es arte, no una fotocopia!" },
         { q: "¿Necesito una app?", a: "¡No! Funciona directo en tu navegador en cualquier celular." },
         { q: "¿Puedo imprimirlas?", a: "¡Sí! Damos Alta Resolución (4K) perfecta para tarjetas o cuadros." },
-        { q: "Mi código no funciona.", a: "Revisa la ortografía. Códigos comunes: SANTA25. Si falla, contáctanos." }
+        { q: "Mi código no funciona.", a: "Revisa la ortografía. Códigos comunes: SANTA25. Si falla, contáctanos." },
+        { q: "¿Qué métodos de pago aceptan?", a: "Aceptamos todas las tarjetas (Visa, Mastercard, Amex), PayPal, MercadoPago y criptomonedas." },
+        { q: "¿Puedo editar las fotos después?", a: "¡Sí! Descarga los archivos en alta resolución y usa cualquier editor. También ofrecemos 'Regenerar'." },
+        { q: "¿Hay descuentos por volumen?", a: "¡Sí! Contáctanos para paquetes corporativos/bodas. 20% de descuento en pedidos de 50+ fotos." },
+        { q: "¿Qué pasa si la IA no reconoce mi cara?", a: "Asegúrate de que tu foto esté bien iluminada, de frente y muestre tu cara completa. Evita filtros pesados." },
+        { q: "¿Puedo usar fotos viejas?", a: "¡Absolutamente! Mientras la cara sea clara, fotos de cualquier año funcionan perfectamente." },
+        { q: "¿Hay app móvil?", a: "Aún no, pero nuestro sitio está optimizado para móviles. ¡Funciona perfecto en iPhone y Android!" },
+        { q: "¿Cómo cancelo mi pedido?", a: "Contacta a support@pic.christmas dentro de 1 hora de la compra para reembolso total." },
+        { q: "¿Puedo hacer fotos de un ser querido fallecido?", a: "Sí, con respeto. Muchos clientes crean fotos navideñas conmemorativas. Lo manejamos con cuidado." },
+        { q: "¿Cuál es la diferencia entre estilos?", a: "Cada estilo tiene iluminación, fondos y filtros únicos. ¡Previsualízalos en el paso de configuración!" }
     ],
     fr: [
         { q: "Combien de temps cela prend-il ?", a: "La plupart des photos sont prêtes en moins de 30 minutes ! En cas de forte demande, jusqu'à 2 heures." },
@@ -105,5 +123,14 @@ export const smartKeywords = {
     'money|back|guarantee|return|devolución|garantía|retour|geld|soldi|dinheiro|возврат|退款|返金|استرجاع': 9,
     'affiliate|partner|earn|commission|afiliado|socio|ganar|partenaire|gagner|partner|guadagnare|parceiro|партнер|联盟|アフィリエイト|شريك': 10,
     'download|print|resolution|4k|imprimir|descargar|imprenta|imprimer|drucken|stampa|baixar|печать|下载|印刷|طباعة': 13,
-    'code|coupon|promo|discount|código|descuento|cupón|code|rabatt|codice|código|код|优惠码|コード|كود': 14
+    'code|coupon|promo|discount|código|descuento|cupón|code|rabatt|codice|código|код|优惠码|コード|كود': 14,
+    'payment|card|paypal|crypto|bitcoin|pago|tarjeta|cripto|paiement|carte|zahlung|karte|pagamento|cartão|оплата|карта|支付|卡|دفع': 15,
+    'edit|change|modify|regenerate|editar|cambiar|modificar|éditer|modifier|bearbeiten|ändern|modificare|editar|редактировать|изменить|编辑|修改|تعديل': 16,
+    'bulk|discount|corporate|wedding|volume|descuento|volumen|corporativo|boda|réduction|volume|entreprise|mariage|rabatt|volumen|firma|hochzeit|sconto|volume|aziendale|matrimonio|скидка|объем|корпоративный|свадьба|批量|折扣|企业|婚礼|خصم|حجم|شركة|زفاف': 17,
+    'recognize|detect|face|not working|no funciona|reconocer|detectar|cara|reconnaître|détecter|visage|erkennen|gesicht|riconoscere|rilevare|viso|reconhecer|detectar|rosto|распознать|обнаружить|лицо|识别|检测|脸|التعرف|كشف|وجه': 18,
+    'old|photo|vintage|past|antigua|vieja|pasado|ancienne|vieille|passé|alt|foto|vergangenheit|vecchia|passato|antiga|velha|passado|старый|фото|прошлое|旧|照片|过去|قديم|صورة|ماضي': 19,
+    'mobile|app|iphone|android|móvil|aplicación|téléphone|application|handy|anwendung|cellulare|applicazione|celular|aplicativo|мобильный|приложение|手机|应用|جوال|تطبيق': 20,
+    'cancel|refund|return|money back|cancelar|reembolso|devolver|annuler|remboursement|retour|stornieren|rückerstattung|annullare|rimborso|cancelar|reembolso|отменить|возврат|取消|退款|إلغاء|استرداد': 21,
+    'deceased|memorial|passed|died|fallecido|memorial|murió|décédé|mémorial|verstorben|gedenkstätte|defunto|memoriale|falecido|memorial|умерший|мемориал|去世|纪念|متوفى|تذكاري': 22,
+    'style|difference|compare|background|estilo|diferencia|comparar|fondo|style|différence|comparer|arrière-plan|stil|unterschied|vergleichen|hintergrund|stile|differenza|confrontare|sfondo|estilo|diferença|comparar|fundo|стиль|разница|сравнить|фон|风格|差异|比较|背景|نمط|فرق|مقارنة|خلفية': 23
 };
