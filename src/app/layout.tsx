@@ -197,6 +197,9 @@ import { ChatWidget } from "@/components/ChatWidget";
 import { SecurityShield } from "@/components/SecurityShield";
 import { MusicPlayer } from "@/components/MusicPlayer";
 import { FlyingSanta3D } from "@/components/FlyingSanta3D";
+import { BrandHeader } from "@/components/BrandHeader";
+import { EarthFooter } from "@/components/EarthFooter";
+
 
 
 
@@ -221,7 +224,9 @@ export default function RootLayout({
           <SocialProof />
           <ChatWidget />
           <MusicPlayer />
+          <BrandHeader />
           {children}
+          <EarthFooter />
         </Providers>
 
         {/* Anti-copy / anti-right-click basic protection */}
