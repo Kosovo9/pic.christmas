@@ -53,10 +53,8 @@ export const Hero: React.FC<HeroProps> = ({ onStart }) => {
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 
                 {/* Premium Badge */}
-                <div className="animate-fade-in inline-flex items-center px-4 py-2 rounded-full border border-blue-500/30 bg-blue-900/20 backdrop-blur-md text-blue-200 text-sm font-medium mb-8 shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-                    <span className="w-2 h-2 rounded-full bg-blue-400 mr-2 animate-pulse"></span>
-                    <span>{t('hero.powered')}</span>
-                </div>
+                {/* Premium Badge Removed as requested to avoid covering logo */}
+                <div className="mb-8"></div>
 
                 {/* Main Headline */}
                 <h1 className="animate-slide-up text-5xl sm:text-7xl md:text-8xl font-black text-white tracking-tight mb-8 leading-tight drop-shadow-2xl">
@@ -64,8 +62,8 @@ export const Hero: React.FC<HeroProps> = ({ onStart }) => {
                 </h1>
 
                 {/* Subtitle */}
-                <p className="animate-slide-up [animation-delay:200ms] mt-6 max-w-2xl mx-auto text-xl sm:text-2xl text-slate-300 mb-12 font-light leading-relaxed">
-                    {t('hero.description')}
+                <p className="animate-slide-up [animation-delay:200ms] mt-6 max-w-2xl mx-auto text-xl sm:text-2xl text-slate-200 mb-12 font-medium leading-relaxed drop-shadow-lg">
+                    Ya no tienes que ir a un estudio para tu foto soñada... aquí la tienes y como la quieres.
                 </p>
 
                 {/* CTA Buttons */}

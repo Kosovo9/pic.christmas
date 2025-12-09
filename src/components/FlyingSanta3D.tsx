@@ -63,9 +63,9 @@ export const FlyingSanta3D = () => {
             <div className="relative">
                 {/* 🎅 SANTA SPRITE (HD PNG) */}
                 <img
-                    src="https://cdn.pixabay.com/photo/2016/12/15/21/50/santa-claus-1909875_1280.png"
+                    src="/assets/santa_setup.png"
                     alt="Santa Flying"
-                    className="h-32 md:h-48 object-contain transform -scale-x-100" // Voltear para ir a la izquierda
+                    className="h-32 md:h-64 object-contain" // Removed scale-x-100 if image direction is already correct or needs adjustment
                 />
 
                 {/* ✨ PARTICLES / MAGIC TRAIL */}

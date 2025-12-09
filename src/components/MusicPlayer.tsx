@@ -11,17 +11,29 @@ export const MusicPlayer = () => {
 
     // Música estilo Jazz Navideño Moderno (Sin Copyright)
     // Fuente: Mixkit / Pixabay (Royalty Free)
-    const AUDIO_URL = "https://cdn.pixabay.com/download/audio/2022/11/22/audio_febc508520.mp3?filename=christmas-jazz-11787.mp3";
+    // Playlist de Jazz Navideño (Royalty Free)
+    const PLAYLIST = [
+        "https://cdn.pixabay.com/download/audio/2022/11/22/audio_febc508520.mp3?filename=christmas-jazz-11787.mp3",
+        "https://cdn.pixabay.com/download/audio/2022/12/16/audio_1332204128.mp3?filename=christmas-magic-12297.mp3",
+        "https://cdn.pixabay.com/download/audio/2021/11/25/audio_91b79f2910.mp3?filename=jingle-bells-jazzy-style-11883.mp3"
+    ];
+
+    const [currentTrack, setCurrentTrack] = useState(0);
+
+    const handleTrackEnd = () => {
+        setCurrentTrack((prev) => (prev + 1) % PLAYLIST.length);
+    };
 
     useEffect(() => {
         // Autoplay policy workaround: Iniciar con interacción
-        // Intentar autoplay suave si es posible (a veces bloqueado por browsers hasta clic)
         const audio = audioRef.current;
         if (audio) {
             audio.volume = volume;
-            audio.loop = true;
+            audio.onended = handleTrackEnd;
+            // Intentar autoplay
+            audio.play().then(() => setIsPlaying(true)).catch(() => console.log("Autoplay blocked"));
         }
-    }, []);
+    }, [currentTrack]);
 
     useEffect(() => {
         if (audioRef.current) {
@@ -79,7 +91,7 @@ export const MusicPlayer = () => {
                     <span className="text-xl ml-1">▶</span>
                 )}
             </button>
-            <audio ref={audioRef} src={AUDIO_URL} />
+            <audio ref={audioRef} src={PLAYLIST[currentTrack]} />
         </div>
     );
 };

@@ -8,12 +8,10 @@ export const Footer: React.FC<FooterProps> = () => {
     const { t } = useI18n();
 
     return (
-        <footer className="bg-[#020408] border-t border-slate-800 py-8 mt-12">
+        <footer className="relative z-50 border-t border-slate-800/50 py-8 mt-12 bg-transparent">
             <div className="max-w-7xl mx-auto px-4 text-center">
                 <div className="flex justify-center items-center gap-2 mb-4">
-                    <span className="text-xl font-bold tracking-wider text-slate-200">
-                        NEXORA · pic.christmas
-                    </span>
+                    {/* Logo only - text removed */}
                 </div>
 
                 {/* Dynamic Legal Disclaimer & Safety Shield 🛡️ */}
@@ -21,10 +19,10 @@ export const Footer: React.FC<FooterProps> = () => {
                     <div className="flex flex-col md:flex-row items-center gap-6 text-left">
                         <div className="text-4xl text-slate-500">⚖️</div>
                         <div className="flex-1">
-                            <h4 className="text-slate-200 font-bold mb-2 uppercase tracking-widest text-xs">
+                            <h4 className="text-blue-400 font-bold mb-2 uppercase tracking-widest text-xs">
                                 {t('footer.legal_title')}
                             </h4>
-                            <p className="text-slate-400 text-xs leading-relaxed">
+                            <p className="text-amber-300 font-medium text-xs leading-relaxed drop-shadow-md">
                                 {t('footer.disclaimer_full')}
                             </p>
                         </div>
@@ -50,16 +48,7 @@ export const Footer: React.FC<FooterProps> = () => {
                 <p className="text-slate-500 text-sm mb-2">
                     © {new Date().getFullYear()} Nexora Studio. {t('footer.terms')}
                 </p>
-                <div className="mt-4 flex flex-wrap justify-center items-center gap-4 text-xs text-gray-400">
-                    <span>{t('footer.payments')}:</span>
-                    <span className="font-medium text-slate-300">Mercado&nbsp;Pago</span>
-                    <span>|</span>
-                    <span className="font-medium text-slate-300">PayPal</span>
-                    <span>|</span>
-                    <span className="font-medium text-slate-300">Stripe</span>
-                    <span>|</span>
-                    <span className="font-medium text-slate-300">Lemon&nbsp;Squeezy</span>
-                </div>
+                {/* REMOVED PAYMENTS & AFFILIATES AS REQUESTED */}
                 <div className="mt-2 text-xs text-gray-500 italic">
                     {t('footer.affiliates')}
                 </div>

@@ -43,11 +43,15 @@ export const SocialProof: React.FC = () => {
         return () => clearInterval(interval);
     }, []);
 
+    const [displayedCount, setDisplayedCount] = useState(0);
+
     // Simulate "Recent Sales/Generations" Popups
     useEffect(() => {
+        if (displayedCount >= 3) return; // Stop after 3
+
         const scheduleNextPopup = () => {
-            const delay = Math.random() * 5000 + 3000; // 3-8 seconds
-            setTimeout(() => {
+            const delay = Math.random() * 8000 + 5000; // 5-13 seconds (slower)
+            const timeoutId = setTimeout(() => {
                 const name = MOCK_NAMES[Math.floor(Math.random() * MOCK_NAMES.length)];
                 const location = MOCK_LOCATIONS[Math.floor(Math.random() * MOCK_LOCATIONS.length)];
                 const action = MOCK_ACTIONS[Math.floor(Math.random() * MOCK_ACTIONS.length)];
@@ -61,16 +65,17 @@ export const SocialProof: React.FC = () => {
                 };
 
                 setRecentActivity(activity);
+                setDisplayedCount(prev => prev + 1);
 
-                // Hide after 4 seconds
-                setTimeout(() => setRecentActivity(null), 4000);
-
-                scheduleNextPopup();
+                // Hide after 5 seconds
+                setTimeout(() => setRecentActivity(null), 5000);
             }, delay);
+            return timeoutId;
         };
 
-        scheduleNextPopup();
-    }, []);
+        const timer = scheduleNextPopup();
+        return () => clearTimeout(timer); // Cleanup on unmount or re-render
+    }, [displayedCount]); // Re-run when count changes until 3
 
     return (
         <>
