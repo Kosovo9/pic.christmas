@@ -137,6 +137,19 @@ export const calculatePrice = (
     let discount = 0;
     let savingsText = '';
 
+    // 🔥 VIRAL LAUNCH MODE ACTIVATED
+    // Hardcoded 100% Discount for the next 4 hours
+    const VIRAL_MODE = true;
+
+    if (VIRAL_MODE) {
+        return {
+            basePrice: parseFloat(basePrice.toFixed(2)),
+            discount: parseFloat(basePrice.toFixed(2)),
+            finalPrice: 0.00,
+            savingsText: "🎁 ¡REGALO DE LANZAMIENTO! (100% GRATIS)"
+        };
+    }
+
     // Descuentos por volumen
     if (applyDiscount && quantity > 1) {
         if (quantity >= 5) {
