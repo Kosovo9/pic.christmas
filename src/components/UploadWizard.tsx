@@ -6,12 +6,14 @@ import { ContentSafetyService } from '../services/safety';
 import { CHRISTMAS_PROMPTS, ChristmasPromptCategory } from '../data/christmasPrompts';
 import { validateImage, ValidationResult } from '../utils/imageValidation';
 import { ReferralWidget } from './ReferralWidget';
+import { UploadWarningModal } from './UploadWarningModal';
 
 interface UploadWizardProps {
     onComplete: (data: any) => void;
 }
 
 const CATEGORIES: { id: ChristmasPromptCategory; label: string; emoji: string }[] = [
+    { id: 'studio_magic', label: 'Studio Magic', emoji: '📸' },
     { id: 'couples_elite', label: 'Elite Couples', emoji: '💑' },
     { id: 'family_dynasty', label: 'Dynasty Family', emoji: '👨‍👩‍👧‍👦' },
     { id: 'pet_natgeo', label: 'Nat Geo Pets', emoji: '🐾' },
@@ -19,13 +21,44 @@ const CATEGORIES: { id: ChristmasPromptCategory; label: string; emoji: string }[
     { id: 'fantasy_creative', label: 'Fantasy & Creative', emoji: '✨' },
 ];
 
+// LGBTQ+ Couple Options
+const COUPLE_TYPES = [
+    { id: 'couple_mm', label: 'Hombre-Hombre', emoji: '👨‍❤️‍👨' },
+    { id: 'couple_ww', label: 'Mujer-Mujer', emoji: '👩‍❤️‍👩' },
+    { id: 'couple_mw', label: 'Hombre-Mujer', emoji: '👨‍❤️‍👩' },
+    { id: 'couple_any', label: 'Cualquier Pareja', emoji: '💑' },
+];
+
+// Pet Gender Options
+const PET_OPTIONS = [
+    { id: 'dog_male', label: 'Perrito', emoji: '🐕' },
+    { id: 'dog_female', label: 'Perrita', emoji: '🐕‍🦺' },
+    { id: 'cat_male', label: 'Gato', emoji: '🐈' },
+    { id: 'cat_female', label: 'Gata', emoji: '🐈‍⬛' },
+    { id: 'pet_any', label: 'Otra Mascota', emoji: '🐾' },
+];
+
+// Santa + Reindeer Themes
+const SANTA_THEMES = [
+    { id: 'santa_classic', label: 'Santa Clásico', emoji: '🎅' },
+    { id: 'santa_reindeer', label: 'Santa + Renos', emoji: '🦌' },
+    { id: 'santa_workshop', label: 'Taller de Santa', emoji: '🎁' },
+    { id: 'santa_sleigh', label: 'Trineo Mágico', emoji: '🛷' },
+];
+
 export const UploadWizard: React.FC<UploadWizardProps> = ({ onComplete }) => {
     const { t } = useI18n();
     const [step, setStep] = useState(1);
+    const [showWarning, setShowWarning] = useState(true); // NEW: Warning modal state
 
     // Scene Selection State
     const [selectedCategory, setSelectedCategory] = useState<ChristmasPromptCategory>('couples_elite');
     const [selectedPromptId, setSelectedPromptId] = useState<string | null>(null);
+
+    // NEW: LGBTQ+, Pet, and Santa Options
+    const [selectedCoupleType, setSelectedCoupleType] = useState('couple_any');
+    const [selectedPetOption, setSelectedPetOption] = useState('pet_any');
+    const [selectedSantaTheme, setSelectedSantaTheme] = useState('santa_classic');
 
     // Upload State
     const [files, setFiles] = useState<File[]>([]);
@@ -145,13 +178,26 @@ export const UploadWizard: React.FC<UploadWizardProps> = ({ onComplete }) => {
                 children,
                 pets,
                 email,
-                promptId: selectedPromptId
+                promptId: selectedPromptId,
+                coupleType: selectedCoupleType,
+                petOption: selectedPetOption,
+                santaTheme: selectedSantaTheme
             }
         };
         onComplete(data);
     };
 
     const filteredPrompts = CHRISTMAS_PROMPTS.filter(p => p.category === selectedCategory);
+
+    // Show warning modal first
+    if (showWarning) {
+        return (
+            <UploadWarningModal
+                onAccept={() => setShowWarning(false)}
+                onCancel={() => window.history.back()}
+            />
+        );
+    }
 
     return (
         <div className="w-full max-w-5xl mx-auto bg-slate-900/80 backdrop-blur-xl border border-slate-700 rounded-3xl p-6 md:p-12 shadow-2xl">

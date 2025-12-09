@@ -18,7 +18,7 @@
     "@cloudflare/next-on-pages": "^1.13.16",
     "@stripe/react-stripe-js": "^5.4.1",
     "@stripe/stripe-js": "^8.5.3",
-    "@supabase/supabase-js": "^2.86.2",
+    "@supabase/supabase-js": "^2.87.0",
     "bullmq": "^5.65.1",
     "cloudinary": "^2.8.0",
     "cors": "^2.8.5",

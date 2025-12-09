@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Hero } from '../components/Hero';
 import { UploadWizard } from '../components/UploadWizard';
 import { PricingSection } from '../components/PricingSection';

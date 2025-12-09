@@ -377,5 +377,90 @@ export const CHRISTMAS_PROMPTS: ChristmasPrompt[] = [
         basePrompt: 'Green digital rain forming the shape of a Christmas tree, [Subject] in trench coats and sunglasses, cool green tint, sci-fi code background. Aspect Ratio 4:5. Style: Raw, Photorealistic 8K.',
         needsFamilyCount: true,
         supportsPets: true
+    },
+
+    // --- SANTA + REINDEER (NUEVOS) ---
+    {
+        id: 'santa_classic_portrait',
+        category: 'fantasy_creative',
+        title: 'Santa Classic Portrait',
+        uiLabel: 'Con Santa Clásico',
+        description: 'Portrait with Santa Claus in his classic red suit.',
+        basePrompt: 'Ultra-photorealistic portrait of [Subject] standing next to Santa Claus in his classic red velvet suit, white fluffy trim, sitting by a massive fireplace, Christmas tree with golden ornaments, warm ambient lighting, 8K detailed, cinematic. Aspect Ratio 4:5. Style: Raw, Photorealistic 8K.',
+        needsFamilyCount: true,
+        supportsPets: true
+    },
+    {
+        id: 'santa_reindeer_sleigh',
+        category: 'fantasy_creative',
+        title: 'Santa + Reindeer Sleigh',
+        uiLabel: 'Santa con Renos en Trineo',
+        description: 'Flying in Santa sleigh with magical reindeer over snowy village.',
+        basePrompt: 'Epic cinematic shot of [Subject] riding in Santas magical sleigh alongside Santa Claus, pulled by 8 magnificent reindeer including Rudolph with glowing red nose, flying over a snow-covered European village at night, Northern Lights in sky, magical sparkles trailing behind, ultra-detailed fur on reindeer, 8K hyper-realistic. Aspect Ratio 4:5. Style: Raw, Photorealistic 8K.',
+        needsFamilyCount: true,
+        supportsPets: true
+    },
+    {
+        id: 'santa_workshop_elf',
+        category: 'fantasy_creative',
+        title: 'Santa Workshop',
+        uiLabel: 'Taller de Santa',
+        description: 'Inside Santas magical toy workshop at the North Pole.',
+        basePrompt: 'Hyper-realistic interior of Santas Toy Workshop at North Pole, [Subject] dressed as an adorable elf helper, surrounded by wooden toys being built, conveyor belts of gifts, warm amber lighting, happy elves in background, magical dust particles, extremely detailed wood textures, cozy Christmas vibes. Aspect Ratio 4:5. Style: Raw, Photorealistic 8K.',
+        needsFamilyCount: true,
+        supportsPets: true
+    },
+    {
+        id: 'reindeer_stable',
+        category: 'fantasy_creative',
+        title: 'Reindeer Stable',
+        uiLabel: 'Establo de Renos',
+        description: 'Feeding and petting magical reindeer in their stable.',
+        basePrompt: 'Documentary style shot of [Subject] in a magical reindeer stable, feeding carrots to Rudolph the red-nosed reindeer, other reindeer (Dasher, Dancer, Prancer, Vixen) visible in cozy wooden stables decorated with Christmas lights, hay and snow on ground, golden hour light streaming through windows, ultra-realistic fur textures. Aspect Ratio 4:5. Style: Raw, Photorealistic 8K.',
+        needsFamilyCount: true,
+        supportsPets: true
+    },
+
+    // --- STUDIO MAGIC (NUEVOS) ---
+    {
+        id: 'studio_white_luxury',
+        category: 'studio_magic',
+        title: 'White Studio Luxury',
+        uiLabel: 'Estudio Blanco de Lujo',
+        description: 'Professional white background studio with softbox lighting.',
+        basePrompt: 'Professional photography studio session, [Subject] in elegant Christmas attire, pure white background with three-point softbox lighting, high-end fashion magazine quality, sharp focus on eyes, clean aesthetic, minimal props, 8K resolution, studio flash. Aspect Ratio 4:5. Style: Raw, Photorealistic 8K.',
+        needsFamilyCount: true,
+        supportsPets: true
+    },
+    {
+        id: 'studio_golden_christmas',
+        category: 'studio_magic',
+        title: 'Golden Christmas Studio',
+        uiLabel: 'Estudio Dorado Navideño',
+        description: 'Warm golden bokeh background with Christmas ornaments.',
+        basePrompt: 'Professional studio portrait of [Subject], gorgeous golden bokeh background created by out-of-focus Christmas lights, warm amber color grading, subtle Christmas ornaments in frame, Rembrandt lighting, shallow depth of field f/1.4, magazine cover quality. Aspect Ratio 4:5. Style: Raw, Photorealistic 8K.',
+        needsFamilyCount: true,
+        supportsPets: true
+    },
+    {
+        id: 'studio_snow_magic',
+        category: 'studio_magic',
+        title: 'Snow Magic Studio',
+        uiLabel: 'Estudio con Nieve Mágica',
+        description: 'Studio shot with falling snow and dramatic lighting.',
+        basePrompt: 'High-end studio photography, [Subject] with artificial snow falling gently, dramatic side lighting creating rim light effect on hair and shoulders, deep blue gradient background, winter fashion editorial style, crisp detail on snowflakes, 8K ultra-sharp. Aspect Ratio 4:5. Style: Raw, Photorealistic 8K.',
+        needsFamilyCount: true,
+        supportsPets: true
+    },
+    {
+        id: 'studio_red_velvet',
+        category: 'studio_magic',
+        title: 'Red Velvet Elegance',
+        uiLabel: 'Elegancia Terciopelo Rojo',
+        description: 'Luxurious red velvet backdrop with golden accents.',
+        basePrompt: 'Opulent studio portrait, [Subject] posed against rich red velvet curtain backdrop, gold-framed props, Christmas wreath accent, theatrical lighting with warm fill, Victorian elegance meets modern photography, extremely detailed fabric textures. Aspect Ratio 4:5. Style: Raw, Photorealistic 8K.',
+        needsFamilyCount: true,
+        supportsPets: true
     }
 ];
+
