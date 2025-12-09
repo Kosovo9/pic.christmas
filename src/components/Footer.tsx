@@ -63,6 +63,9 @@ export const Footer: React.FC<FooterProps> = () => {
                 <div className="mt-2 text-xs text-gray-500 italic">
                     {t('footer.affiliates')}
                 </div>
+                <div className="mt-4 text-[10px] text-slate-700 font-mono">
+                    v1.0.5-FINAL 🎄
+                </div>
             </div>
         </footer>
     );

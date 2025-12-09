@@ -28,6 +28,18 @@ const nextConfig: NextConfig = {
       }
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://pic-christmas-backend.onrender.com/api/:path*', // 🔌 Proxy to Backend
+      },
+      {
+        source: '/mp/ipn',
+        destination: 'https://pic-christmas-backend.onrender.com/api/payments/webhook', // 💰 Mercado Pago Webhook
+      }
+    ];
+  },
 };
 
 export default nextConfig;

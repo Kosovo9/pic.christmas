@@ -112,6 +112,11 @@ export const metadata: Metadata = {
     title: "Pic.Christmas",
     statusBarStyle: "black-translucent",
   },
+  icons: {
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
+  },
 };
 
 // 🧠 NEURAL STRUCTURED DATA (JSON-LD)
