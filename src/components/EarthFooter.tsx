@@ -27,10 +27,28 @@ export const EarthFooter = () => {
                 <p className="text-blue-200/50 text-sm font-mono tracking-[0.3em] uppercase">
                     From North Pole to World Wide
                 </p>
-                <div className="flex items-center justify-center gap-2 text-slate-500 text-xs">
+
+                {/* Multilingual Disclaimer */}
+                <div className="max-w-2xl mx-auto px-4 mt-8">
+                    <p className="text-[10px] text-slate-600 leading-relaxed text-justify opacity-60 hover:opacity-100 transition-opacity">
+                        <strong>LEGAL DISCLAIMER:</strong> This service utilizes advanced Artificial Intelligence (AI) for image synthesis. While we strive for realistic results, generated images may vary. Users retain ownership of their original uploads.
+                        <br /><br />
+                        <strong>DATA RETENTION POLICY:</strong> To ensure user privacy and security, all uploaded and generated images are stored in an auto-expiring, encrypted temporary storage (S3-IA).
+                        <strong> ALL IMAGES ARE PERMANENTLY DELETED FROM OUR SERVERS AFTER 24 HOURS.</strong>
+                        We do not retain backups. Please download your images immediately. By using this service, you acknowledge and agree to these terms.
+                        <br /><br />
+                        <em>(Available in EN, ES, FR, DE, IT, PT, RU, ZH, JA, AR via Language Settings)</em>
+                    </p>
+                </div>
+
+                <div className="flex items-center justify-center gap-2 text-slate-500 text-xs mt-4">
                     <span>© 2025 Nexora Studios</span>
                     <span>•</span>
                     <span>All Rights Reserved</span>
+                    <span>•</span>
+                    <a href="/terms" className="hover:text-blue-400">Terms</a>
+                    <span>•</span>
+                    <a href="/privacy" className="hover:text-blue-400">Privacy</a>
                 </div>
             </div>
         </div>

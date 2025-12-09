@@ -199,6 +199,8 @@ import { MusicPlayer } from "@/components/MusicPlayer";
 import { FlyingSanta3D } from "@/components/FlyingSanta3D";
 import { BrandHeader } from "@/components/BrandHeader";
 import { EarthFooter } from "@/components/EarthFooter";
+import ExitBanner from "@/components/ExitBanner";
+
 
 
 
@@ -225,6 +227,7 @@ export default function RootLayout({
           <ChatWidget />
           <MusicPlayer />
           <BrandHeader />
+          <ExitBanner />
           {children}
           <EarthFooter />
         </Providers>

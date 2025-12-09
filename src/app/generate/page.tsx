@@ -5,6 +5,8 @@ import React, { useState } from 'react';
 import { FormatSelector } from '@/components/FormatSelector';
 import { useFormatSelector } from '@/hooks/useFormatSelector';
 import { PaymentMethods } from '@/components/PaymentMethods';
+import { CurrencyBreakdown } from '@/components/CurrencyBreakdown';
+
 
 
 export default function GeneratePage() {
@@ -114,6 +116,7 @@ export default function GeneratePage() {
                                         {pricing.discount > 0 && (
                                             <p className="text-sm text-green-400">{pricing.savingsText}</p>
                                         )}
+                                        <CurrencyBreakdown basePriceUSD={pricing.finalPrice} />
                                     </div>
                                 )}
                             </div>

@@ -28,6 +28,8 @@ import { PaymentMethodSelector } from '../components/PaymentMethodSelector';
 import { OxxoPaymentUI } from '../components/OxxoPaymentUI';
 import { BankTransferUI } from '../components/BankTransferUI';
 import ExitBanner from '../components/ExitBanner'; // Task 9
+
+import ExitBanner from '../components/ExitBanner'; // Task 9
 import { SystemStatus } from '../components/SystemStatus';
 
 
