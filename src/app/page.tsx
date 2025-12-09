@@ -28,6 +28,8 @@ import { PaymentMethodSelector } from '../components/PaymentMethodSelector';
 import { OxxoPaymentUI } from '../components/OxxoPaymentUI';
 import { BankTransferUI } from '../components/BankTransferUI';
 import { SystemStatus } from '../components/SystemStatus';
+import { FlyingSanta3D } from '../components/FlyingSanta3D';
+import { Snowfall } from '../components/Snowfall';
 
 
 export default function Home() {
@@ -206,6 +208,10 @@ export default function Home() {
     <PageTransition>
       <main className="min-h-screen bg-slate-950 text-white selection:bg-blue-500/30 font-sans">
 
+        {/* EFFECTS */}
+        <Snowfall />
+        <FlyingSanta3D />
+
         {/* FREE MODE BANNER - ELON STYLE (Task 8) */}
         {freeMode?.active && (
           <div className="fixed top-0 left-0 right-0 bg-yellow-400 text-black text-center py-2 font-black z-[200] animate-pulse cursor-pointer shadow-lg" onClick={realStart}>
@@ -320,7 +326,7 @@ export default function Home() {
         {/* 🚀 ELON GROWTH HACKS */}
         <LiveNotifications />
         <ExitIntentModal />
-        <ExitBanner onDismiss={() => setShowExitBanner(false)} /> {/* Task 9 */}
+
 
         {/* 🛡️ SECURITY HUD */}
         <SystemStatus />
