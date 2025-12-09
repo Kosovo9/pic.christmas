@@ -7,12 +7,15 @@ export const FlyingSanta3D = () => {
     // Usamos una imagen (sprite) de alta calidad en lugar de Three.js pesado para mantener 60FPS
     // pero con animación CSS avanzada para dar efecto 3D
     const santaRef = useRef<HTMLDivElement>(null);
+    const startTimeRef = useRef(Date.now()); // Store start time
 
     useEffect(() => {
-        const santa = santaRef.current;
-        if (!santa) return;
+        console.log('%c 🚀 NASA DEPLOYMENT CONFIRMED: V2.3 (Red Block Removed) 🚀', 'background: #00ff00; color: black; font-size: 20px; padding: 10px;');
+        // Preload imagery
+        const img = new Image();
+        img.src = '/assets/santa_3d_final.png';
 
-        let startTime = Date.now();
+        const startTime = startTimeRef.current; // access ref
 
         const animate = () => {
             const now = Date.now();
@@ -45,6 +48,7 @@ export const FlyingSanta3D = () => {
             // Combinar Y sinusoidal grande con galope pequeño
             const finalY = y + gallop;
 
+            const santa = santaRef.current; // Get current ref value
             if (santa) {
                 santa.style.transform = `translate3d(${x}vw, ${finalY}vh, 0) scale(${scale}) rotate(${rotation}deg)`;
 
@@ -70,7 +74,6 @@ export const FlyingSanta3D = () => {
         >
             <div className="relative">
                 {/* 🎅 SANTA SPRITE (HD PNG) */}
-                {/* 🎅 SANTA SPRITE (HD 3D RENDER) */}
                 <img
                     src="/assets/santa_3d_final.png"
                     alt="Santa Flying"

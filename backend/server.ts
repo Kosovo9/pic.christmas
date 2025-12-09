@@ -17,8 +17,10 @@ import batchRoutes from './routes/batch.routes';
 import viralRoutes from './routes/viral.routes';
 import generationRoutes from './routes/generate.routes';
 import { v2 as cloudinary } from 'cloudinary';
-import { stripe } from './config/clients'; // Import strictly to verify connection if needed
-// import './workers/imageGeneration.worker'; // Start worker
+import { stripe } from './config/clients';
+import mongoose from 'mongoose'; // Added for health check
+import { redis } from './config/clients'; // Added for health check
+import './workers/imageGeneration.worker'; // Worker Enabled 🚀
 
 dotenv.config();
 
@@ -68,7 +70,7 @@ import { i18nMiddleware } from './middleware/i18n';
 app.use(cors());
 app.use(i18nMiddleware);
 app.use(express.json({
-  limit: '10mb', // 🚀 ELON 10X: Support Base64 Image Analysis
+  limit: '50mb', // 🚀 ELON 10X: Increased for larger payloads/Base64
   verify: (req: any, res, buf) => {
     req.rawBody = buf;
   }
@@ -77,9 +79,7 @@ app.use(express.json({
 // --- Routes ---
 
 app.use('/api/orders', ordersRoutes);
-app.use('/api/payments', paymentsRoutes); // This was already named paymentsRoutes but imported from the old file potentially.
-// Ensure the import lines up: 
-// import paymentsRoutes from './routes/payment.routes'; (Need to update top of file if it was different)
+app.use('/api/payments', paymentsRoutes);
 app.use('/api/referrals', referralsRoutes);
 app.use('/api/prompts', promptsRoutes);
 app.use('/api/ai', aiRoutes);
@@ -98,38 +98,30 @@ app.get('/', (req, res) => {
 });
 
 // Health check endpoint (both root and /api for flexibility)
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    environment: process.env.NODE_ENV || 'development',
-    services: {
-      mongodb: 'connected', // TODO: Add actual MongoDB health check
-      redis: 'connected',    // TODO: Add actual Redis health check
-      cloudinary: 'configured',
-      stripe: 'configured',
-      mercadoPago: 'configured'
-    }
-  });
-});
+const healthCheck = async (req: express.Request, res: express.Response) => {
+  const mongoStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  const redisStatus = redis && (await redis.ping()) === 'PONG' ? 'connected' : 'disconnected';
 
-// Health check also available via /api/health (for proxy consistency)
-app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    status: 'ok',
+  const status = (mongoStatus === 'connected' && redisStatus === 'connected') ? 'ok' : 'degraded';
+  const httpStatus = status === 'ok' ? 200 : 503;
+
+  res.status(httpStatus).json({
+    status,
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development',
     services: {
-      mongodb: 'connected', // TODO: Add actual MongoDB health check
-      redis: 'connected',    // TODO: Add actual Redis health check
+      mongodb: mongoStatus,
+      redis: redisStatus,
       cloudinary: 'configured',
       stripe: 'configured',
       mercadoPago: 'configured'
     }
   });
-});
+};
+
+app.get('/health', healthCheck);
+app.get('/api/health', healthCheck);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
