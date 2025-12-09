@@ -4,6 +4,8 @@
 import React, { useState } from 'react';
 import { FormatSelector } from '@/components/FormatSelector';
 import { useFormatSelector } from '@/hooks/useFormatSelector';
+import { PaymentMethods } from '@/components/PaymentMethods';
+
 
 export default function GeneratePage() {
     const [prompt, setPrompt] = useState('');
@@ -131,6 +133,8 @@ export default function GeneratePage() {
                                 `Generar imagen → $${pricing?.finalPrice.toFixed(2) || '0.00'}`
                             )}
                         </button>
+
+                        <PaymentMethods />
                     </div>
 
                     <div className="lg:col-span-2">
