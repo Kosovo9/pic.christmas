@@ -1,41 +1,40 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
 
-export function middleware(request: NextRequest) {
-    const response = NextResponse.next();
+import { type NextRequest, NextResponse } from 'next/server';
 
-    // 🛡️ SECURITY HEADERS (Iron Dome)
-    const headers = response.headers;
+export function middleware(req: NextRequest) {
+    const res = NextResponse.next();
+    const searchParams = req.nextUrl.searchParams;
+    const ref = searchParams.get('ref');
 
-    // 1. Anti-Clickjacking (X-Frame-Options)
-    headers.set('X-Frame-Options', 'DENY');
+    // 🚀 REFERRAL TRACKING LOGIC
+    // If ?ref=X is present, we store it in a cookie for 30 days
+    // This ensures the "Money Machine" works even if they leave and buy later.
+    if (ref) {
+        // Safe check for valid ref format (alphanumeric + underscore)
+        if (/^[a-zA-Z0-9_-]+$/.test(ref)) {
+            res.cookies.set('aff_ref', ref, {
+                maxAge: 60 * 60 * 24 * 30, // 30 days
+                path: '/',
+                sameSite: 'lax',
+                secure: process.env.NODE_ENV === 'production'
+            });
+            console.log(`[Referral] Captured ref: ${ref}`);
+        }
+    }
 
-    // 2. Anti-MIME Sniffing
-    headers.set('X-Content-Type-Options', 'nosniff');
-
-    // 3. Referrer Policy (Privacy)
-    headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-
-    // 4. Strict Transport Security (HSTS) - Force HTTPS
-    headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-
-    // 5. Content Security Policy (Basic) - Prevent XSS
-    // Note: Strict CSP can break scripts if not careful (e.g. inline scripts, analytics). 
-    // We add a permissive one for now to block obvious malicious external loads.
-    headers.set(
-        'Content-Security-Policy',
-        "default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data: blob:;"
-    );
-
-    // 6. Permissions Policy
-    headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
-
-    return response;
+    return res;
 }
 
 export const config = {
     matcher: [
-        '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-        '/(api|trpc)(.*)',
+        /*
+         * Match all request paths except for the ones starting with:
+         * - api (API routes)
+         * - _next/static (static files)
+         * - _next/image (image optimization files)
+         * - favicon.ico (favicon file)
+         * - assets (public folder)
+         */
+        '/((?!api|_next/static|_next/image|favicon.ico|assets).*)',
     ],
-}
+};

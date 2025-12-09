@@ -16,9 +16,15 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
     const [currency, setCurrency] = useState<CurrencyCode>('USD');
     const [hasUserSelected, setHasUserSelected] = useState(false);
 
-    // Initial sync with language, only if user hasn't manually overridden
+    // Initial sync with language or hydrate from localStorage
     useEffect(() => {
-        if (!hasUserSelected) {
+        // Try to recover from localStorage first (User Preference > Language Default)
+        const savedCurrency = localStorage.getItem('pic_currency') as CurrencyCode;
+        if (savedCurrency) {
+            setCurrency(savedCurrency);
+            setHasUserSelected(true);
+        } else if (!hasUserSelected) {
+            // Fallback to language-based default
             const recommended = getCurrencyForLanguage(language);
             setCurrency(recommended);
         }
@@ -27,6 +33,7 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
     const handleSetCurrency = (code: CurrencyCode) => {
         setCurrency(code);
         setHasUserSelected(true);
+        localStorage.setItem('pic_currency', code); // Persist
     };
 
     return (
