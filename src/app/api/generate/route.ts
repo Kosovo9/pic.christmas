@@ -6,7 +6,8 @@ import {
     getSystemStatus
 } from '@/lib/rateLimiter';
 
-export const runtime = "edge"; // fast execution
+// Using Node.js runtime for Redis/Upstash compatibility
+export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
     try {
