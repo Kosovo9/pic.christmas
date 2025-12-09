@@ -195,6 +195,8 @@ import { SnowEffect } from "@/components/SnowEffect";
 import { SocialProof } from "@/components/SocialProof";
 import { ChatWidget } from "@/components/ChatWidget";
 import { SecurityShield } from "@/components/SecurityShield";
+import { MusicPlayer } from "@/components/MusicPlayer";
+
 
 export default function RootLayout({
   children,
@@ -215,6 +217,7 @@ export default function RootLayout({
           <SecurityShield />
           <SocialProof />
           <ChatWidget />
+          <MusicPlayer />
           {children}
         </Providers>
 
