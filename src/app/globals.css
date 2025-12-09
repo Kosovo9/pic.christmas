@@ -19,17 +19,17 @@
   --accent: #ef4444; /* Bright Red */
   --accent-glow: rgba(239, 68, 68, 0.5);
 
-  --deep-bg: #450a0a; /* Deep Red Background (Rose/Red 950 mix) */
-  --background-start: #2a0a0a;
-  --background-end: #450a0a;
+  --deep-bg: #020617; /* Deep Blue/Black Background (Slate 950) - FIXED from Red */
+  --background-start: #0f172a;
+  --background-end: #020617;
 }
 
 @layer base {
   body {
-    @apply text-slate-50 antialiased selection:bg-red-500/30 selection:text-red-200 relative overflow-x-hidden;
+    @apply text-slate-50 antialiased selection:bg-blue-500/30 selection:text-blue-200 relative overflow-x-hidden;
     background-color: var(--deep-bg);
     background-image: 
-      radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.15), transparent 70%),
+      radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15), transparent 70%),
       linear-gradient(to bottom, var(--background-start), var(--background-end));
   }
 }
