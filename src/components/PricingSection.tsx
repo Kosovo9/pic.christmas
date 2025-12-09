@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import pricingRules from '../../data/pricing-rules.json';
+import { convertPrice, CurrencyCode, EXCHANGE_RATES } from '../services/CurrencyService';
 
 interface PricingProps {
     onSelect: (pkg: string) => void;
@@ -9,12 +10,34 @@ interface PricingProps {
         children: number;
         pets: number;
     };
+    locale?: string; // e.g. 'en-US', 'es-MX'
 }
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_51Pn4CpLs6SKtSyaKW8VhRjPn0p8Z2o1JH1zMkDj3YvL0h9Lx5GzN6KqRmZ8Dj3Lx5GzN6KqRmZ8Dj3Lx5GzN6KqRm00kF9Z9Z9Z');
 
-export const PricingSection: React.FC<PricingProps> = ({ onSelect, config }) => {
-    const [calculatedPrice, setCalculatedPrice] = useState<number>(9.99);
+export const PricingSection: React.FC<PricingProps> = ({ onSelect, config, locale = 'en' }) => {
+    const [currency, setCurrency] = useState<CurrencyCode>('USD');
+    const [priceMultiplier, setPriceMultiplier] = useState(1); // For coupons
+
+    // Auto-detect currency based on locale props or browser
+    useEffect(() => {
+        // Simple mapping for demo
+        if (locale.includes('es') || locale.includes('MX')) setCurrency('MXN');
+        else if (locale.includes('EUR') || locale.includes('DE') || locale.includes('FR')) setCurrency('EUR');
+        else setCurrency('USD');
+    }, [locale]);
+
+    // Force currency selector (Optional UI component could go here)
+
+    const calculateBase = (baseUSD: number) => {
+        return baseUSD * priceMultiplier; // Apply coupon discount to base USD
+    };
+
+    const getDisplayPrice = (usdAmount: number) => {
+        return convertPrice(calculateBase(usdAmount), currency);
+    };
+
+    const [calculatedPrice, setCalculatedPrice] = useState<number>(9.99); // Internal USD tracking
     const [isGift, setIsGift] = useState(false);
 
     useEffect(() => {
@@ -35,8 +58,7 @@ export const PricingSection: React.FC<PricingProps> = ({ onSelect, config }) => 
         {
             id: 'single',
             name: 'Single Portrait',
-            basePrice: 9.99,
-            price: config ? `$${calculatedPrice.toFixed(2)}` : '$9.99',
+            price: config ? getDisplayPrice(calculatedPrice) : getDisplayPrice(9.99),
             features: [
                 config ? `${config.adults + config.children + config.pets} ${config.adults + config.children + config.pets === 1 ? 'Subject' : 'Subjects'}` : '1 Person',
                 '5 High-Res Photos',
@@ -49,8 +71,7 @@ export const PricingSection: React.FC<PricingProps> = ({ onSelect, config }) => 
         {
             id: 'couple',
             name: 'Couple / Pet',
-            basePrice: 19.99,
-            price: config ? `$${calculatedPrice.toFixed(2)}` : '$19.99',
+            price: config ? getDisplayPrice(calculatedPrice) : getDisplayPrice(19.99),
             features: [
                 config ? `${config.adults + config.children + config.pets} ${config.adults + config.children + config.pets === 1 ? 'Subject' : 'Subjects'}` : 'Up to 2 Subjects',
                 '10 High-Res Photos',
@@ -63,8 +84,7 @@ export const PricingSection: React.FC<PricingProps> = ({ onSelect, config }) => 
         {
             id: 'family',
             name: 'Family + Pets',
-            basePrice: 29.99,
-            price: config ? `$${calculatedPrice.toFixed(2)}` : '$29.99',
+            price: config ? getDisplayPrice(calculatedPrice) : getDisplayPrice(29.99),
             features: [
                 config ? `${config.adults} Adults, ${config.children} Kids, ${config.pets} Pets` : 'Up to 5 Subjects',
                 '20 High-Res Photos',
@@ -87,7 +107,7 @@ export const PricingSection: React.FC<PricingProps> = ({ onSelect, config }) => 
                         <div className="mt-6 flex flex-col items-center gap-4">
                             <div className="inline-block bg-blue-900/30 border border-blue-500/30 rounded-xl px-6 py-3">
                                 <p className="text-blue-400 font-medium">
-                                    💡 Your Price: <span className="text-2xl font-bold text-white">${calculatedPrice.toFixed(2)}</span>
+                                    💡 Your Price: <span className="text-2xl font-bold text-white">{getDisplayPrice(calculatedPrice)}</span>
                                     <span className="text-sm text-slate-400 ml-2">
                                         ({config.adults} adults + {config.children} kids + {config.pets} pets)
                                     </span>
@@ -103,9 +123,11 @@ export const PricingSection: React.FC<PricingProps> = ({ onSelect, config }) => 
                                     onChange={(e) => {
                                         const code = e.target.value.toUpperCase();
                                         if (code === 'SANTA25') {
-                                            setCalculatedPrice(prev => prev * 0.75);
+                                            setPriceMultiplier(0.75); // 25% OFF
                                         } else if (code === 'ELON100') {
-                                            setCalculatedPrice(0); // FREE TEST MODE
+                                            setPriceMultiplier(0); // 100% OFF
+                                        } else {
+                                            setPriceMultiplier(1);
                                         }
                                     }}
                                 />

@@ -1,129 +1,210 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { BrandHeader } from '@/components/BrandHeader';
+import { EarthFooter } from '@/components/EarthFooter';
 
-// Mock data types matching supabase-payments
-interface DashboardData {
-    stats: {
-        totalEarned: number;
-        pendingBalance: number;
-        totalTransactions: number;
+export default function AffiliatePage() {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [generatedLink, setGeneratedLink] = useState('');
+    const [couponCode, setCouponCode] = useState('');
+    const [customCoupon, setCustomCoupon] = useState('');
+
+    const handleLogin = (e: React.FormEvent) => {
+        e.preventDefault();
+        // Simulate login
+        setIsLoggedIn(true);
+        setGeneratedLink('https://pic.christmas/?ref=ELON_AFF_101');
     };
-    affiliate: {
-        affiliate_code: string;
+
+    const generateCoupon = () => {
+        if (!customCoupon) return;
+        setCouponCode(customCoupon.toUpperCase());
     };
-    transactions: any[];
-}
-
-export default function AffiliatesPage() {
-    const [data, setData] = useState<DashboardData | null>(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        // In a real app, you would fetch this from /api/affiliates/dashboard
-        // For now, we mock it to show the UI
-        setTimeout(() => {
-            setData({
-                stats: {
-                    totalEarned: 150.00,
-                    pendingBalance: 45.00,
-                    totalTransactions: 12
-                },
-                affiliate: {
-                    affiliate_code: "XMAS2024"
-                },
-                transactions: [
-                    { id: 1, amount: 5.00, status: 'pending', created_at: new Date().toISOString() },
-                    { id: 2, amount: 5.00, status: 'paid', created_at: new Date(Date.now() - 86400000).toISOString() }
-                ]
-            });
-            setLoading(false);
-        }, 1000);
-    }, []);
-
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-red-50 flex items-center justify-center">
-                <div className="text-xl text-red-600 font-semibold">Loading Dashboard...</div>
-            </div>
-        );
-    }
-
-    if (!data) return <div>Error loading dashboard</div>;
 
     return (
-        <div className="min-h-screen bg-zinc-50 p-6">
-            <div className="max-w-4xl mx-auto">
-                <header className="mb-8">
-                    <h1 className="text-3xl font-bold text-zinc-900">Affiliate Dashboard</h1>
-                    <p className="text-zinc-500">Track your earnings and referrals</p>
-                </header>
+        <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-emerald-500/30">
+            <BrandHeader />
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div className="bg-white p-6 rounded-xl shadow-sm border border-zinc-100">
-                        <div className="text-sm text-zinc-500 mb-1">Total Earnings</div>
-                        <div className="text-3xl font-bold text-green-600">${data.stats.totalEarned.toFixed(2)}</div>
-                    </div>
-                    <div className="bg-white p-6 rounded-xl shadow-sm border border-zinc-100">
-                        <div className="text-sm text-zinc-500 mb-1">Pending Balance</div>
-                        <div className="text-3xl font-bold text-amber-600">${data.stats.pendingBalance.toFixed(2)}</div>
-                    </div>
-                    <div className="bg-white p-6 rounded-xl shadow-sm border border-zinc-100">
-                        <div className="text-sm text-zinc-500 mb-1">Referrals</div>
-                        <div className="text-3xl font-bold text-blue-600">{data.stats.totalTransactions}</div>
-                    </div>
-                </div>
-
-                {/* Referral Link */}
-                <div className="bg-gradient-to-r from-red-600 to-red-500 p-6 rounded-xl shadow-lg text-white mb-8">
-                    <h2 className="text-xl font-bold mb-2">Your Referral Link</h2>
-                    <p className="mb-4 opacity-90">Share this link to earn 15% commission on every sale!</p>
-                    <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg flex items-center justify-between">
-                        <code className="font-mono text-lg">pic.christmas/?ref={data.affiliate.affiliate_code}</code>
-                        <button
-                            onClick={() => navigator.clipboard.writeText(`https://pic.christmas/?ref=${data.affiliate.affiliate_code}`)}
-                            className="bg-white text-red-600 px-4 py-2 rounded-lg font-bold hover:bg-gray-100 transition-colors"
-                        >
-                            Copy Link
-                        </button>
-                    </div>
-                </div>
-
-                {/* Transactions */}
-                <div className="bg-white rounded-xl shadow-sm border border-zinc-100 overflow-hidden">
-                    <div className="p-6 border-b border-zinc-100">
-                        <h2 className="font-bold text-zinc-900">Recent Transactions</h2>
-                    </div>
-                    <table className="w-full">
-                        <thead className="bg-zinc-50">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Date</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">Commission</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-zinc-100">
-                            {data.transactions.map((tx) => (
-                                <tr key={tx.id}>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-zinc-600">
-                                        {new Date(tx.created_at).toLocaleDateString()}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                            ${tx.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                                            {tx.status}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-zinc-900 text-right">
-                                        ${tx.amount.toFixed(2)}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+            {/* Background Effects */}
+            <div className="fixed inset-0 z-0 pointer-events-none">
+                <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-blue-900/20 to-transparent"></div>
+                <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-emerald-900/10 blur-[100px] rounded-full"></div>
             </div>
+
+            <main className="relative z-10 pt-32 pb-20 px-4 md:px-8 max-w-7xl mx-auto">
+
+                {!isLoggedIn ? (
+                    // HERO / LOGIN SECTION
+                    <div className="flex flex-col md:flex-row items-center gap-12">
+                        <div className="flex-1 space-y-8 animate-slide-up">
+                            <div className="inline-flex items-center space-x-2 bg-slate-900/50 backdrop-blur-md px-3 py-1 rounded-full border border-slate-700">
+                                <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                                <span className="text-xs font-semibold uppercase tracking-wider text-emerald-300">New Partner Program</span>
+                            </div>
+
+                            <h1 className="text-5xl md:text-7xl font-black text-white leading-tight">
+                                Earn <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">35%</span> Recurring Commission.
+                            </h1>
+                            <p className="text-xl text-slate-400 max-w-2xl">
+                                Join the highest paying AI affiliate program. Monetize your audience with hyper-realistic Christmas photos. Real-time tracking, instant payouts.
+                            </p>
+
+                            <div className="flex flex-col sm:flex-row gap-4">
+                                <button onClick={() => setIsLoggedIn(true)} className="px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transform hover:-translate-y-1">
+                                    Start Earning Now
+                                </button>
+                                <button className="px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl border border-slate-700 transition-all">
+                                    View Commission Tiers
+                                </button>
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-6 pt-8 border-t border-slate-800/50">
+                                <div>
+                                    <h3 className="text-3xl font-black text-white">$450</h3>
+                                    <p className="text-xs text-slate-500 uppercase tracking-wide">Avg. Daily Earnings</p>
+                                </div>
+                                <div>
+                                    <h3 className="text-3xl font-black text-white">35%</h3>
+                                    <p className="text-xs text-slate-500 uppercase tracking-wide">Commission Rate</p>
+                                </div>
+                                <div>
+                                    <h3 className="text-3xl font-black text-white">24h</h3>
+                                    <p className="text-xs text-slate-500 uppercase tracking-wide">Payout Time</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Login Card */}
+                        <div className="w-full max-w-md bg-slate-900/80 backdrop-blur-xl border border-slate-700 p-8 rounded-3xl shadow-2xl animate-fade-in delay-200">
+                            <h2 className="text-2xl font-bold text-white mb-6">Partner Login</h2>
+                            <form className="space-y-4" onSubmit={handleLogin}>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-400 uppercase mb-1">Email Address</label>
+                                    <input type="email" placeholder="partner@example.com" className="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 transition-colors" />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-400 uppercase mb-1">Password</label>
+                                    <input type="password" placeholder="••••••••" className="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 transition-colors" />
+                                </div>
+                                <button type="submit" className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg">
+                                    Access Dashboard
+                                </button>
+                            </form>
+                            <p className="text-center text-xs text-slate-500 mt-6">
+                                Not a partner? <a href="#" className="text-emerald-400 hover:underline">Apply for access</a>
+                            </p>
+                        </div>
+                    </div>
+                ) : (
+                    // DASHBOARD SECTION
+                    <div className="space-y-12 animate-fade-in">
+                        <div className="flex justify-between items-end border-b border-slate-800 pb-8">
+                            <div>
+                                <h1 className="text-4xl font-bold text-white mb-2">Welcome back, Partner 🚀</h1>
+                                <p className="text-slate-400">Here's what's happening with your links today.</p>
+                            </div>
+                            <div className="text-right hidden md:block">
+                                <p className="text-xs text-slate-500 uppercase mb-1">Next Payout</p>
+                                <p className="text-xl font-mono text-emerald-400 font-bold">$1,245.50</p>
+                                <p className="text-xs text-slate-600">Scheduled for Dec 15</p>
+                            </div>
+                        </div>
+
+                        {/* Stats Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                            {[
+                                { label: 'Total Clicks', value: '12,450', change: '+12%', color: 'text-blue-400' },
+                                { label: 'Conversions', value: '843', change: '+5.2%', color: 'text-purple-400' },
+                                { label: 'Conversion Rate', value: '6.8%', change: '+0.4%', color: 'text-indigo-400' },
+                                { label: 'Revenue (35%)', value: '$8,320', change: '+18%', color: 'text-emerald-400' },
+                            ].map((stat, i) => (
+                                <div key={i} className="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl hover:border-slate-700 transition-colors">
+                                    <p className="text-xs text-slate-500 uppercase font-semibold mb-2">{stat.label}</p>
+                                    <h3 className={`text-3xl font-black ${stat.color} mb-1`}>{stat.value}</h3>
+                                    <span className="text-xs text-emerald-500 bg-emerald-950/30 px-2 py-0.5 rounded-full">▲ {stat.change}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Tools Section */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {/* Link Generator */}
+                            <div className="bg-slate-900/50 border border-slate-800 p-8 rounded-3xl">
+                                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                                    <span className="bg-blue-500/10 text-blue-400 text-sm p-2 rounded-lg">🔗</span>
+                                    Smart Link Generator
+                                </h3>
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-xs font-semibold text-slate-400 uppercase mb-2">Your Unique Referral Link</label>
+                                        <div className="flex gap-2">
+                                            <code className="flex-1 bg-black/30 border border-slate-700 rounded-xl px-4 py-3 font-mono text-emerald-400 overflow-x-auto whitespace-nowrap">
+                                                {generatedLink}
+                                            </code>
+                                            <button
+                                                onClick={() => navigator.clipboard.writeText(generatedLink)}
+                                                className="px-6 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl border border-slate-700 transition-all"
+                                            >
+                                                Copy
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p className="text-xs text-slate-500">
+                                        Traffic sent to this link is tracked for 60 days. You earn 35% on all purchases made by referred users.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Coupon Creator */}
+                            <div className="bg-slate-900/50 border border-slate-800 p-8 rounded-3xl">
+                                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                                    <span className="bg-purple-500/10 text-purple-400 text-sm p-2 rounded-lg">🎟️</span>
+                                    Custom Coupon Creator
+                                </h3>
+                                <div className="space-y-4">
+                                    <div className="flex gap-4">
+                                        <div className="flex-1">
+                                            <label className="block text-xs font-semibold text-slate-400 uppercase mb-2">Discount Code</label>
+                                            <input
+                                                type="text"
+                                                placeholder="e.g. SANTABILL"
+                                                value={customCoupon}
+                                                onChange={(e) => setCustomCoupon(e.target.value)}
+                                                className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white uppercase focus:outline-none focus:border-purple-500"
+                                            />
+                                        </div>
+                                        <div className="w-1/3">
+                                            <label className="block text-xs font-semibold text-slate-400 uppercase mb-2">Discount</label>
+                                            <select className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500 appearance-none">
+                                                <option>10% Off</option>
+                                                <option>15% Off</option>
+                                                <option>20% Off (Lower comm.)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={generateCoupon}
+                                        className="w-full py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-purple-900/20"
+                                    >
+                                        Create Coupon
+                                    </button>
+
+                                    {couponCode && (
+                                        <div className="bg-green-500/10 border border-green-500/30 p-4 rounded-xl flex items-center justify-between">
+                                            <span className="text-green-400 font-mono font-bold">{couponCode}</span>
+                                            <span className="text-xs text-green-300">Active</span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                )}
+            </main>
+
+            <EarthFooter />
         </div>
     );
 }
