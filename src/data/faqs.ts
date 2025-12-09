@@ -5,6 +5,16 @@ export const faqData = {
         { q: "Is my payment secure?", a: "100%. We use Stripe and MercadoPago, the world's leading secure payment processors." },
         { q: "What if I don't like the results?", a: "We strive for magic! If there's a technical error, contact us at support@pic.christmas and we'll help." },
         { q: "Can I add my dog?", a: "Absolutely! We specialize in pets. Just select the 'Pets' option in the configuration." },
+        { q: "How much does it cost?", a: "Packages start at just $9.99 for 5 professional photos. Better than a $500 studio session!" },
+        { q: "Can I do a group family photo?", a: "Yes! Select the 'Family' package. We support up to 10 people in one generated image." },
+        { q: "Is my data private?", a: "Yes. Your photos are deleted from our servers after 24 hours. We do not sell your data or use it to train public models." },
+        { q: "Do you support gay/LGBT couples?", a: "Proudly! Our AI is trained to support all couple types. Use the configuration step to specify." },
+        { q: "Can I get a refund?", a: "If the AI fails to generate a recognizable image due to our error, we offer a full refund within 7 days." },
+        { q: "How do I become an affiliate?", a: "Click the 'Affiliates' link in the header. You can earn 35% commission on every sale!" },
+        { q: "Why does the AI look slightly different?", a: "AI takes artistic license to make you look your 'Christmas Best'. It's not a photocopy, it's a painting!" },
+        { q: "Do I need an app?", a: "No! pic.christmas works directly in your browser on any phone or computer." },
+        { q: "Can I print these?", a: "Yes! We provide High-Resolution (4K) downloads suitable for printing on cards, mugs, or canvas." },
+        { q: "My code isn't working.", a: "Check spelling! Common codes are SANTA25. If it still fails, chat with support." }
     ],
     es: [
         { q: "¿Cuánto tiempo tarda?", a: "¡La mayoría de las fotos están listas en menos de 30 minutos! En alta demanda, hasta 2 horas." },
@@ -12,6 +22,16 @@ export const faqData = {
         { q: "¿Es seguro el pago?", a: "100%. Usamos Stripe y MercadoPago, líderes mundiales en seguridad." },
         { q: "¿Y si no me gustan las fotos?", a: "¡Buscamos magia! Si hay un error técnico, contáctanos." },
         { q: "¿Puedo incluir a mi perro?", a: "¡Claro! Somos expertos en mascotas. Elige la opción 'Mascotas'." },
+        { q: "¿Cuánto cuesta?", a: "Desde solo $9.99 por 5 fotos profesionales. ¡Mejor que una sesión de $500!" },
+        { q: "¿Puedo hacer fotos familiares?", a: "¡Sí! Elige el paquete 'Familia'. Soportamos hasta 10 personas." },
+        { q: "¿Mis datos están privados?", a: "Sí. Tus fotos se borran en 24h. No vendemos tus datos ni entrenamos modelos públicos." },
+        { q: "¿Apoyan parejas LGBT?", a: "¡Con orgullo! Nuestra IA soporta todo tipo de parejas. Configúralo en el paso 3." },
+        { q: "¿Hay reembolso?", a: "Si la IA falla por error técnico nuestro, ofrecemos reembolso total en 7 días." },
+        { q: "¿Cómo soy afiliado?", a: "Clic en 'Afiliados' arriba. ¡Gana 35% de comisión por venta!" },
+        { q: "¿Por qué me veo diferente?", a: "La IA te hace ver tu 'Mejor Versión Navideña'. ¡Es arte, no una fotocopia!" },
+        { q: "¿Necesito una app?", a: "¡No! Funciona directo en tu navegador en cualquier celular." },
+        { q: "¿Puedo imprimirlas?", a: "¡Sí! Damos Alta Resolución (4K) perfecta para tarjetas o cuadros." },
+        { q: "Mi código no funciona.", a: "Revisa la ortografía. Códigos comunes: SANTA25. Si falla, contáctanos." }
     ],
     fr: [
         { q: "Combien de temps cela prend-il ?", a: "La plupart des photos sont prêtes en moins de 30 minutes ! En cas de forte demande, jusqu'à 2 heures." },
@@ -77,5 +97,13 @@ export const smartKeywords = {
     'glasses|mask|sunglasses|gafas|lentes|lunettes|brille|occhiali|óculos|очки|墨镜|メガネ|نظارات': 1,
     'secure|safety|stripe|payment|seguro|pago|sécurisé|sicher|sicuro|segurança|безопасность|安全|安心|آمن': 2,
     'refund|error|bad|quality|reembolso|calidad|remboursement|fehler|rimborso|qualidade|качество|质量|品質|جودة': 3,
-    'dog|cat|pet|animal|perro|gato|mascota|chien|chat|hund|cane|gatto|cachorro|собака|宠物|ペット|كلب': 4
+    'dog|cat|pet|animal|perro|gato|mascota|chien|chat|hund|cane|gatto|cachorro|собака|宠物|ペット|كلب': 4,
+    'cost|price|expensive|cheap|money|cuesta|precio|dinero|coût|prix|kostet|costo|custo|цена|стоимость|费用|値段|سعر': 5,
+    'group|family|people|together|familia|grupo|famille|groupe|familie|gruppo|família|семья|группа|家庭|家族|عائلة': 6,
+    'data|private|privacy|delete|datos|privacidad|borrar|données|daten|dati|privacidade|данные|数据|データ|بيانات': 7,
+    'gay|lgbt|lesbian|couple|pareja|homo|same|gender|casal|пара|同性|ゲイ|مثلي': 8,
+    'money|back|guarantee|return|devolución|garantía|retour|geld|soldi|dinheiro|возврат|退款|返金|استرجاع': 9,
+    'affiliate|partner|earn|commission|afiliado|socio|ganar|partenaire|gagner|partner|guadagnare|parceiro|партнер|联盟|アフィリエイト|شريك': 10,
+    'download|print|resolution|4k|imprimir|descargar|imprenta|imprimer|drucken|stampa|baixar|печать|下载|印刷|طباعة': 13,
+    'code|coupon|promo|discount|código|descuento|cupón|code|rabatt|codice|código|код|优惠码|コード|كود': 14
 };

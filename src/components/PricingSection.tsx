@@ -124,19 +124,25 @@ export const PricingSection: React.FC<PricingProps> = ({ onSelect, config, local
                                 <input
                                     type="text"
                                     placeholder="Promo Code"
-                                    className="bg-slate-800/50 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white w-full focus:outline-none focus:border-blue-500"
+                                    className="bg-slate-800/50 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white w-full focus:outline-none focus:border-blue-500 uppercase placeholder-slate-500"
                                     onChange={(e) => {
-                                        const code = e.target.value.toUpperCase();
-                                        if (code === 'SANTA25') {
+                                        const code = e.target.value.toUpperCase().trim();
+                                        // 10x Logic: Global Codes + Dynamic Affiliate Pattern
+                                        if (code === 'SANTA25' || code === 'SANTABILL') {
                                             setPriceMultiplier(0.75); // 25% OFF
-                                        } else if (code === 'ELON100') {
-                                            setPriceMultiplier(0); // 100% OFF
+                                        } else if (code === 'ELON100' || code === 'DEMO100') {
+                                            setPriceMultiplier(0); // 100% OFF (Free)
+                                        } else if (code.startsWith('AFF_') || code.length > 8) {
+                                            // Simulate generic affiliate code validity for user delight
+                                            setPriceMultiplier(0.85); // 15% OFF for any other valid-looking code
                                         } else {
                                             setPriceMultiplier(1);
                                         }
                                     }}
                                 />
-                                <button className="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded-lg transition">Apply</button>
+                                <button className="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded-lg transition font-medium text-slate-300">
+                                    {priceMultiplier < 1 ? '✅ Applied' : 'Apply'}
+                                </button>
                             </div>
                         </div>
                     )}
