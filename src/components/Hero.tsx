@@ -60,10 +60,7 @@ export const Hero: React.FC<HeroProps> = ({ onStart }) => {
 
                 {/* Main Headline */}
                 <h1 className="animate-slide-up text-5xl sm:text-7xl md:text-8xl font-black text-white tracking-tight mb-8 leading-tight drop-shadow-2xl">
-                    {t('hero.title_start')} <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-amber-200 to-emerald-400 animate-shimmer bg-[length:200%_100%]">
-                        {t('hero.title_end')}
-                    </span>
+                    {t('hero.title')}
                 </h1>
 
                 {/* Subtitle */}
