@@ -1,16 +1,18 @@
 import Replicate from "replicate";
-import { CHRISTMAS_PROMPTS, MASTER_PROMPT_TEMPLATE, ScenePreset } from "./christmasPrompts";
+import { CHRISTMAS_PROMPTS, MASTER_PROMPT_TEMPLATE, ChristmasPrompt } from "./christmasPrompts";
 
 export interface PromptContext {
-    presetId: string;
+    presetId?: string; // Optional now
+    prompt?: string;   // Direct prompt override
     language?: "en" | "es";
+    aspectRatio?: string; // e.g. "1:1", "16:9"
     // Future extensibility: custom details about people/pets
     details?: string;
 }
 
 export interface GenerationResult {
     url: string;
-    presetId: string;
+    presetId?: string;
     seed?: number;
 }
 
@@ -22,31 +24,36 @@ const replicate = new Replicate({
 /**
  * Finds a preset by ID or returns a default one.
  */
-export function getPresetById(id: string): ScenePreset {
+export function getPresetById(id: string): ChristmasPrompt {
     return CHRISTMAS_PROMPTS.find((p) => p.id === id) || CHRISTMAS_PROMPTS[0];
 }
 
 /**
- * Constructs the full positive and negative prompts based on the Master Template.
+ * Constructs the full positive and negative prompts.
  */
 export function generateChristmasPrompt(context: PromptContext) {
-    const preset = getPresetById(context.presetId);
-    const lang = context.language || "en";
+    if (context.prompt) {
+        return {
+            positive: context.prompt,
+            negative: MASTER_PROMPT_TEMPLATE.negative || "low quality, distorted",
+        };
+    }
 
-    let positiveTemplate = lang === "es" ? MASTER_PROMPT_TEMPLATE.es_positive : MASTER_PROMPT_TEMPLATE.en_positive;
-    let negativeTemplate = lang === "es" ? MASTER_PROMPT_TEMPLATE.es_negative : MASTER_PROMPT_TEMPLATE.en_negative;
+    const presetId = context.presetId || CHRISTMAS_PROMPTS[0].id;
+    const preset = getPresetById(presetId);
 
-    const sceneDescription = lang === "es" ? preset.scene_es : preset.scene_en;
+    // The new prompts have a full 'basePrompt' that includes style directives.
+    // We use it directly.
+    // In future iterations, we could translate or inject details.
 
-    // Replace placeholders
-    // Note: The template uses {SCENE_EN} or {ESCENA_ES}. We handle both to be safe.
-    let positivePrompt = positiveTemplate
-        .replace("{SCENE_EN}", sceneDescription)
-        .replace("{ESCENA_ES}", sceneDescription);
+    let positivePrompt = preset.basePrompt;
+
+    // Fallback for negative
+    const negativePrompt = MASTER_PROMPT_TEMPLATE.negative;
 
     return {
         positive: positivePrompt,
-        negative: negativeTemplate,
+        negative: negativePrompt,
     };
 }
 
@@ -55,35 +62,28 @@ export function generateChristmasPrompt(context: PromptContext) {
  * Uses SDXL or Flux (defaults to Flux Schnell for speed if not specified otherwise in env).
  */
 export async function generateImage(
-    imageRefs: string[], // URLs or base64 of reference photos (not fully used in this v1 prompt-based approach unless using InstantID/Image adapter)
+    imageRefs: string[],
     context: PromptContext
 ): Promise<GenerationResult> {
     const { positive, negative } = generateChristmasPrompt(context);
 
     console.log("Generating with prompt:", positive.substring(0, 100) + "...");
 
-    // MODEL CHOICE:
-    // For v1 standard prompt-based generation, we use black-forest-labs/flux-schnell
-    // If we had InstantID configured, we would pass imageRefs to that specific model.
-    // For now, we assume a high-quality text-to-image to validate the pipeline, 
-    // as InstantID requires a different input structure (adapter_image).
-
-    // TODO: Switch to InstantID model or similar if maintaining identity is strictly required via image inputs now.
-    // For this MVP step, we will use Flux Schnell as requested for speed/quality text-to-image.
+    // MODEL CHOICE: Flux Schnell
     const model = "black-forest-labs/flux-schnell";
 
-    // If we wanted to use image refs, we'd need an InstantID model like:
-    // "instantx/instant-id-sdxl"
+    // Map strict aspect ratios if needed, or pass through.
+    // Flux Schnell supports: "1:1", "16:9", "21:9", "3:2", "2:3", "4:5", "5:4", "9:16", "9:21"
+    const aspectRatio = context.aspectRatio || "4:5";
 
     const output = await replicate.run(model, {
         input: {
             prompt: positive,
-            // negative_prompt: negative, // Flux Schnell often ignores negative prompt or handles it differently, but good to have.
             num_outputs: 1,
-            aspect_ratio: "4:5",
+            aspect_ratio: aspectRatio,
             output_format: "jpg",
             output_quality: 90,
-            disable_safety_checker: true, // Be careful with this, but requested for "unfiltered" art often.
+            disable_safety_checker: true,
         },
     });
 
@@ -92,6 +92,6 @@ export async function generateImage(
 
     return {
         url,
-        presetId: context.presetId,
+        presetId: context.presetId || "custom",
     };
 }

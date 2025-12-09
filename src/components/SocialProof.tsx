@@ -82,7 +82,7 @@ export const SocialProof: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-2">
                     <span>📸</span>
-                    <span className="text-white font-bold">{stats.photosCreated.toLocaleString()}</span> photos generated today
+                    <span className="text-white font-bold" suppressHydrationWarning>{stats.photosCreated.toLocaleString()}</span> photos generated today
                 </div>
                 <div className="flex items-center gap-2">
                     <span>⭐</span>
@@ -92,30 +92,32 @@ export const SocialProof: React.FC = () => {
 
             {/* Notification Toast */}
             <AnimatePresence>
-                {recentActivity && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 50, x: -50 }}
-                        animate={{ opacity: 1, y: 0, x: 0 }}
-                        exit={{ opacity: 0, y: 20 }}
-                        className="fixed bottom-20 left-4 md:bottom-24 md:left-8 z-50 bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-2xl shadow-2xl flex items-center gap-4 max-w-sm"
-                    >
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${recentActivity.type === 'purchase' ? 'bg-yellow-500' : 'bg-blue-500'}`}>
-                            {recentActivity.type === 'purchase' ? '💰' : '✨'}
-                        </div>
-                        <div>
-                            <p className="text-white text-sm font-bold">
-                                {recentActivity.user}
-                            </p>
-                            <p className="text-slate-300 text-xs">
-                                {recentActivity.message}
-                            </p>
-                            <p className="text-slate-500 text-[10px] uppercase mt-1">
-                                {recentActivity.time}
-                            </p>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                {
+                    recentActivity && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 50, x: -50 }}
+                            animate={{ opacity: 1, y: 0, x: 0 }}
+                            exit={{ opacity: 0, y: 20 }}
+                            className="fixed bottom-20 left-4 md:bottom-24 md:left-8 z-50 bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-2xl shadow-2xl flex items-center gap-4 max-w-sm"
+                        >
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${recentActivity.type === 'purchase' ? 'bg-yellow-500' : 'bg-blue-500'}`}>
+                                {recentActivity.type === 'purchase' ? '💰' : '✨'}
+                            </div>
+                            <div>
+                                <p className="text-white text-sm font-bold">
+                                    {recentActivity.user}
+                                </p>
+                                <p className="text-slate-300 text-xs">
+                                    {recentActivity.message}
+                                </p>
+                                <p className="text-slate-500 text-[10px] uppercase mt-1">
+                                    {recentActivity.time}
+                                </p>
+                            </div>
+                        </motion.div>
+                    )
+                }
+            </AnimatePresence >
         </>
     );
 };
