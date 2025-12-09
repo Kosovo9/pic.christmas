@@ -12,7 +12,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'edge'; // ⚡ Cloudflare Workers Optimization
+// Using Node.js runtime for consistency
+export const runtime = 'nodejs';
 
 // Configuration
 const BACKEND_URL = process.env.BACKEND_URL || 'https://pic-christmas-backend.onrender.com';
