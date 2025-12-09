@@ -194,6 +194,7 @@ import { Providers } from "@/components/Providers";
 import { SnowEffect } from "@/components/SnowEffect";
 import { SocialProof } from "@/components/SocialProof";
 import { ChatWidget } from "@/components/ChatWidget";
+import { SecurityShield } from "@/components/SecurityShield";
 
 export default function RootLayout({
   children,
@@ -211,6 +212,7 @@ export default function RootLayout({
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
           <SnowEffect />
+          <SecurityShield />
           <SocialProof />
           <ChatWidget />
           {children}
