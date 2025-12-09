@@ -14,11 +14,10 @@ export const BrandHeader = () => {
                     <img
                         src="/nexora_logo.png"
                         alt="Nexora Studio"
-                        className="h-10 md:h-12 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-transform duration-300 group-hover:scale-105"
+                        className="h-16 md:h-20 w-auto object-contain drop-shadow-[0_0_25px_rgba(255,255,255,0.5)] transition-transform duration-300 group-hover:scale-110 filter brightness-125 saturate-150"
                     />
                     <div className="flex flex-col">
-                        <span className="text-white font-bold text-lg leading-none tracking-wide font-display">PIC.CHRISTMAS</span>
-                        <span className="text-[10px] text-blue-200 uppercase tracking-widest opacity-80">Powered by Nexora Neural</span>
+                        <span className="text-white font-bold text-xl leading-none tracking-wide font-display shadow-black drop-shadow-md">PIC.CHRISTMAS</span>
                     </div>
                 </div>
             </div>

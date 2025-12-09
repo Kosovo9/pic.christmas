@@ -1,7 +1,7 @@
 
 // services/CurrencyService.ts
 
-export type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'MXN' | 'BRL' | 'CAD' | 'AUD' | 'JPY' | 'CNY' | 'INR' | 'RUB' | 'KRW' | 'CHF' | 'SEK' | 'SAR' | 'AED';
+export type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'MXN' | 'BRL' | 'CAD' | 'AUD' | 'JPY' | 'CNY' | 'INR' | 'RUB' | 'KRW' | 'CHF' | 'SEK' | 'SAR' | 'AED' | 'ARS' | 'COP' | 'CLP' | 'PEN';
 
 interface CurrencyInfo {
     code: CurrencyCode;
@@ -29,6 +29,10 @@ export const EXCHANGE_RATES: Record<CurrencyCode, CurrencyInfo> = {
     SEK: { code: 'SEK', symbol: 'kr', rate: 10.50, locale: 'sv-SE' },
     SAR: { code: 'SAR', symbol: '﷼', rate: 3.75, locale: 'ar-SA' },
     AED: { code: 'AED', symbol: 'د.إ', rate: 3.67, locale: 'ar-AE' },
+    ARS: { code: 'ARS', symbol: '$', rate: 850.00, locale: 'es-AR' },
+    COP: { code: 'COP', symbol: '$', rate: 3900.00, locale: 'es-CO' },
+    CLP: { code: 'CLP', symbol: '$', rate: 940.00, locale: 'es-CL' },
+    PEN: { code: 'PEN', symbol: 'S/', rate: 3.70, locale: 'es-PE' },
 };
 
 export const convertPrice = (priceInUSD: number, targetCurrency: CurrencyCode): string => {

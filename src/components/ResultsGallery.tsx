@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 interface ResultsGalleryProps {
     images?: string[]; // Optional for now
@@ -13,17 +14,57 @@ export const ResultsGallery: React.FC<ResultsGalleryProps> = ({ images = [] }) =
         'https://images.unsplash.com/photo-1576618148400-f54bed99fcf8?q=80&w=2080&auto=format&fit=crop',
     ];
 
+    const container = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const item = {
+        hidden: { opacity: 0, y: 50, scale: 0.9 },
+        show: {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            transition: {
+                type: "spring" as const,
+                stiffness: 100,
+                damping: 10
+            }
+        }
+    };
+
     return (
         <div className="py-24 bg-slate-900/30">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-16">
-                    <h2 className="text-4xl font-bold text-white mb-4">Your Magical Gallery</h2>
+                    <motion.h2
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-4xl font-bold text-white mb-4"
+                    >
+                        Your Magical Gallery
+                    </motion.h2>
                     <p className="text-slate-400 text-xl">Download and share your masterpieces.</p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <motion.div
+                    variants={container}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true }}
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+                >
                     {displayImages.map((img, index) => (
-                        <div key={index} className="group relative aspect-[3/4] rounded-2xl overflow-hidden bg-slate-800">
+                        <motion.div
+                            key={index}
+                            variants={item}
+                            className="group relative aspect-[3/4] rounded-2xl overflow-hidden bg-slate-800 shadow-2xl"
+                        >
                             <img
                                 src={img}
                                 alt={`Result ${index + 1}`}
@@ -32,16 +73,24 @@ export const ResultsGallery: React.FC<ResultsGalleryProps> = ({ images = [] }) =
 
                             {/* Overlay Actions */}
                             <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-4">
-                                <button className="px-6 py-2 bg-white text-slate-900 rounded-full font-bold hover:bg-blue-50 transition transform hover:scale-105">
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="px-6 py-2 bg-white text-slate-900 rounded-full font-bold hover:bg-blue-50 transition shadow-lg"
+                                >
                                     Download
-                                </button>
-                                <button className="px-6 py-2 bg-slate-800/50 text-white border border-white/20 rounded-full font-bold backdrop-blur-md hover:bg-slate-800 transition">
+                                </motion.button>
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="px-6 py-2 bg-slate-800/50 text-white border border-white/20 rounded-full font-bold backdrop-blur-md hover:bg-slate-800 transition"
+                                >
                                     Share
-                                </button>
+                                </motion.button>
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
-                </div>
+                </motion.div>
             </div>
         </div>
     );

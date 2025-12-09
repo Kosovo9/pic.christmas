@@ -3,21 +3,20 @@ import { ViralThankYouModal } from './ViralThankYouModal';
 
 export const ExitIntentModal: React.FC = () => {
     const [isVisible, setIsVisible] = useState(false);
-    const [hasShown, setHasShown] = useState(false);
+    const [showCount, setShowCount] = useState(0);
 
     useEffect(() => {
-        // Only trigger once per session to avoid annoying users
+        // Trigger up to 2 times per session
         const handleMouseLeave = (e: MouseEvent) => {
-            if (e.clientY <= 0 && !hasShown) {
-                // Optional: Check if user has spent some time or interacted
+            if (e.clientY <= 0 && showCount < 2) {
                 setIsVisible(true);
-                setHasShown(true);
+                setShowCount(prev => prev + 1);
             }
         };
 
         document.addEventListener('mouseleave', handleMouseLeave);
         return () => document.removeEventListener('mouseleave', handleMouseLeave);
-    }, [hasShown]);
+    }, [showCount]);
 
     return (
         <ViralThankYouModal

@@ -105,9 +105,13 @@ export default function AffiliatePage() {
                                 <p className="text-slate-400">Here's what's happening with your links today.</p>
                             </div>
                             <div className="text-right hidden md:block">
-                                <p className="text-xs text-slate-500 uppercase mb-1">Next Payout</p>
+                                <div className="inline-flex items-center gap-2 mb-2 bg-emerald-950/30 px-3 py-1 rounded-full border border-emerald-500/20">
+                                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                    <span className="text-xs font-bold text-emerald-400 uppercase tracking-wide">Payouts Enabled</span>
+                                </div>
+                                <p className="text-xs text-slate-500 uppercase mb-1">Next Payout (Friday)</p>
                                 <p className="text-xl font-mono text-emerald-400 font-bold">$1,245.50</p>
-                                <p className="text-xs text-slate-600">Scheduled for Dec 15</p>
+                                <p className="text-[10px] text-slate-600 font-mono">Auto-transfer in: 2d 14h</p>
                             </div>
                         </div>
 
@@ -139,6 +143,10 @@ export default function AffiliatePage() {
                                     <div>
                                         <label className="block text-xs font-semibold text-slate-400 uppercase mb-2">Your Unique Referral Link</label>
                                         <div className="flex gap-2">
+                                            <div className="flex-1 bg-black/30 border border-slate-700 rounded-xl px-4 py-3 flex items-center gap-2">
+                                                <span className="text-slate-500 text-sm">pic.christmas/?ref=</span>
+                                                <span className="text-emerald-400 font-mono font-bold">ELON_AFF_101</span>
+                                            </div>
                                             <code className="flex-1 bg-black/30 border border-slate-700 rounded-xl px-4 py-3 font-mono text-emerald-400 overflow-x-auto whitespace-nowrap">
                                                 {generatedLink}
                                             </code>

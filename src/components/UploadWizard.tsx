@@ -431,6 +431,70 @@ export const UploadWizard: React.FC<UploadWizardProps> = ({ onComplete }) => {
                             </div>
                         </div>
 
+                        {/* Advanced Options */}
+                        <div className="space-y-6">
+                            {/* Couple Type Selector */}
+                            {adults >= 2 && (
+                                <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700 animate-fade-in">
+                                    <label className="block text-slate-400 mb-3 text-sm uppercase font-bold tracking-wider">Couple / Group Type</label>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {COUPLE_TYPES.map(type => (
+                                            <button
+                                                key={type.id}
+                                                onClick={() => setSelectedCoupleType(type.id)}
+                                                className={`px-3 py-2 rounded-lg text-sm border transition-all flex items-center justify-center gap-2
+                                                    ${selectedCoupleType === type.id ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-slate-900 border-slate-700 text-slate-400 hover:text-white'}
+                                                `}
+                                            >
+                                                <span>{type.emoji}</span>
+                                                <span>{type.label}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Pet Options */}
+                            {pets > 0 && (
+                                <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700 animate-fade-in">
+                                    <label className="block text-slate-400 mb-3 text-sm uppercase font-bold tracking-wider">Pet Type</label>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {PET_OPTIONS.map(opt => (
+                                            <button
+                                                key={opt.id}
+                                                onClick={() => setSelectedPetOption(opt.id)}
+                                                className={`px-3 py-2 rounded-lg text-sm border transition-all flex items-center justify-center gap-2
+                                                    ${selectedPetOption === opt.id ? 'bg-emerald-600 border-emerald-500 text-white' : 'bg-slate-900 border-slate-700 text-slate-400 hover:text-white'}
+                                                `}
+                                            >
+                                                <span>{opt.emoji}</span>
+                                                <span>{opt.label}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Santa Theme */}
+                            <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+                                <label className="block text-slate-400 mb-3 text-sm uppercase font-bold tracking-wider">Santa Theme</label>
+                                <div className="grid grid-cols-2 gap-2">
+                                    {SANTA_THEMES.map(theme => (
+                                        <button
+                                            key={theme.id}
+                                            onClick={() => setSelectedSantaTheme(theme.id)}
+                                            className={`px-3 py-2 rounded-lg text-sm border transition-all flex items-center justify-center gap-2
+                                                ${selectedSantaTheme === theme.id ? 'bg-red-900/50 border-red-500 text-white' : 'bg-slate-900 border-slate-700 text-slate-400 hover:text-white'}
+                                            `}
+                                        >
+                                            <span>{theme.emoji}</span>
+                                            <span>{theme.label}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
                         {/* Summary */}
                         <div className="bg-gradient-to-br from-indigo-900/50 to-purple-900/50 p-8 rounded-3xl border border-indigo-500/30 flex flex-col justify-between">
                             <div>

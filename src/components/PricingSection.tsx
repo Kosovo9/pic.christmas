@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import pricingRules from '../../data/pricing-rules.json';
 import { convertPrice, CurrencyCode, EXCHANGE_RATES } from '../services/CurrencyService';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 interface PricingProps {
     onSelect: (pkg: string) => void;
@@ -16,26 +17,30 @@ interface PricingProps {
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_51Pn4CpLs6SKtSyaKW8VhRjPn0p8Z2o1JH1zMkDj3YvL0h9Lx5GzN6KqRmZ8Dj3Lx5GzN6KqRmZ8Dj3Lx5GzN6KqRm00kF9Z9Z9Z');
 
 export const PricingSection: React.FC<PricingProps> = ({ onSelect, config, locale = 'en' }) => {
-    const [currency, setCurrency] = useState<CurrencyCode>('USD');
+    const { currency } = useCurrency(); // Global state
     const [priceMultiplier, setPriceMultiplier] = useState(1); // For coupons
 
-    // Auto-detect currency based on locale props or browser
-    useEffect(() => {
-        // Simple mapping for demo
-        if (locale.includes('es') || locale.includes('MX')) setCurrency('MXN');
-        else if (locale.includes('EUR') || locale.includes('DE') || locale.includes('FR')) setCurrency('EUR');
-        else setCurrency('USD');
-    }, [locale]);
-
-    // Force currency selector (Optional UI component could go here)
+    // 💰 FEE CALCULATION LOGIC
+    // We add a small "processing fee" visualization to make the user feel like the base price is cheaper, 
+    // but clearly showing they pay the total.
+    const getFee = (basePrice: number) => {
+        // e.g. 3% + 0.30 cents approx
+        return (basePrice * 0.03) + 0.30;
+    };
 
     const calculateBase = (baseUSD: number) => {
         return baseUSD * priceMultiplier; // Apply coupon discount to base USD
     };
 
-    const getDisplayPrice = (usdAmount: number) => {
-        return convertPrice(calculateBase(usdAmount), currency);
+    const getDisplayPrice = (usdAmount: number, includeFee: boolean = false) => {
+        const base = calculateBase(usdAmount);
+        const final = includeFee ? base + getFee(base) : base;
+        return convertPrice(final, currency);
     };
+
+    const getFeeDisplay = (usdAmount: number) => {
+        return convertPrice(getFee(calculateBase(usdAmount)), currency);
+    }
 
     const [calculatedPrice, setCalculatedPrice] = useState<number>(9.99); // Internal USD tracking
     const [isGift, setIsGift] = useState(false);

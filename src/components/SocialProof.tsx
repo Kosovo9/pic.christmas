@@ -47,7 +47,7 @@ export const SocialProof: React.FC = () => {
 
     // Simulate "Recent Sales/Generations" Popups
     useEffect(() => {
-        if (displayedCount >= 3) return; // Stop after 3
+        if (displayedCount >= 4) return; // Stop after 4
 
         const scheduleNextPopup = () => {
             const delay = Math.random() * 8000 + 5000; // 5-13 seconds (slower)

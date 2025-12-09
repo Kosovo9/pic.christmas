@@ -8,7 +8,7 @@ export const Footer: React.FC<FooterProps> = () => {
     const { t } = useI18n();
 
     return (
-        <footer className="relative z-50 border-t border-slate-800/50 py-8 mt-12 bg-transparent">
+        <footer className="relative z-50 py-8 mt-12 bg-transparent">
             <div className="max-w-7xl mx-auto px-4 text-center">
                 <div className="flex justify-center items-center gap-2 mb-4">
                     {/* Logo only - text removed */}
@@ -45,7 +45,7 @@ export const Footer: React.FC<FooterProps> = () => {
                     <span className="text-xs font-bold tracking-wide">{t('footer.picheart_badge')}</span>
                 </div>
 
-                <p className="text-slate-500 text-sm mb-2">
+                <p className="text-amber-500 font-bold text-sm mb-2 drop-shadow-md">
                     © {new Date().getFullYear()} Nexora Studio. {t('footer.terms')}
                 </p>
                 {/* REMOVED PAYMENTS & AFFILIATES AS REQUESTED */}
@@ -53,7 +53,7 @@ export const Footer: React.FC<FooterProps> = () => {
                     {t('footer.affiliates')}
                 </div>
                 <div className="mt-4 text-[10px] text-slate-700 font-mono">
-                    v1.0.5-FINAL 🎄
+                    v1.0.6-ELON-SPEED 🚀
                 </div>
             </div>
         </footer>

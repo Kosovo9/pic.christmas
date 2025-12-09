@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Language } from '../types';
+import { useCurrency } from '@/contexts/CurrencyContext';
+import { CurrencyCode } from '@/services/CurrencyService';
 
 interface NavbarProps {
     language: Language;
@@ -8,10 +10,12 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ language, onLanguageChange, onReferralsClick }) => {
-    const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
-    const dropdownRef = React.useRef<HTMLDivElement>(null);
+    const { currency, setCurrency } = useCurrency();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const [isCurrencyOpen, setIsCurrencyOpen] = useState(false); // Helper state for mobile if needed, though group-hover handles verify
 
-    React.useEffect(() => {
+    useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setIsDropdownOpen(false);
@@ -58,6 +62,35 @@ export const Navbar: React.FC<NavbarProps> = ({ language, onLanguageChange, onRe
                         )}
 
                         <div className="flex items-center gap-4">
+                            {/* Currency Selector (New) 💰 */}
+                            {/* Currency Selector (New) 💰 */}
+                            <div className="relative hidden md:block group z-50">
+                                <button className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-900/50 border border-slate-700 hover:border-emerald-500/50 transition-all">
+                                    <span className="text-xs font-mono text-emerald-400 font-bold">$ {currency}</span>
+                                    <svg className="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                </button>
+                                {/* Dropdown Hover */}
+                                <div className="absolute right-0 top-full mt-2 w-40 bg-slate-900 border border-slate-800 rounded-xl shadow-xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                                    <div className="p-1 grid grid-cols-1 max-h-64 overflow-y-auto custom-scrollbar">
+                                        {['USD', 'EUR', 'MXN', 'BRL', 'ARS', 'COP', 'CLP', 'GBP', 'CAD', 'AUD', 'JPY', 'CNY'].map(c => (
+                                            <button
+                                                key={c}
+                                                onClick={() => setCurrency(c as CurrencyCode)}
+                                                className={`w-full text-left px-3 py-2 text-xs hover:bg-slate-800 rounded-lg transition-colors flex justify-between
+                                                    ${currency === c ? 'text-emerald-400 bg-emerald-950/20 font-bold' : 'text-slate-300'}
+                                                `}
+                                            >
+                                                <span>{c}</span>
+                                                {currency === c && <span className="text-emerald-500">✓</span>}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div className="px-3 py-2 bg-slate-950 text-[10px] text-slate-500 text-center border-t border-slate-800">
+                                        Live Rates
+                                    </div>
+                                </div>
+                            </div>
+
                             {/* Language Switcher */}
                             <div className="relative" ref={dropdownRef}>
                                 <button
@@ -66,11 +99,6 @@ export const Navbar: React.FC<NavbarProps> = ({ language, onLanguageChange, onRe
                                 >
                                     <div className="flex items-center gap-2">
                                         <span className="text-sm font-bold text-white uppercase">{language}</span>
-                                        <span className="h-3 w-px bg-slate-600"></span>
-                                        {/* Dynamic Currency Display */}
-                                        <span className="text-xs font-mono text-emerald-400">
-                                            {language === 'es' ? 'MXN' : language === 'en' ? 'USD' : language === 'ja' ? 'JPY' : 'EUR'}
-                                        </span>
                                     </div>
                                     <svg className={`w-3 h-3 text-slate-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                                 </button>
@@ -79,16 +107,16 @@ export const Navbar: React.FC<NavbarProps> = ({ language, onLanguageChange, onRe
                                     <div className="absolute right-0 mt-2 w-48 bg-slate-900 border border-slate-800 rounded-xl shadow-xl overflow-hidden z-50 animate-fade-in">
                                         <div className="py-1 max-h-80 overflow-y-auto custom-scrollbar">
                                             {[
-                                                { code: 'en', label: 'English', currency: 'USD ($)' },
-                                                { code: 'es', label: 'Español', currency: 'MXN ($)' },
-                                                { code: 'fr', label: 'Français', currency: 'EUR (€)' },
-                                                { code: 'de', label: 'Deutsch', currency: 'EUR (€)' },
-                                                { code: 'it', label: 'Italiano', currency: 'EUR (€)' },
-                                                { code: 'pt', label: 'Português', currency: 'BRL (R$)' },
-                                                { code: 'ru', label: 'Русский', currency: 'RUB (₽)' },
-                                                { code: 'zh', label: '中文', currency: 'CNY (¥)' },
-                                                { code: 'ja', label: '日本語', currency: 'JPY (¥)' },
-                                                { code: 'ar', label: 'العربية', currency: 'AED (د.إ)' }
+                                                { code: 'en', label: 'English' },
+                                                { code: 'es', label: 'Español' },
+                                                { code: 'fr', label: 'Français' },
+                                                { code: 'de', label: 'Deutsch' },
+                                                { code: 'it', label: 'Italiano' },
+                                                { code: 'pt', label: 'Português' },
+                                                { code: 'ru', label: 'Русский' },
+                                                { code: 'zh', label: '中文' },
+                                                { code: 'ja', label: '日本語' },
+                                                { code: 'ar', label: 'العربية' }
                                             ].map((lang) => (
                                                 <button
                                                     key={lang.code}
@@ -99,7 +127,6 @@ export const Navbar: React.FC<NavbarProps> = ({ language, onLanguageChange, onRe
                                                 >
                                                     <div className="flex justify-between items-center">
                                                         <span>{lang.label}</span>
-                                                        <span className="text-xs opacity-50 font-mono bg-slate-950 px-1.5 py-0.5 rounded">{lang.currency}</span>
                                                     </div>
                                                 </button>
                                             ))}
