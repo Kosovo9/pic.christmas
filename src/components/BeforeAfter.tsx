@@ -48,7 +48,7 @@ export const BeforeAfter = () => {
             >
                 {/* Image After (Background) */}
                 <div className="absolute inset-0 w-full h-full bg-slate-900 flex items-center justify-center">
-                    <img src="/hero-after.jpg" alt="After AI" className="w-full h-full object-cover" onError={(e) => e.currentTarget.src = 'https://placehold.co/800x400/101010/FFF?text=After+AI+Magic'} />
+                    <img src="/hero-cam-after.jpg" alt="After AI" className="w-full h-full object-cover" onError={(e) => e.currentTarget.src = 'https://placehold.co/800x400/101010/FFF?text=After+AI+Magic'} />
                     <div className="absolute top-4 right-4 bg-blue-600/80 text-white px-3 py-1 rounded-full text-sm font-bold backdrop-blur-md">
                         {t('before_after.after')}
                     </div>
@@ -59,7 +59,7 @@ export const BeforeAfter = () => {
                     className="absolute inset-0 w-full h-full overflow-hidden bg-slate-800"
                     style={{ clipPath: `polygon(0 0, ${sliderPosition}% 0, ${sliderPosition}% 100%, 0 100%)` }}
                 >
-                    <img src="/hero-before.jpg" alt="Before AI" className="w-full h-full object-cover" onError={(e) => e.currentTarget.src = 'https://placehold.co/800x400/303030/FFF?text=Before+Original'} />
+                    <img src="/hero-cam-before.jpg" alt="Before AI" className="w-full h-full object-cover" onError={(e) => e.currentTarget.src = 'https://placehold.co/800x400/303030/FFF?text=Before+Original'} />
                     <div className="absolute top-4 left-4 bg-slate-800/80 text-white px-3 py-1 rounded-full text-sm font-bold backdrop-blur-md">
                         {t('before_after.before')}
                     </div>

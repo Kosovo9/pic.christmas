@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "pages:build": "npx @cloudflare/next-on-pages",
     "start": "next start",
     "lint": "eslint",
     "test:deployment": "node test-deployment.js",
@@ -37,6 +38,7 @@
     "stripe": "^20.0.0"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.11.0",
     "@tailwindcss/postcss": "^4",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
