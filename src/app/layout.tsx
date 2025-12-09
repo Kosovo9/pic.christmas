@@ -196,6 +196,8 @@ import { SocialProof } from "@/components/SocialProof";
 import { ChatWidget } from "@/components/ChatWidget";
 import { SecurityShield } from "@/components/SecurityShield";
 import { MusicPlayer } from "@/components/MusicPlayer";
+import { FlyingSanta3D } from "@/components/FlyingSanta3D";
+
 
 
 export default function RootLayout({
@@ -214,6 +216,7 @@ export default function RootLayout({
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
           <SnowEffect />
+          <FlyingSanta3D />
           <SecurityShield />
           <SocialProof />
           <ChatWidget />
