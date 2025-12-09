@@ -11,6 +11,7 @@ const translations: Record<Language, Record<string, string>> = {
         'hero.title': '🎄 Crea Fotos Navideñas Mágicas con IA',
         'hero.title_start': 'Haz esta Navidad',
         'hero.title_end': 'Inolvidable',
+        'hero.description': 'Transforma tus selfies en retratos navideños de calidad estudio. Sin fotógrafos, sin espera. Magia pura con IA.', // Added missing key
         'hero.powered': 'Potenciado por Nexora AI',
         'hero.gallery_btn': 'Ver Galería',
         'hero.trusted': 'Con la confianza de 50,000+ familias',
@@ -95,6 +96,7 @@ const translations: Record<Language, Record<string, string>> = {
         'hero.title': '🎄 Create Magical Christmas Photos with AI',
         'hero.title_start': 'Make This Christmas',
         'hero.title_end': 'Unforgettable',
+        'hero.description': 'Transform your selfies into studio-quality Christmas portraits. No photographers, no waiting. Pure AI magic.', // Added missing key
         'hero.powered': 'Powered by Nexora AI',
         'hero.gallery_btn': 'View Gallery',
         'hero.trusted': 'Trusted by 50,000+ Families',

@@ -63,7 +63,7 @@ export const Hero: React.FC<HeroProps> = ({ onStart }) => {
 
                 {/* Subtitle */}
                 <p className="animate-slide-up [animation-delay:200ms] mt-6 max-w-2xl mx-auto text-xl sm:text-2xl text-slate-200 mb-12 font-medium leading-relaxed drop-shadow-lg">
-                    Ya no tienes que ir a un estudio para tu foto soñada... aquí la tienes y como la quieres.
+                    {t('hero.description')}
                 </p>
 
                 {/* CTA Buttons */}
