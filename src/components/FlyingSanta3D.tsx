@@ -35,11 +35,18 @@ export const FlyingSanta3D = () => {
             // Escala / Profundidad Z
             const scale = 0.8 + Math.sin(progress * Math.PI * 2) * 0.2;
 
-            // Rotación leve
+            // Rotación leve (Banking turn)
             const rotation = Math.sin(progress * Math.PI * 8) * 5;
 
+            // 🏇 ANIMACIÓN DE "GALOPE" (Rapid bobs)
+            // Simula el movimiento de los renos corriendo y el trineo vibrando
+            const gallop = Math.sin(elapsed / 150) * 2; // Rapido: cada 150ms 
+
+            // Combinar Y sinusoidal grande con galope pequeño
+            const finalY = y + gallop;
+
             if (santa) {
-                santa.style.transform = `translate3d(${x}vw, ${y}vh, 0) scale(${scale}) rotate(${rotation}deg)`;
+                santa.style.transform = `translate3d(${x}vw, ${finalY}vh, 0) scale(${scale}) rotate(${rotation}deg)`;
 
                 // Reset (ocultar) cuando termina el ciclo para que no "salte"
                 santa.style.opacity = (x > -20 && x < 120) ? '1' : '0';
@@ -57,15 +64,21 @@ export const FlyingSanta3D = () => {
             className="fixed top-0 left-0 z-40 pointer-events-none filter drop-shadow-2xl"
             style={{
                 willChange: 'transform',
-                opacity: 0 // Inicia invisible
+                opacity: 0, // Inicia invisible, controlado por JS
+                pointerEvents: 'none'
             }}
         >
             <div className="relative">
                 {/* 🎅 SANTA SPRITE (HD PNG) */}
+                {/* 🎅 SANTA SPRITE (HD 3D RENDER) */}
                 <img
-                    src="/assets/santa_setup.png"
+                    src="/assets/santa_3d_final.png"
                     alt="Santa Flying"
-                    className="h-32 md:h-64 object-contain" // Removed scale-x-100 if image direction is already correct or needs adjustment
+                    onError={(e) => {
+                        // Fallback if local fails for some reason
+                        e.currentTarget.src = "https://cdn.pixabay.com/photo/2016/12/15/21/50/santa-claus-1909875_1280.png";
+                    }}
+                    className="h-32 md:h-64 object-contain"
                 />
 
                 {/* ✨ PARTICLES / MAGIC TRAIL */}
