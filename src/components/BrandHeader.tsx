@@ -16,10 +16,7 @@ export const BrandHeader = () => {
                     className="h-16 md:h-20 w-auto object-contain drop-shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-transform duration-300 group-hover:scale-105"
                 />
 
-                {/* Tech Badge */}
-                <div className="absolute -bottom-2 -right-2 bg-slate-950/80 backdrop-blur border border-slate-700 rounded-md px-1.5 py-0.5 pointer-events-none">
-                    <span className="text-[8px] font-mono text-blue-400 uppercase tracking-widest">Powered By Nexora</span>
-                </div>
+                {/* Tech Badge Removed */}
             </div>
 
             {/* Affiliates Link - DESKTOP ONLY for now to save space on mobile, or just icon? */}
