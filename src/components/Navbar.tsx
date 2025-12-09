@@ -62,35 +62,45 @@ export const Navbar: React.FC<NavbarProps> = ({ language, onLanguageChange, onRe
                             <div className="relative" ref={dropdownRef}>
                                 <button
                                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors ${isDropdownOpen ? 'bg-slate-700/50 border-slate-500' : 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-700/50'}`}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 ${isDropdownOpen ? 'bg-slate-700/50 border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-700/50'}`}
                                 >
-                                    <span className="text-xs font-medium text-white uppercase">{language}</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm font-bold text-white uppercase">{language}</span>
+                                        <span className="h-3 w-px bg-slate-600"></span>
+                                        {/* Dynamic Currency Display */}
+                                        <span className="text-xs font-mono text-emerald-400">
+                                            {language === 'es' ? 'MXN' : language === 'en' ? 'USD' : language === 'ja' ? 'JPY' : 'EUR'}
+                                        </span>
+                                    </div>
                                     <svg className={`w-3 h-3 text-slate-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                                 </button>
 
                                 {isDropdownOpen && (
-                                    <div className="absolute right-0 mt-2 w-32 bg-slate-900 border border-slate-800 rounded-xl shadow-xl overflow-hidden z-50 animate-fade-in">
-                                        <div className="py-1 max-h-64 overflow-y-auto custom-scrollbar">
+                                    <div className="absolute right-0 mt-2 w-48 bg-slate-900 border border-slate-800 rounded-xl shadow-xl overflow-hidden z-50 animate-fade-in">
+                                        <div className="py-1 max-h-80 overflow-y-auto custom-scrollbar">
                                             {[
-                                                { code: 'en', label: 'English' },
-                                                { code: 'es', label: 'Español' },
-                                                { code: 'fr', label: 'Français' },
-                                                { code: 'de', label: 'Deutsch' },
-                                                { code: 'it', label: 'Italiano' },
-                                                { code: 'pt', label: 'Português' },
-                                                { code: 'ru', label: 'Русский' },
-                                                { code: 'zh', label: '中文' },
-                                                { code: 'ja', label: '日本語' },
-                                                { code: 'ar', label: 'العربية' }
+                                                { code: 'en', label: 'English', currency: 'USD ($)' },
+                                                { code: 'es', label: 'Español', currency: 'MXN ($)' },
+                                                { code: 'fr', label: 'Français', currency: 'EUR (€)' },
+                                                { code: 'de', label: 'Deutsch', currency: 'EUR (€)' },
+                                                { code: 'it', label: 'Italiano', currency: 'EUR (€)' },
+                                                { code: 'pt', label: 'Português', currency: 'BRL (R$)' },
+                                                { code: 'ru', label: 'Русский', currency: 'RUB (₽)' },
+                                                { code: 'zh', label: '中文', currency: 'CNY (¥)' },
+                                                { code: 'ja', label: '日本語', currency: 'JPY (¥)' },
+                                                { code: 'ar', label: 'العربية', currency: 'AED (د.إ)' }
                                             ].map((lang) => (
                                                 <button
                                                     key={lang.code}
                                                     onClick={() => handleLanguageSelect(lang.code as any)}
-                                                    className={`block w-full text-left px-4 py-2 text-sm hover:bg-slate-800 transition-colors
-                                                        ${language === lang.code ? 'text-blue-400 font-medium bg-slate-800/50' : 'text-slate-400'}
+                                                    className={`block w-full text-left px-4 py-3 text-sm hover:bg-slate-800 transition-colors border-b border-slate-800/50 last:border-0
+                                                        ${language === lang.code ? 'text-blue-400 font-bold bg-slate-800/50' : 'text-slate-400'}
                                                     `}
                                                 >
-                                                    {lang.label}
+                                                    <div className="flex justify-between items-center">
+                                                        <span>{lang.label}</span>
+                                                        <span className="text-xs opacity-50 font-mono bg-slate-950 px-1.5 py-0.5 rounded">{lang.currency}</span>
+                                                    </div>
                                                 </button>
                                             ))}
                                         </div>
