@@ -10,9 +10,9 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
         }
 
-        // Create Checkout Session
+        // Create Checkout Session with multiple payment methods
         const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
+            payment_method_types: ['card', 'paypal'],
             line_items: [
                 {
                     price_data: {
