@@ -51,17 +51,9 @@ export const Navbar: React.FC<NavbarProps> = ({ language, onLanguageChange, onRe
                         </span>
                     </div>
 
-                    {/* CENTER: Affiliates */}
+                    {/* CENTER: Empty (removed Affiliates) */}
                     <div className="flex-1 flex justify-center">
-                        {onReferralsClick && (
-                            <button
-                                onClick={onReferralsClick}
-                                className="px-4 py-2 bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-500/30 rounded-full text-emerald-400 font-medium text-sm transition-all flex items-center gap-2"
-                            >
-                                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                                Affiliates
-                            </button>
-                        )}
+                        {/* Affiliates button removed per user request */}
                     </div>
 
                     {/* RIGHT: User Avatar, Currency, Language */}

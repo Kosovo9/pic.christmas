@@ -28,8 +28,9 @@ export const ChatWidget = () => {
 
     // Context-Aware Greeting & Language Update
     useEffect(() => {
-        // Only override if it's the very first message
-        if (messages.length > 1) return;
+        // FIXED: Only set greeting on initial mount, not on every language/pathname change
+        // This prevents the chat from repeating the same message
+        if (messages.length > 1) return; // Don't reset if user has already interacted
 
         let greeting = language === 'es' ? "¡Hola! Soy Holly 🎄. ¿En qué puedo ayudarte hoy?" : "Hi! I'm Holly 🎄. How can I help you?";
 
@@ -42,8 +43,9 @@ export const ChatWidget = () => {
             greeting = language === 'es' ? "¡Gana dinero compartiendo! ¿Te explico cómo funciona? 💰" : "Earn money sharing! Want me to explain how? 💰";
         }
 
-        setMessages([{ role: 'bot', text: greeting }]);
-    }, [language, pathname]);
+        // Only update if it's truly the first message
+        setMessages(prev => prev.length === 1 && prev[0].role === 'bot' ? [{ role: 'bot', text: greeting }] : prev);
+    }, []); // FIXED: Empty dependency array - only run once on mount
 
     const handleSend = async () => {
         if (!input.trim()) return;
