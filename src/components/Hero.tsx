@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { trackEvent } from '../services/analytics';
 import { Language } from '../types';
 import { useI18n } from '../hooks/useI18n';
+import { Santa3DScene } from './Santa3DScene';
 
 interface HeroProps {
     language: Language;
@@ -86,15 +87,10 @@ export const Hero: React.FC<HeroProps> = ({ onStart, freeMode }) => {
                     </button>
                 </div>
 
-                {/* Santa with Sleigh Image */}
+                {/* Santa 3D Animado - Paseándose por el UI */}
                 <div className="animate-fade-in [animation-delay:600ms] mt-12 flex justify-center">
-                    <div className="relative group">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-red-600 via-green-600 to-red-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-                        <img
-                            src="https://images.unsplash.com/photo-1512389142860-9c449e58a543?q=80&w=2069&auto=format&fit=crop"
-                            alt="Santa with Sleigh"
-                            className="relative w-full max-w-md rounded-2xl shadow-2xl"
-                        />
+                    <div className="relative w-full max-w-4xl">
+                        <Santa3DScene />
                     </div>
                 </div>
 
