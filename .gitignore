@@ -21,3 +21,6 @@ coverage/
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# Local Netlify folder
+.netlify

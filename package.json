@@ -29,16 +29,17 @@
     "mercadopago": "^2.11.0",
     "mongoose": "^9.0.0",
     "multer": "^2.0.2",
-    "next": "15.0.3",
+    "next": "^16.0.8",
     "qrcode.react": "^4.2.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
     "react-dropzone": "^14.3.8",
     "replicate": "^1.4.0",
     "stripe": "^20.0.0"
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.13.16",
+    "@netlify/plugin-nextjs": "^5.15.1",
     "@tailwindcss/postcss": "^4.1.17",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
@@ -47,7 +48,7 @@
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
-    "eslint-config-next": "16.0.7",
+    "eslint-config-next": "^16.0.8",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
