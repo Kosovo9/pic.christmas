@@ -86,8 +86,36 @@ export const Hero: React.FC<HeroProps> = ({ onStart, freeMode }) => {
                     </button>
                 </div>
 
+                {/* Santa with Sleigh Image */}
+                <div className="animate-fade-in [animation-delay:600ms] mt-12 flex justify-center">
+                    <div className="relative group">
+                        <div className="absolute -inset-1 bg-gradient-to-r from-red-600 via-green-600 to-red-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                        <img
+                            src="https://images.unsplash.com/photo-1512389142860-9c449e58a543?q=80&w=2069&auto=format&fit=crop"
+                            alt="Santa with Sleigh"
+                            className="relative w-full max-w-md rounded-2xl shadow-2xl"
+                        />
+                    </div>
+                </div>
+
+                {/* Stats Section */}
+                <div className="animate-fade-in [animation-delay:800ms] mt-16 grid grid-cols-3 gap-8 max-w-3xl mx-auto">
+                    <div className="text-center">
+                        <div className="text-4xl font-black text-emerald-400 mb-2">133</div>
+                        <div className="text-sm text-slate-400 uppercase tracking-wide">users creating now</div>
+                    </div>
+                    <div className="text-center border-x border-white/10">
+                        <div className="text-4xl font-black text-blue-400 mb-2">32,454</div>
+                        <div className="text-sm text-slate-400 uppercase tracking-wide">photos generated today</div>
+                    </div>
+                    <div className="text-center">
+                        <div className="text-4xl font-black text-yellow-400 mb-2">4.9/5</div>
+                        <div className="text-sm text-slate-400 uppercase tracking-wide">from happy customers</div>
+                    </div>
+                </div>
+
                 {/* Social Proof / Trust Indicators */}
-                <div className="animate-fade-in [animation-delay:800ms] mt-16 pt-8 border-t border-white/10">
+                <div className="animate-fade-in [animation-delay:1000ms] mt-16 pt-8 border-t border-white/10">
                     <p className="text-slate-400 text-sm font-medium mb-4 uppercase tracking-widest">{t('hero.trusted')}</p>
                     <div className="flex justify-center items-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
                         {/* Mock Logos - Replace with SVGs or Images */}

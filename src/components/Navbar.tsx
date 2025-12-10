@@ -41,12 +41,12 @@ export const Navbar: React.FC<NavbarProps> = ({ language, onLanguageChange, onRe
                         className="flex items-center gap-3 cursor-pointer"
                         onClick={() => window.location.reload()}
                     >
-                        {/* Logo Nexora "N" */}
-                        <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-xl">
-                            N
+                        {/* Logo PIC.CHRISTMAS */}
+                        <div className="w-10 h-10 bg-gradient-to-br from-red-600 to-green-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                            🎄
                         </div>
-                        <span className="text-xl font-bold tracking-wide text-white">
-                            NEXORA
+                        <span className="text-xl font-bold tracking-wide bg-gradient-to-r from-red-500 via-green-500 to-red-500 bg-clip-text text-transparent">
+                            PIC.CHRISTMAS
                         </span>
                     </div>
 
@@ -62,6 +62,14 @@ export const Navbar: React.FC<NavbarProps> = ({ language, onLanguageChange, onRe
                         )}
 
                         <div className="flex items-center gap-4">
+                            {/* User Avatar */}
+                            <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-full bg-slate-800/50 border border-slate-700/50 hover:border-emerald-500/50 transition-all cursor-pointer">
+                                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold text-sm">
+                                    👤
+                                </div>
+                                <span className="text-sm text-slate-300">Guest</span>
+                            </div>
+
                             {/* Currency Selector (New) 💰 */}
                             {/* Currency Selector (New) 💰 */}
                             <div className="relative hidden md:block group z-50">
