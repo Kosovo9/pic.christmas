@@ -42,7 +42,7 @@ export const EarthFooter = () => {
                 </div>
 
                 <div className="flex items-center justify-center gap-2 text-slate-500 text-xs mt-4">
-                    <span>© 2025 Nexora Studios</span>
+                    <span>© 2025 PIC.CHRISTMAS</span>
                     <span>•</span>
                     <span>All Rights Reserved</span>
                     <span>•</span>

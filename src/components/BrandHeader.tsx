@@ -11,13 +11,12 @@ export const BrandHeader = () => {
                 <div className="absolute -inset-4 bg-blue-500/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                 <div className="relative flex items-center gap-3">
-                    <img
-                        src="/nexora_logo.png"
-                        alt="Nexora Studio"
-                        className="h-16 md:h-20 w-auto object-contain drop-shadow-[0_0_25px_rgba(255,255,255,0.5)] transition-transform duration-300 group-hover:scale-110 filter brightness-125 saturate-150"
-                    />
+                    {/* Christmas Tree Icon */}
+                    <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-green-600 rounded-lg flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                        🎄
+                    </div>
                     <div className="flex flex-col">
-                        <span className="text-white font-bold text-xl leading-none tracking-wide font-display shadow-black drop-shadow-md">PIC.CHRISTMAS</span>
+                        <span className="text-white font-bold text-xl leading-none tracking-wide font-display shadow-black drop-shadow-md bg-gradient-to-r from-red-500 via-green-500 to-red-500 bg-clip-text text-transparent">PIC.CHRISTMAS</span>
                     </div>
                 </div>
             </div>

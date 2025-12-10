@@ -46,7 +46,7 @@ export const Footer: React.FC<FooterProps> = () => {
                 </div>
 
                 <p className="text-amber-500 font-bold text-sm mb-2 drop-shadow-md">
-                    © {new Date().getFullYear()} Nexora Studio. {t('footer.terms')}
+                    © {new Date().getFullYear()} PIC.CHRISTMAS. {t('footer.terms')}
                 </p>
                 {/* REMOVED PAYMENTS & AFFILIATES AS REQUESTED */}
                 <div className="mt-2 text-xs text-gray-500 italic">

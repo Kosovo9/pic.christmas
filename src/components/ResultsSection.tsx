@@ -40,7 +40,7 @@ export const ResultsSection: React.FC<ResultsSectionProps> = ({ language, result
                 <div className="flex justify-center gap-4 flex-wrap">
                     <a
                         href={resultUrl}
-                        download={`nexora-christmas-${Date.now()}.${mediaType === 'video' ? 'mp4' : 'png'}`}
+                        download={`pic-christmas-${Date.now()}.${mediaType === 'video' ? 'mp4' : 'png'}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg shadow-lg flex items-center transition transform hover:scale-105"
