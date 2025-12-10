@@ -1,0 +1,156 @@
+{
+    "prompts": [
+        {
+            "id": "christmas_tree_farm_truck",
+            "title": "Christmas Tree Farm with Vintage Truck",
+            "category": "Outdoor Winter Scene",
+            "style": "Cinematic Christmas Photography",
+            "image": "/examples/tree-farm-truck.jpg",
+            "prompt": "A hyper-realistic, cinematic Christmas scene: mature Hispanic man in his 50s standing confidently next to a burgundy red Ford F-150 pickup truck loaded with fresh-cut Christmas tree in the bed, set in a professional Christmas tree farm during golden hour. The man wears a cream cable-knit cardigan sweater over white shirt, classic red and black plaid scarf draped elegantly, dark blue jeans, and polished brown leather boots. Scene details: pristine snow-covered ground with realistic tire tracks, rows of perfectly shaped Fraser fir and Douglas fir trees heavily laden with fresh snow on every branch, warm golden sunlight streaming through the trees creating dramatic god rays and atmospheric mist, bokeh effect on background trees. Lighting: soft golden hour sunlight (color temperature 3200K) from the left creating rim lighting on the subject, natural fill light bouncing off snow, subtle lens flare. Camera settings: shot with Canon EOS R5, 85mm f/1.4 lens at f/2.8, shallow depth of field isolating subject, professional color grading with warm tones (oranges 15%, teals in shadows), slight vignette. Atmosphere: peaceful winter morning, visible breath vapor, sparkling snow crystals, cozy holiday spirit. Composition: subject positioned using rule of thirds, truck at 45-degree angle showing both side and bed with tree, environmental portrait style. Post-processing: lifted shadows, crushed blacks slightly, added clarity 20%, vibrance 15%, split toning (highlights warm, shadows cool), film grain 5% for texture.",
+            "technical_specs": {
+                "camera": "Canon EOS R5",
+                "lens": "85mm f/1.4",
+                "aperture": "f/2.8",
+                "iso": "400",
+                "shutter_speed": "1/250s",
+                "color_temp": "3200K",
+                "aspect_ratio": "16:9"
+            },
+            "keywords": [
+                "Christmas tree farm",
+                "vintage truck",
+                "golden hour",
+                "winter portrait",
+                "family photography",
+                "holiday card",
+                "outdoor Christmas"
+            ]
+        },
+        {
+            "id": "elegant_christmas_branding",
+            "title": "Elegant Christmas Brand Identity",
+            "category": "Graphic Design / Branding",
+            "style": "Luxury Editorial Design",
+            "image": "/examples/elegant-moments-brand.jpg",
+            "prompt": "Professional luxury Christmas brand identity mockup: elegant website hero section displayed on MacBook Pro screen, featuring sophisticated typography and premium design elements. Main headline reads 'Elegant Moments: Our Christmas Story' in classic serif font (Playfair Display or Didot, 72pt, letter-spacing -2%), subheadline 'A Tradition of Luxury Photography' in refined sans-serif (Montserrat Light, 18pt). Color palette: rich burgundy red (#8B1538) as primary, warm gold (#D4AF37) as accent, cream (#F5F5DC) background. Design elements: deep red velvet texture background in lower third with elegant script text 'Crafting Memories Since 2010' in gold, fresh pine branches with realistic needles positioned at corners creating natural frame, soft bokeh Christmas lights in warm white and amber tones (f/1.8 bokeh simulation) in background. Screen mockup: realistic MacBook Pro with accurate bezels and screen reflections, subtle shadow beneath laptop, positioned at slight angle (15 degrees) for depth. Background: blurred Christmas tree with warm LED lights creating dreamy bokeh circles, shallow depth of field (f/2.0 equivalent), soft focus on ornaments. Lighting: soft diffused window light from left, warm color temperature (2800K), subtle rim light on laptop edges. Typography hierarchy: clear visual weight difference between headline (bold 700), subheadline (light 300), and body text. Professional touches: subtle texture overlay on red velvet section, gold foil effect on text (use gradient overlay with highlights), micro-interactions suggested through button states. Overall aesthetic: timeless, sophisticated, heirloom quality, editorial magazine style, Vogue-inspired layout.",
+            "technical_specs": {
+                "software": "Photoshop + Illustrator",
+                "fonts": "Playfair Display, Montserrat",
+                "colors": [
+                    "#8B1538",
+                    "#D4AF37",
+                    "#F5F5DC"
+                ],
+                "mockup_type": "MacBook Pro 16-inch",
+                "resolution": "4K (3840x2160)",
+                "format": "PNG with transparency"
+            },
+            "keywords": [
+                "luxury branding",
+                "Christmas design",
+                "editorial layout",
+                "premium photography",
+                "brand identity",
+                "web design mockup"
+            ]
+        },
+        {
+            "id": "cozy_couple_christmas_tree",
+            "title": "Intimate Couple Moment by Christmas Tree",
+            "category": "Indoor Romantic Portrait",
+            "style": "Lifestyle Editorial Photography",
+            "image": "/examples/couple-christmas-embrace.jpg",
+            "prompt": "Intimate, emotionally rich Christmas couple portrait: young couple (late 20s) in tender embrace in modern minimalist living room, positioned in front of beautifully decorated 7-foot Christmas tree with warm white LED lights. Woman: blonde hair with soft beach waves (balayage highlights), wearing oversized cream cable-knit turtleneck sweater (chunky knit texture visible), hand gently touching man's face showing engagement ring (princess cut diamond, subtle sparkle), natural makeup with soft pink lips. Man: athletic build, wearing charcoal gray crew neck sweater (merino wool texture), dark fitted jeans, short dark hair with clean fade, genuine smile, arms wrapped around woman's waist. Tree details: Fraser fir with realistic needle texture, decorated with mix of rose gold and copper ornaments (matte and metallic finish), white ribbon garland, warm white fairy lights creating soft glow. Room setting: modern farmhouse style with white shiplap fireplace (gas insert with realistic flames visible), marble mantle with subtle veining, cream colored stockings with names embroidered, soft gray area rug with subtle pattern. Lighting setup: main light from fireplace creating warm orange glow on left side of subjects (2400K), Christmas tree lights providing soft fill light from behind (3000K), large window out of frame providing natural soft light from right (5500K), creating beautiful three-point lighting. Camera settings: shot with Sony A7III, 50mm f/1.2 GM lens wide open at f/1.2 for creamy bokeh, ISO 800 for grain texture, 1/125s shutter. Composition: subjects centered using rule of thirds, tree slightly out of focus in background creating dreamy atmosphere, fireplace bokeh on left edge. Color grading: warm and inviting with lifted shadows, orange and teal color science (oranges in highlights, teals in shadows), slight fade in blacks for film look, added grain 8% for texture. Mood: authentic love, cozy intimacy, holiday magic, engagement announcement vibes.",
+            "technical_specs": {
+                "camera": "Sony A7III",
+                "lens": "50mm f/1.2 GM",
+                "aperture": "f/1.2",
+                "iso": "800",
+                "shutter_speed": "1/125s",
+                "white_balance": "Mixed (2400K-5500K)",
+                "aspect_ratio": "4:5 (Instagram portrait)"
+            },
+            "keywords": [
+                "couple photography",
+                "Christmas engagement",
+                "cozy home",
+                "romantic portrait",
+                "holiday love",
+                "fireplace setting",
+                "intimate moment"
+            ]
+        },
+        {
+            "id": "baby_christmas_wonderland",
+            "title": "Baby's First Christmas Wonderland",
+            "category": "Children's Holiday Portrait",
+            "style": "Whimsical Studio Photography",
+            "image": "/examples/baby-christmas-toys.jpg",
+            "prompt": "Enchanting Christmas studio portrait: adorable Asian baby (8-10 months) sitting cross-legged on plush gray knit blanket, wearing ultra-soft cream teddy bear onesie with hood featuring cute ears, hands playfully touching face in candid moment, genuine smile with visible baby teeth. Scene composition: baby positioned center-frame surrounded by carefully curated Christmas props creating magical toy shop atmosphere. Left side: fluffy apricot toy poodle (groomed, sitting attentively, wearing small red bow), vintage white Christmas lantern with LED candle, stack of wrapped presents with red and gold paper. Right side: large cream-colored teddy bear with red and white striped bow tie, additional wrapped gifts, vintage toy nutcracker (12 inches tall, traditional red uniform). Background: rich layered Christmas setup with vintage wooden crates stacked at varying heights, illuminated Christmas tree (4 feet, pre-lit with warm white LEDs, decorated with red and gold ornaments), deep blue starry night backdrop with subtle snowflake overlay, bokeh effect lights creating depth. Lighting setup: main key light (softbox 3x4 feet) positioned 45 degrees camera left at f/5.6 for soft shadows, fill light (octabox) camera right at 50% power, hair light from above-behind creating separation, practical lights from tree and lantern adding warmth. Color palette: rich jewel tones with burgundy reds, forest greens, warm golds, cream whites, deep navy blues. Camera settings: Canon EOS R6, 85mm f/1.4 lens at f/2.0 for subject isolation, ISO 400, 1/200s shutter, shot at baby's eye level. Post-processing: enhanced clarity on baby's face, softened background slightly, added warmth (color temp +300K), vibrance +20%, subtle vignette, sharpened eyes, added catch lights, film grain 3% for professional finish. Mood: pure joy, childhood wonder, heirloom quality portrait, timeless Christmas magic.",
+            "technical_specs": {
+                "camera": "Canon EOS R6",
+                "lens": "85mm f/1.4",
+                "aperture": "f/2.0",
+                "iso": "400",
+                "shutter_speed": "1/200s",
+                "lighting": "3-point studio setup",
+                "backdrop": "Custom Christmas scene",
+                "aspect_ratio": "4:5"
+            },
+            "keywords": [
+                "baby photography",
+                "first Christmas",
+                "studio portrait",
+                "children's photography",
+                "holiday session",
+                "toy wonderland",
+                "professional baby photos"
+            ]
+        },
+        {
+            "id": "christmas_proposal_moment",
+            "title": "Christmas Engagement Ring Close-up",
+            "category": "Detail/Macro Photography",
+            "style": "Fine Art Wedding Photography",
+            "image": "/examples/engagement-ring-bokeh.jpg",
+            "prompt": "Breathtaking macro engagement moment: extreme close-up of hands during marriage proposal in front of Christmas tree, captured at decisive moment ring is being placed on finger. Main subjects: woman's left hand (elegant fingers, fresh white gel manicure with almond-shaped nails, subtle length) receiving platinum engagement ring (1.5 carat round brilliant cut diamond in classic 6-prong Tiffany setting, VS1 clarity catching light beautifully), man's hand (masculine, well-groomed, wearing charcoal gray wool sweater visible at wrist) gently holding woman's hand. Ring details: diamond exhibiting perfect fire and brilliance with visible rainbow reflections, platinum band with mirror polish, sized perfectly for finger. Background: completely defocused Christmas tree creating dreamy bokeh wonderland, warm white LED lights transformed into perfect circular bokeh balls (achieved with f/1.4 aperture), varying sizes of bokeh from f/1.4 to f/2.0 range, golden and amber tones dominating (2800K color temperature), subtle green from tree needles adding depth, hints of ornament colors (red, gold) in soft focus. Lighting: soft natural window light from left (5500K) as main light source creating gentle shadows and dimension on hands, Christmas tree lights providing warm practical fill light (2800K), subtle rim light separating hands from background. Camera settings: shot with Canon EOS R5, 100mm f/2.8L Macro IS lens at f/1.4 (using speedbooster for ultra-shallow DOF), ISO 800 for slight grain texture, 1/160s shutter speed, manual focus on diamond with focus peaking. Composition: hands positioned using rule of thirds, ring at golden ratio intersection point, negative space in upper right, leading lines from fingers guiding eye to ring. Depth of field: razor-thin (approximately 2mm) with diamond in perfect focus, fingers gradually falling out of focus, background completely dissolved into bokeh. Color grading: warm and romantic with lifted blacks for fade effect, orange and teal color science (warm highlights, cool shadows), added luminance to diamond for extra sparkle, subtle split toning (highlights warm gold, shadows cool blue), film grain 5%. Mood: romantic, intimate, once-in-a-lifetime moment, luxury, timeless elegance, Christmas magic, emotional significance.",
+            "technical_specs": {
+                "camera": "Canon EOS R5",
+                "lens": "100mm f/2.8L Macro IS + 0.71x speedbooster",
+                "aperture": "f/1.4 (effective)",
+                "iso": "800",
+                "shutter_speed": "1/160s",
+                "focus_distance": "12 inches",
+                "bokeh_quality": "Ultra-creamy circular",
+                "aspect_ratio": "4:5"
+            },
+            "keywords": [
+                "engagement photography",
+                "proposal moment",
+                "ring detail",
+                "Christmas proposal",
+                "macro photography",
+                "bokeh photography",
+                "wedding details",
+                "romantic moment"
+            ]
+        }
+    ],
+    "prompt_categories": [
+        "Outdoor Winter Scenes",
+        "Indoor Romantic Portraits",
+        "Children's Holiday Sessions",
+        "Detail/Macro Photography",
+        "Graphic Design & Branding",
+        "Family Gatherings",
+        "Pet Christmas Photos",
+        "Lifestyle Editorial"
+    ],
+    "photography_tips": {
+        "golden_hour": "Shoot 30-60 minutes before sunset for warm, flattering light",
+        "bokeh": "Use f/1.2-f/2.0 aperture with distance between subject and lights",
+        "color_grading": "Orange and teal color science works best for Christmas photos",
+        "composition": "Rule of thirds + leading lines + negative space",
+        "lighting": "Three-point lighting (key, fill, rim) for professional results"
+    }
+}

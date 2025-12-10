@@ -79,20 +79,25 @@ export const ChatWidget = () => {
 
         // 2. AI Fallback (Gemini) 🤖
         try {
-            // Ensure we are hitting the correct endpoint /api/chat which proxies to backend
-            const res = await fetch('/api/chat', {
+            // Timeout after 10 seconds
+            const timeoutPromise = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('Timeout')), 10000)
+            );
+
+            const fetchPromise = fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     message: userMsg,
                     language,
-                    // Send minimal history context if needed
                     history: messages.slice(-4).map(m => ({
                         role: m.role === 'user' ? 'user' : 'model',
                         parts: [{ text: m.text }]
                     }))
                 })
             });
+
+            const res = await Promise.race([fetchPromise, timeoutPromise]) as Response;
 
             if (!res.ok) throw new Error('Network response was not ok');
 

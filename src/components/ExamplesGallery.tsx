@@ -3,26 +3,68 @@ import Image from 'next/image';
 
 export const ExamplesGallery: React.FC = () => {
     const examples = [
-        { id: 1, title: 'Festive Ornaments', category: 'Decorations', image: '/examples/ornament-bokeh.jpg', alt: 'Red Christmas ornament' },
-        { id: 2, title: 'Santa Visit', category: 'Family', image: '/examples/santa-kids.jpg', alt: 'Children visiting Santa' },
-        { id: 3, title: 'Cozy Christmas', category: 'Mood', image: '/examples/gift-candycane.jpg', alt: 'Gift wrapping' },
-        { id: 4, title: 'Tree Decorating', category: 'Traditional', image: '/examples/tree-ornaments.jpg', alt: 'Decorated tree' },
-        { id: 5, title: 'Warm Bokeh', category: 'Atmosphere', image: '/examples/bokeh-lights.jpg', alt: 'Warm lights' },
-        { id: 6, title: 'Golden Elegance', category: 'Decorations', image: '/examples/golden-ornaments.jpg', alt: 'Golden ornaments' },
-        { id: 7, title: 'Snowy Morning', category: 'Outdoor', image: '/examples/snow-window.jpg', alt: 'Snowy window view' },
-        { id: 8, title: 'Reindeer Love', category: 'Pets', image: '/examples/dog-reindeer.jpg', alt: 'Dog with reindeer antlers' },
-        { id: 9, title: 'Hot Cocoa', category: 'Cozy', image: '/examples/hot-cocoa.jpg', alt: 'Hot chocolate mug' },
-        { id: 10, title: 'Winter Walk', category: 'Outdoor', image: '/examples/winter-walk.jpg', alt: 'Walking in snow' },
-        { id: 11, title: 'Elf Helper', category: 'Kids', image: '/examples/baby-elf.jpg', alt: 'Baby in elf costume' },
-        { id: 12, title: 'Mistletoe Kiss', category: 'Couples', image: '/examples/couple-kiss.jpg', alt: 'Couple kissing' },
-        { id: 13, title: 'Gingerbread Fun', category: 'Activity', image: '/examples/gingerbread.jpg', alt: 'Decorating gingerbread' },
-        { id: 14, title: 'Silent Night', category: 'Atmosphere', image: '/examples/night-lights.jpg', alt: 'Christmas lights at night' },
-        { id: 15, title: 'Stocking Surprise', category: 'Family', image: '/examples/stockings.jpg', alt: 'Hanging stockings' },
-        { id: 16, title: 'Rustic Cabin', category: 'Travel', image: '/examples/cabin.jpg', alt: 'Log cabin in snow' },
-        { id: 17, title: 'Sparkler Joy', category: 'Party', image: '/examples/sparklers.jpg', alt: 'Holding sparklers' },
-        { id: 18, title: 'Ugly Sweater', category: 'Fun', image: '/examples/sweaters.jpg', alt: 'Ugly Christmas sweaters' },
-        { id: 19, title: 'Sleigh Ride', category: 'Adventure', image: '/examples/sleigh.jpg', alt: 'Horse drawn sleigh' },
-        { id: 20, title: 'Midnight Mass', category: 'Traditional', image: '/examples/candle-service.jpg', alt: 'Candlelight service' },
+        // NEW PROFESSIONAL EXAMPLES WITH PROMPTS
+        {
+            id: 1,
+            title: 'Christmas Tree Farm',
+            category: 'Outdoor',
+            image: '/examples/tree-farm-truck.jpg',
+            alt: 'Man with vintage truck at Christmas tree farm',
+            prompt: 'Cinematic Christmas scene: mature man next to burgundy Ford F-150 loaded with fresh Christmas tree, golden hour lighting, snow-covered tree farm, warm tones, professional color grading'
+        },
+        {
+            id: 2,
+            title: 'Elegant Branding',
+            category: 'Design',
+            image: '/examples/elegant-moments-brand.jpg',
+            alt: 'Luxury Christmas brand identity',
+            prompt: 'Premium Christmas brand mockup: MacBook displaying elegant website, burgundy and gold palette, velvet textures, pine branches, warm bokeh lights, editorial magazine style'
+        },
+        {
+            id: 3,
+            title: 'Cozy Couple',
+            category: 'Romance',
+            image: '/examples/couple-christmas-embrace.jpg',
+            alt: 'Couple embracing by Christmas tree',
+            prompt: 'Intimate couple portrait: tender embrace by decorated tree, fireplace glow, warm lighting, f/1.2 bokeh, orange and teal grading, engagement ring visible, cozy home atmosphere'
+        },
+        {
+            id: 4,
+            title: 'Baby Wonderland',
+            category: 'Children',
+            image: '/examples/baby-christmas-toys.jpg',
+            alt: 'Baby in Christmas wonderland with toys',
+            prompt: 'Whimsical baby portrait: 8-month-old in teddy bear onesie, surrounded by Christmas toys and poodle, vintage props, rich jewel tones, studio lighting, heirloom quality'
+        },
+        {
+            id: 5,
+            title: 'Proposal Moment',
+            category: 'Details',
+            image: '/examples/engagement-ring-bokeh.jpg',
+            alt: 'Engagement ring with Christmas bokeh',
+            prompt: 'Macro engagement shot: diamond ring being placed on finger, ultra-shallow DOF (f/1.4), Christmas tree bokeh background, warm golden tones, romantic intimate moment'
+        },
+        // ORIGINAL EXAMPLES
+        { id: 6, title: 'Festive Ornaments', category: 'Decorations', image: '/examples/ornament-bokeh.jpg', alt: 'Red Christmas ornament' },
+        { id: 7, title: 'Santa Visit', category: 'Family', image: '/examples/santa-kids.jpg', alt: 'Children visiting Santa' },
+        { id: 8, title: 'Cozy Christmas', category: 'Mood', image: '/examples/gift-candycane.jpg', alt: 'Gift wrapping' },
+        { id: 9, title: 'Tree Decorating', category: 'Traditional', image: '/examples/tree-ornaments.jpg', alt: 'Decorated tree' },
+        { id: 10, title: 'Warm Bokeh', category: 'Atmosphere', image: '/examples/bokeh-lights.jpg', alt: 'Warm lights' },
+        { id: 11, title: 'Golden Elegance', category: 'Decorations', image: '/examples/golden-ornaments.jpg', alt: 'Golden ornaments' },
+        { id: 12, title: 'Snowy Morning', category: 'Outdoor', image: '/examples/snow-window.jpg', alt: 'Snowy window view' },
+        { id: 13, title: 'Reindeer Love', category: 'Pets', image: '/examples/dog-reindeer.jpg', alt: 'Dog with reindeer antlers' },
+        { id: 14, title: 'Hot Cocoa', category: 'Cozy', image: '/examples/hot-cocoa.jpg', alt: 'Hot chocolate mug' },
+        { id: 15, title: 'Winter Walk', category: 'Outdoor', image: '/examples/winter-walk.jpg', alt: 'Walking in snow' },
+        { id: 16, title: 'Elf Helper', category: 'Kids', image: '/examples/baby-elf.jpg', alt: 'Baby in elf costume' },
+        { id: 17, title: 'Mistletoe Kiss', category: 'Couples', image: '/examples/couple-kiss.jpg', alt: 'Couple kissing' },
+        { id: 18, title: 'Gingerbread Fun', category: 'Activity', image: '/examples/gingerbread.jpg', alt: 'Decorating gingerbread' },
+        { id: 19, title: 'Silent Night', category: 'Atmosphere', image: '/examples/night-lights.jpg', alt: 'Christmas lights at night' },
+        { id: 20, title: 'Stocking Surprise', category: 'Family', image: '/examples/stockings.jpg', alt: 'Hanging stockings' },
+        { id: 21, title: 'Rustic Cabin', category: 'Travel', image: '/examples/cabin.jpg', alt: 'Log cabin in snow' },
+        { id: 22, title: 'Sparkler Joy', category: 'Party', image: '/examples/sparklers.jpg', alt: 'Holding sparklers' },
+        { id: 23, title: 'Ugly Sweater', category: 'Fun', image: '/examples/sweaters.jpg', alt: 'Ugly Christmas sweaters' },
+        { id: 24, title: 'Sleigh Ride', category: 'Adventure', image: '/examples/sleigh.jpg', alt: 'Horse drawn sleigh' },
+        { id: 25, title: 'Midnight Mass', category: 'Traditional', image: '/examples/candle-service.jpg', alt: 'Candlelight service' },
     ];
 
     return (
