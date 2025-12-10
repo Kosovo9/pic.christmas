@@ -43,7 +43,7 @@ export const Navbar: React.FC<NavbarProps> = ({ language, onLanguageChange, onRe
                     >
                         {/* Logo PIC.CHRISTMAS */}
                         <div className="w-10 h-10 bg-gradient-to-br from-red-600 to-green-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                            🎄
+                            PC
                         </div>
                         <span className="text-xl font-bold tracking-wide bg-gradient-to-r from-red-500 via-green-500 to-red-500 bg-clip-text text-transparent">
                             PIC.CHRISTMAS

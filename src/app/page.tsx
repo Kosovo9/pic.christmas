@@ -326,8 +326,8 @@ export default function Home() {
         <ExitIntentModal />
 
 
-        {/* 🛡️ SECURITY HUD */}
-        <SystemStatus />
+        {/* SystemStatus removed as requested */}
+        {/* <SystemStatus /> */}
       </main>
     </PageTransition>
   );
