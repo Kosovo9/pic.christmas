@@ -48,6 +48,16 @@ export function generateChristmasPrompt(context: PromptContext) {
 
     let positivePrompt = preset.basePrompt;
 
+    // Replace placeholders with context or defaults
+    const subject = context.details || "A beautiful person";
+    const pet = "A cute dog (Golden Retriever mix)"; // Default for now, can be dynamic later
+    const count = "4"; // Default family size
+
+    positivePrompt = positivePrompt
+        .replace(/\[Subject\]/g, subject)
+        .replace(/\[Subject Pet\]/g, pet)
+        .replace(/\[Count\]/g, count);
+
     // Fallback for negative
     const negativePrompt = MASTER_PROMPT_TEMPLATE.negative;
 

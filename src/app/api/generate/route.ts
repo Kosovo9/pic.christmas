@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateImage } from "@/lib/ai/generateChristmasPortrait";
+import { uploadImageFromUrl } from "@/lib/storage";
 import {
     validateGenerationRequest,
     logGenerationRequest,
@@ -57,14 +58,28 @@ export async function POST(req: NextRequest) {
             aspectRatio,
         });
 
-        // 3. REGISTRAR LA SOLICITUD (Log successful generation)
+        // 3. PERSIST IMAGE TO STORAGE (The "Cloud Folder")
+        let finalImageUrl = result.url;
+        try {
+            // Upload to Supabase Storage 'generated-images' bucket
+            // This ensures the photo is kept "forever" in the user's cloud folder
+            const storageUrl = await uploadImageFromUrl(result.url, userId);
+            if (storageUrl) {
+                finalImageUrl = storageUrl;
+                console.log("Image persisted to storage:", finalImageUrl);
+            }
+        } catch (storageError) {
+            console.error("Failed to persist image, using temporary URL:", storageError);
+        }
+
+        // 4. REGISTRAR LA SOLICITUD (Log successful generation)
         // Estimated price for Flux Schnell ~0.003, let's log 0.05 to be conservative/safe for the spend limit
         const ESTIMATED_PRICE = 0.05;
-        await logGenerationRequest(userId, formatId || 'custom', ESTIMATED_PRICE, (prompt || '').length, result.url);
+        await logGenerationRequest(userId, formatId || 'custom', ESTIMATED_PRICE, (prompt || '').length, finalImageUrl);
 
         return NextResponse.json({
             success: true,
-            imageUrl: result.url,
+            imageUrl: finalImageUrl,
             images: [
                 {
                     id: crypto.randomUUID(),
