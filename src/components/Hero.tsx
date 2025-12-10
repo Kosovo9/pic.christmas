@@ -6,9 +6,10 @@ import { useI18n } from '../hooks/useI18n';
 interface HeroProps {
     language: Language;
     onStart: () => void;
+    freeMode?: any;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onStart }) => {
+export const Hero: React.FC<HeroProps> = ({ onStart, freeMode }) => {
     const { t } = useI18n();
 
     const heroImages: string[] = [
@@ -96,6 +97,18 @@ export const Hero: React.FC<HeroProps> = ({ onStart }) => {
                     </div>
                 </div>
             </div>
+
+            {/* Free Mode Banner - Moved Below per User Request */}
+            {freeMode?.active && (
+                <div className="mt-8 mx-auto max-w-3xl">
+                    <div
+                        className="bg-yellow-400/60 backdrop-blur-md text-slate-900 py-3 px-6 rounded-xl font-black text-lg animate-pulse shadow-[0_0_30px_rgba(250,204,21,0.4)] border border-yellow-300/50"
+                        role="alert"
+                    >
+                        🚀 VIRAL LAUNCH: FREE MODE ACTIVE — {freeMode.hoursRemaining}h {freeMode.minutesRemaining}m LEFT!
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

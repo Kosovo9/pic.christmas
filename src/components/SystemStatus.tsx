@@ -48,20 +48,20 @@ export const SystemStatus: React.FC = () => {
 
     return (
         <div
-            className={`fixed bottom-4 right-4 z-[9999] rounded-lg p-4 max-w-xs shadow-lg border-2 transition-all duration-300 ${isActive
-                    ? isDangerous
-                        ? 'bg-orange-50 border-orange-300'
-                        : 'bg-green-50 border-green-300'
-                    : 'bg-red-50 border-red-300'
+            className={`fixed bottom-24 right-4 z-[9999] rounded-lg p-4 max-w-xs shadow-lg border-2 transition-all duration-300 backdrop-blur-md bg-opacity-80 ${isActive
+                ? isDangerous
+                    ? 'bg-orange-50 border-orange-300'
+                    : 'bg-green-50 border-green-300'
+                : 'bg-red-50 border-red-300'
                 }`}
         >
             <div className="flex items-center gap-2 mb-2">
                 <div
                     className={`w-3 h-3 rounded-full ${isActive
-                            ? isDangerous
-                                ? 'bg-orange-500 animate-pulse'
-                                : 'bg-green-500'
-                            : 'bg-red-500'
+                        ? isDangerous
+                            ? 'bg-orange-500 animate-pulse'
+                            : 'bg-green-500'
+                        : 'bg-red-500'
                         }`}
                 />
                 <h3 className="font-bold text-sm text-slate-800">
@@ -85,10 +85,10 @@ export const SystemStatus: React.FC = () => {
                 <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
                     <div
                         className={`h-full transition-all ${spendPercentage > 90
-                                ? 'bg-red-500'
-                                : spendPercentage > 70
-                                    ? 'bg-orange-500'
-                                    : 'bg-green-500'
+                            ? 'bg-red-500'
+                            : spendPercentage > 70
+                                ? 'bg-orange-500'
+                                : 'bg-green-500'
                             }`}
                         style={{ width: `${Math.min(spendPercentage, 100)}%` }}
                     />

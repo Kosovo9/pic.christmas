@@ -213,11 +213,9 @@ export default function Home() {
         <FlyingSanta3D />
 
         {/* FREE MODE BANNER - ELON STYLE (Task 8) */}
-        {freeMode?.active && (
-          <div className="fixed top-0 left-0 right-0 bg-yellow-400 text-black text-center py-2 font-black z-[200] animate-pulse cursor-pointer shadow-lg" onClick={realStart}>
-            🚀 VIRAL LAUNCH: FREE MODE ACTIVE — {freeMode.hoursRemaining}h {freeMode.minutesRemaining}m LEFT! GENERA AHORA (GRATIS) ⚡
-          </div>
-        )}
+        <FlyingSanta3D />
+
+        {/* FREE MODE BANNER - MOVED TO HERO */}
 
         <SecurityShield />
         <SocialProof />
@@ -228,7 +226,7 @@ export default function Home() {
         <MusicToggle />
 
         {/* Hero Section */}
-        <Hero language={language} onStart={handleStart} />
+        <Hero language={language} onStart={handleStart} freeMode={freeMode} />
 
         {/* Before/After Magic Mirror */}
         <BeforeAfter />
