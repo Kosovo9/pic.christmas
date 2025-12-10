@@ -14,10 +14,30 @@ const PURCHASES = [
 
 export const LiveNotifications: React.FC = () => {
     const [notification, setNotification] = useState<typeof PURCHASES[0] | null>(null);
-
     const [count, setCount] = useState(0);
+    const [hasInteracted, setHasInteracted] = useState(false);
+
+    // Detect user interaction
+    useEffect(() => {
+        const handleInteraction = () => {
+            setHasInteracted(true);
+        };
+
+        window.addEventListener('scroll', handleInteraction, { once: true });
+        window.addEventListener('click', handleInteraction, { once: true });
+        window.addEventListener('touchstart', handleInteraction, { once: true });
+
+        return () => {
+            window.removeEventListener('scroll', handleInteraction);
+            window.removeEventListener('click', handleInteraction);
+            window.removeEventListener('touchstart', handleInteraction);
+        };
+    }, []);
 
     useEffect(() => {
+        // Don't show notifications until user has interacted
+        if (!hasInteracted) return;
+
         const triggerNotification = () => {
             // Limit to 3 notifications max per session
             if (count >= 3) return;
@@ -32,23 +52,24 @@ export const LiveNotifications: React.FC = () => {
             }, 5000);
         };
 
-        // Initial delay
-        const initialTimeout = setTimeout(triggerNotification, 5000); // Start after 5s
+        // Initial delay after interaction (10-20 seconds)
+        const initialDelay = 10000 + Math.random() * 10000;
+        const initialTimeout = setTimeout(triggerNotification, initialDelay);
 
-        // Loop every 20-40 seconds
+        // Random intervals between 20-40 seconds
         const interval = setInterval(() => {
             if (document.visibilityState === 'visible' && count < 3) {
                 triggerNotification();
             } else if (count >= 3) {
                 clearInterval(interval);
             }
-        }, 15000 + Math.random() * 10000);
+        }, 20000 + Math.random() * 20000);
 
         return () => {
             clearTimeout(initialTimeout);
             clearInterval(interval);
         };
-    }, [count]);
+    }, [count, hasInteracted]);
 
     return (
         <AnimatePresence>
