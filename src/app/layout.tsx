@@ -201,7 +201,7 @@ import { SocialProof } from "@/components/SocialProof";
 import { ChatWidget } from "@/components/ChatWidget";
 import { SecurityShield } from "@/components/SecurityShield";
 import { MusicPlayer } from "@/components/MusicPlayer";
-import { FlyingSanta3D } from "@/components/FlyingSanta3D";
+import { Santa3DEpic } from "@/components/Santa3DEpic";
 import { BrandHeader } from "@/components/BrandHeader";
 import { EarthFooter } from "@/components/EarthFooter";
 import ExitBanner from "@/components/ExitBanner";
@@ -226,7 +226,7 @@ export default function RootLayout({
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
           <SnowEffect />
-          <FlyingSanta3D />
+          <Santa3DEpic />
           <SecurityShield />
           <SocialProof />
           <ChatWidget />
