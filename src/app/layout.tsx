@@ -206,6 +206,7 @@ import { BrandHeader } from "@/components/BrandHeader";
 import { EarthFooter } from "@/components/EarthFooter";
 import ExitBanner from "@/components/ExitBanner";
 import { ShareIncentive } from "@/components/ShareIncentive";
+import { GlobalComponentsWrapper } from "@/components/GlobalComponentsWrapper";
 
 
 
@@ -225,15 +226,21 @@ export default function RootLayout({
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
-          <SnowEffect />
-          <Santa3DEpic />
+
+          {/* Global Components - ONLY for public pages (NOT Admin) */}
+          <GlobalComponentsWrapper>
+            <SnowEffect />
+            <Santa3DEpic />
+            <ChatWidget />
+            <ExitBanner />
+            <ShareIncentive />
+          </GlobalComponentsWrapper>
+
           <SecurityShield />
           <SocialProof />
-          <ChatWidget />
           <MusicPlayer />
           <BrandHeader />
-          <ExitBanner />
-          <ShareIncentive />
+
           {children}
           <EarthFooter />
         </Providers>
