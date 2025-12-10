@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   compress: true, // 🚀 10x Performance: Enable Gzip compression
   poweredByHeader: false, // 🛡️ Security: Hide X-Powered-By
   reactStrictMode: true, // 🧪 Stability: Stronger checks
+  experimental: {
+    reactCompiler: false, // Disable React Compiler to prevent build errors
+  },
   eslint: {
     // Disable ESLint during builds (warnings won't block deployment)
     ignoreDuringBuilds: true,
