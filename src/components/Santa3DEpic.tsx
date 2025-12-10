@@ -282,14 +282,16 @@ export function Santa3DEpic() {
                 {/* ENVIRONMENT */}
                 <fog attach="fog" args={['#000033', 10, 30]} />
 
-                {/* SANTA & SLEIGH */}
-                <SantaSleigh />
+                {/* SANTA & SLEIGH - Scaled down nicely */}
+                <group scale={[0.3, 0.3, 0.3]} position={[0, 2, 0]}>
+                    <SantaSleigh />
 
-                {/* REINDEER TEAM - 4 reindeer in formation */}
-                <Reindeer position={[-1.5, 0.5, 2]} delay={0} isRudolph />
-                <Reindeer position={[-0.5, 0.5, 2]} delay={0.2} />
-                <Reindeer position={[0.5, 0.5, 2]} delay={0.4} />
-                <Reindeer position={[1.5, 0.5, 2]} delay={0.6} />
+                    {/* REINDEER TEAM - 4 reindeer in formation */}
+                    <Reindeer position={[-1.5, 0.5, 2]} delay={0} isRudolph />
+                    <Reindeer position={[-0.5, 0.5, 2]} delay={0.2} />
+                    <Reindeer position={[0.5, 0.5, 2]} delay={0.4} />
+                    <Reindeer position={[1.5, 0.5, 2]} delay={0.6} />
+                </group>
 
                 {/* FALLING GIFTS */}
                 <FallingGifts />
