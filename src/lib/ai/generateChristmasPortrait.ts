@@ -1,107 +1,116 @@
-import Replicate from "replicate";
-import { CHRISTMAS_PROMPTS, MASTER_PROMPT_TEMPLATE, ChristmasPrompt } from "./christmasPrompts";
+// Christmas Portrait Generation - Using Free AI Service Manager with HYPER-REALISTIC Prompts
+import { aiServiceManager } from './AIServiceManager';
+import type { GenerationParams } from './AIServiceManager';
+import { generateHyperRealisticPrompt, CHRISTMAS_HYPER_REALISTIC_PROMPTS } from './HyperRealisticPrompts';
 
-export interface PromptContext {
-    presetId?: string; // Optional now
-    prompt?: string;   // Direct prompt override
-    language?: "en" | "es";
-    aspectRatio?: string; // e.g. "1:1", "16:9"
-    // Future extensibility: custom details about people/pets
-    details?: string;
-}
-
-export interface GenerationResult {
-    url: string;
+export interface ChristmasPortraitOptions {
     presetId?: string;
-    seed?: number;
+    prompt?: string;
+    language?: string;
+    aspectRatio?: string;
 }
 
-// Initialize Replicate
-const replicate = new Replicate({
-    auth: process.env.REPLICATE_API_TOKEN,
-});
+export async function generateImage(
+    refPhotos: string[],
+    options: ChristmasPortraitOptions
+) {
+    // Get the first reference photo
+    const refPhoto = refPhotos[0] || '';
 
-/**
- * Finds a preset by ID or returns a default one.
- */
-export function getPresetById(id: string): ChristmasPrompt {
-    return CHRISTMAS_PROMPTS.find((p) => p.id === id) || CHRISTMAS_PROMPTS[0];
-}
+    // Build the HYPER-REALISTIC prompt
+    let finalPrompt = options.prompt || '';
 
-/**
- * Constructs the full positive and negative prompts.
- */
-export function generateChristmasPrompt(context: PromptContext) {
-    if (context.prompt) {
-        return {
-            positive: context.prompt,
-            negative: MASTER_PROMPT_TEMPLATE.negative || "low quality, distorted",
-        };
+    // If using preset, get SAYAYIN-LEVEL preset prompt
+    if (options.presetId && !finalPrompt) {
+        finalPrompt = getHyperRealisticPresetPrompt(options.presetId, options.language || 'en');
     }
 
-    const presetId = context.presetId || CHRISTMAS_PROMPTS[0].id;
-    const preset = getPresetById(presetId);
+    // If custom prompt, enhance it to 8K quality
+    if (finalPrompt && !options.presetId) {
+        finalPrompt = enhanceToHyperRealistic(finalPrompt);
+    }
 
-    // The new prompts have a full 'basePrompt' that includes style directives.
-    // We use it directly.
-    // In future iterations, we could translate or inject details.
+    // Determine dimensions from aspect ratio (8K resolution)
+    const dimensions = get8KDimensionsFromAspectRatio(options.aspectRatio || '4:5');
 
-    let positivePrompt = preset.basePrompt;
+    // Generate using AI Service Manager with HYPER-REALISTIC specs
+    const params: GenerationParams = {
+        refPhoto,
+        prompt: finalPrompt,
+        width: dimensions.width,
+        height: dimensions.height,
+        style: 'hyper-realistic-8k'
+    };
 
-    // Replace placeholders with context or defaults
-    const subject = context.details || "A beautiful person";
-    const pet = "A cute dog (Golden Retriever mix)"; // Default for now, can be dynamic later
-    const count = "4"; // Default family size
+    const result = await aiServiceManager.generate(params);
 
-    positivePrompt = positivePrompt
-        .replace(/\[Subject\]/g, subject)
-        .replace(/\[Subject Pet\]/g, pet)
-        .replace(/\[Count\]/g, count);
-
-    // Fallback for negative
-    const negativePrompt = MASTER_PROMPT_TEMPLATE.negative;
+    if (!result.success) {
+        throw new Error(result.error || 'Generation failed');
+    }
 
     return {
-        positive: positivePrompt,
-        negative: negativePrompt,
+        url: result.imageUrl!,
+        presetId: options.presetId || 'custom',
+        provider: result.provider,
+        timeTaken: result.timeTaken
     };
 }
 
-/**
- * Calls Replicate to generate the image.
- * Uses SDXL or Flux (defaults to Flux Schnell for speed if not specified otherwise in env).
- */
-export async function generateImage(
-    imageRefs: string[],
-    context: PromptContext
-): Promise<GenerationResult> {
-    const { positive, negative } = generateChristmasPrompt(context);
 
-    console.log("Generating with prompt:", positive.substring(0, 100) + "...");
+function getHyperRealisticPresetPrompt(presetId: string, language: string): string {
+    const subject = language === 'es' ? 'Persona' : 'Person';
 
-    // MODEL CHOICE: Flux Schnell
-    const model = "black-forest-labs/flux-schnell";
-
-    // Map strict aspect ratios if needed, or pass through.
-    // Flux Schnell supports: "1:1", "16:9", "21:9", "3:2", "2:3", "4:5", "5:4", "9:16", "9:21"
-    const aspectRatio = context.aspectRatio || "4:5";
-
-    const output = await replicate.run(model, {
-        input: {
-            prompt: positive,
-            num_outputs: 1,
-            aspect_ratio: aspectRatio,
-            output_format: "jpg",
-            output_quality: 90,
-            disable_safety_checker: true,
-        },
-    });
-
-    // Replicate returns an array of URLs (or streams)
-    const url = Array.isArray(output) ? (output[0] as unknown as string) : (output as unknown as string);
-
-    return {
-        url,
-        presetId: context.presetId || "custom",
+    const presets: Record<string, () => string> = {
+        'christmas-classic': () => CHRISTMAS_HYPER_REALISTIC_PROMPTS.classicTree(subject),
+        'christmas-winter': () => CHRISTMAS_HYPER_REALISTIC_PROMPTS.snowyWonderland(subject),
+        'christmas-cozy': () => CHRISTMAS_HYPER_REALISTIC_PROMPTS.cozyfireplace(subject),
+        'christmas-elegant': () => CHRISTMAS_HYPER_REALISTIC_PROMPTS.fashionEditorial(subject),
+        'christmas-vintage': () => CHRISTMAS_HYPER_REALISTIC_PROMPTS.vintageGlamour(subject)
     };
+
+    return presets[presetId]?.() || presets['christmas-classic']();
+}
+
+function enhanceToHyperRealistic(prompt: string): string {
+    // Add SAYAYIN-LEVEL technical specifications
+    const hyperRealisticEnhancements = `
+${prompt}
+
+TECHNICAL SPECIFICATIONS - 8K HYPER-REALISTIC:
+- Camera: Hasselblad H6D-400c MS or Phase One XF IQ4 150MP
+- Lens: Professional prime lens 85mm f/1.2 or 80mm f/2.8
+- Resolution: 8K (7680x4320) minimum, 16-bit color depth
+- Aperture: f/1.2 to f/2.8 (ultra-shallow depth of field, creamy bokeh)
+- ISO: 50-100 (zero noise, pristine quality)
+- Lighting: Professional 3-point studio setup with Profoto or Aputure lights
+- Color Grading: Cinematic orange & teal LUT, film grain 8%, lifted shadows
+- Post-Processing: Frequency separation, dodge & burn, professional retouching
+- Quality: Vogue Magazine cover standard, Annie Leibovitz level artistry
+- Sharpness: Tack-sharp focus on eyes, pixel-level detail
+- Skin Tones: Perfectly calibrated, ColorChecker accurate
+- Dynamic Range: 14+ stops, rich blacks, smooth highlights
+- Output: Museum-quality, award-winning portrait photography
+
+PRESERVE FACIAL IDENTITY: Maintain exact facial features, skin tone, eye color, face shape, and all unique characteristics. 100% recognizable as the same person.
+`.trim();
+
+    return hyperRealisticEnhancements;
+}
+
+function get8KDimensionsFromAspectRatio(aspectRatio: string): { width: number; height: number } {
+    // 8K and 4K resolutions for maximum quality
+    const ratios: Record<string, { width: number; height: number }> = {
+        '1:1': { width: 4096, height: 4096 },      // 4K square
+        '4:5': { width: 3456, height: 4320 },      // 8K portrait
+        '9:16': { width: 2160, height: 3840 },     // 4K vertical
+        '16:9': { width: 7680, height: 4320 },     // 8K landscape
+        '3:4': { width: 3240, height: 4320 }       // 8K portrait
+    };
+
+    return ratios[aspectRatio] || ratios['4:5'];
+}
+
+// Export provider stats for monitoring
+export async function getProviderStats() {
+    return aiServiceManager.getProviderStats();
 }
