@@ -8,6 +8,8 @@ export const FlyingSanta3D = () => {
     const startTimeRef = useRef(Date.now());
     const [isWaving, setIsWaving] = useState(false);
 
+    const [passCount, setPassCount] = useState(0);
+
     useEffect(() => {
         const startTime = startTimeRef.current;
 
@@ -17,6 +19,12 @@ export const FlyingSanta3D = () => {
 
             // 3D Flight Path Logic
             const progress = (elapsed % 25000) / 25000;
+
+            // Count passes
+            if (Math.floor(elapsed / 25000) > passCount) {
+                setPassCount(prev => prev + 1);
+            }
+
             const x = 120 - (progress * 140); // Right to Left
             const y = 10 + Math.sin(progress * Math.PI * 4) * 8; // Wavy path
             const scale = 0.8 + Math.sin(progress * Math.PI * 2) * 0.3; // Depth perception

@@ -2,11 +2,13 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { useI18n } from '../hooks/useI18n';
 
 export const BeforeAfter = () => {
     const { t } = useI18n();
+    const router = useRouter();
     const [sliderPosition, setSliderPosition] = useState(50);
     const [isDragging, setIsDragging] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -36,8 +38,12 @@ export const BeforeAfter = () => {
     }, []);
 
     return (
-        <div className="w-full max-w-4xl mx-auto my-12 px-4 animate-fade-in-up">
-            <h3 className="text-2xl font-bold text-center text-white mb-6">{t('before_after.title')}</h3>
+        <div className="w-full max-w-5xl mx-auto my-8 px-4 animate-fade-in-up relative z-10">
+            <h3 className="text-3xl md:text-5xl font-black text-center text-white mb-8 drop-shadow-lg">
+                <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                    {t('before_after.title')}
+                </span>
+            </h3>
             <div
                 ref={containerRef}
                 className="relative w-full aspect-[16/9] md:aspect-[21/9] rounded-2xl overflow-hidden cursor-ew-resize border-2 border-slate-700 shadow-2xl select-none"
@@ -75,7 +81,30 @@ export const BeforeAfter = () => {
                     </div>
                 </div>
             </div>
-            <p className="text-center text-slate-400 text-sm mt-4">{t('before_after.drag')}</p>
+            {/* OVERLAY CTA - The Main Upload Trigger */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
+                <div className="bg-slate-900/40 backdrop-blur-[2px] p-6 rounded-3xl border border-white/10 shadow-2xl pointer-events-auto text-center transform hover:scale-105 transition-all duration-300 group">
+                    <p className="text-white font-bold text-lg mb-4 drop-shadow-md">
+                        ✨ Create Your Magic Photos Now
+                    </p>
+                    <button
+                        onClick={() => router.push('/generate')}
+                        className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black py-4 px-8 rounded-full text-xl shadow-[0_0_30px_rgba(37,99,235,0.6)] flex items-center gap-3 mx-auto transition-all"
+                    >
+                        <span>📸</span>
+                        <span>Start Uploading</span>
+                    </button>
+                    <p className="text-blue-200 text-xs mt-3 font-medium">
+                        Instant Delivery • 100% Satisfaction
+                    </p>
+                </div>
+            </div>
+
+            <p className="text-center text-slate-400 text-sm mt-6 flex items-center justify-center gap-2">
+                <span className="w-12 h-[1px] bg-slate-700"></span>
+                <span>{t('before_after.drag')}</span>
+                <span className="w-12 h-[1px] bg-slate-700"></span>
+            </p>
         </div>
     );
 };

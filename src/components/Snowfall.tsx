@@ -8,7 +8,7 @@ export const Snowfall = () => {
 
     useEffect(() => {
         // Create initial flakes
-        const initialFlakes = Array.from({ length: 50 }).map((_, i) => ({
+        const initialFlakes = Array.from({ length: 150 }).map((_, i) => ({
             id: i,
             left: Math.random() * 100,
             animationDuration: Math.random() * 5 + 5, // 5-10s

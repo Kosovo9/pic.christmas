@@ -15,10 +15,16 @@ const PURCHASES = [
 export const LiveNotifications: React.FC = () => {
     const [notification, setNotification] = useState<typeof PURCHASES[0] | null>(null);
 
+    const [count, setCount] = useState(0);
+
     useEffect(() => {
         const triggerNotification = () => {
+            // Limit to 3 notifications max per session
+            if (count >= 3) return;
+
             const randomPurchase = PURCHASES[Math.floor(Math.random() * PURCHASES.length)];
             setNotification(randomPurchase);
+            setCount(prev => prev + 1);
 
             // Hide after 5 seconds
             setTimeout(() => {
@@ -31,16 +37,18 @@ export const LiveNotifications: React.FC = () => {
 
         // Loop every 20-40 seconds
         const interval = setInterval(() => {
-            if (document.visibilityState === 'visible') {
+            if (document.visibilityState === 'visible' && count < 3) {
                 triggerNotification();
+            } else if (count >= 3) {
+                clearInterval(interval);
             }
-        }, 12000 + Math.random() * 10000);
+        }, 15000 + Math.random() * 10000);
 
         return () => {
             clearTimeout(initialTimeout);
             clearInterval(interval);
         };
-    }, []);
+    }, [count]);
 
     return (
         <AnimatePresence>

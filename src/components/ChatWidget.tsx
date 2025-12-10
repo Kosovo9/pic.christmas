@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { useI18n } from '../hooks/useI18n';
 import { faqData, smartKeywords } from '../data/faqs';
 
 export const ChatWidget = () => {
     const { language, t } = useI18n();
+    const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<{ role: 'user' | 'bot', text: string }[]>([
         { role: 'bot', text: language === 'es' ? "¡Hola! Soy Holly 🎄. ¿En qué puedo ayudarte hoy? Puedes escribirme o hablarme." : "Hi! I'm Holly 🎄. How can I help you today? You can type or speak to me." }
@@ -24,14 +26,24 @@ export const ChatWidget = () => {
         scrollToBottom();
     }, [messages, isOpen, isTyping]);
 
-    // Update greeting when language changes if chat is empty or default
+    // Context-Aware Greeting & Language Update
     useEffect(() => {
-        if (messages.length === 1 && messages[0].role === 'bot') {
-            setMessages([
-                { role: 'bot', text: language === 'es' ? "¡Hola! Soy Holly 🎄. ¿En qué puedo ayudarte hoy?" : "Hi! I'm Holly 🎄. How can I help you?" }
-            ]);
+        // Only override if it's the very first message
+        if (messages.length > 1) return;
+
+        let greeting = language === 'es' ? "¡Hola! Soy Holly 🎄. ¿En qué puedo ayudarte hoy?" : "Hi! I'm Holly 🎄. How can I help you?";
+
+        // Context Awareness System
+        if (pathname?.includes('/pricing')) {
+            greeting = language === 'es' ? "¡Hola! ¿Tienes dudas sobre los precios o paquetes? 🏷️" : "Hi! Questions about our pricing or packages? 🏷️";
+        } else if (pathname?.includes('/generate')) {
+            greeting = language === 'es' ? "¿Listo para subir tus fotos? Puedo ayudarte con consejos de iluminación. 📸" : "Ready to upload? I can help with lighting tips. 📸";
+        } else if (pathname?.includes('/referral')) {
+            greeting = language === 'es' ? "¡Gana dinero compartiendo! ¿Te explico cómo funciona? 💰" : "Earn money sharing! Want me to explain how? 💰";
         }
-    }, [language]);
+
+        setMessages([{ role: 'bot', text: greeting }]);
+    }, [language, pathname]);
 
     const handleSend = async () => {
         if (!input.trim()) return;
@@ -54,8 +66,9 @@ export const ChatWidget = () => {
         }
 
         if (localMatchIndex !== -1) {
-            const faqs = faqData[language as keyof typeof faqData] || faqData['en'];
-            const answer = faqs[localMatchIndex]?.a;
+            // @ts-ignore - Dynamic key access safe due to fallback
+            const faqs = faqData[language] || faqData['en'];
+            const answer = faqs[localMatchIndex]?.a || faqs[0].a; // Fallback to first if index issue
 
             setTimeout(() => {
                 setMessages(prev => [...prev, { role: 'bot', text: answer }]);

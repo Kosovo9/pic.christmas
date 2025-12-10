@@ -15,12 +15,12 @@ export const ShareIncentive = () => {
             return;
         }
 
-        // Show after 30 seconds on page
-        const timer = setTimeout(() => {
-            setIsVisible(true);
-        }, 30000);
+        // Show after 30 seconds on page - DISABLED per user request for now
+        // const timer = setTimeout(() => {
+        //    setIsVisible(true);
+        // }, 30000);
 
-        return () => clearTimeout(timer);
+        return () => { }; // No cleanup needed
     }, []);
 
     const handleShare = async () => {
