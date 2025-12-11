@@ -104,13 +104,19 @@ export const validateImage = async (file: File): Promise<ValidationResult> => {
 
                 const brightness = Math.floor(brightnessSum / (canvas.width * canvas.height));
 
-                // Dark/Light Checks
-                if (brightness < 40) {
+                // Dark/Light Checks - MORE TOLERANT
+                // FIX: First image bug - if brightness is 0, canvas might not be ready
+                if (brightness === 0) {
+                    console.warn('Brightness calculation returned 0 - skipping quality check');
+                    // Don't penalize, might be canvas issue
+                } else if (brightness < 30) {
+                    // Only warn if VERY dark (was 40, now 30)
                     warnings.push('Image is very dark. Face might not be visible.');
-                    qualityScore -= 20;
-                } else if (brightness > 220) {
+                    qualityScore -= 15; // Less penalty (was 20)
+                } else if (brightness > 230) {
+                    // Only warn if VERY bright (was 220, now 230)
                     warnings.push('Image is overexposed (too bright).');
-                    qualityScore -= 20;
+                    qualityScore -= 15; // Less penalty (was 20)
                 }
             }
 

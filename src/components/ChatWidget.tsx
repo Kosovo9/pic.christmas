@@ -26,26 +26,8 @@ export const ChatWidget = () => {
         scrollToBottom();
     }, [messages, isOpen, isTyping]);
 
-    // Context-Aware Greeting & Language Update
-    useEffect(() => {
-        // FIXED: Only set greeting on initial mount, not on every language/pathname change
-        // This prevents the chat from repeating the same message
-        if (messages.length > 1) return; // Don't reset if user has already interacted
-
-        let greeting = language === 'es' ? "¡Hola! Soy Holly 🎄. ¿En qué puedo ayudarte hoy?" : "Hi! I'm Holly 🎄. How can I help you?";
-
-        // Context Awareness System
-        if (pathname?.includes('/pricing')) {
-            greeting = language === 'es' ? "¡Hola! ¿Tienes dudas sobre los precios o paquetes? 🏷️" : "Hi! Questions about our pricing or packages? 🏷️";
-        } else if (pathname?.includes('/generate')) {
-            greeting = language === 'es' ? "¿Listo para subir tus fotos? Puedo ayudarte con consejos de iluminación. 📸" : "Ready to upload? I can help with lighting tips. 📸";
-        } else if (pathname?.includes('/referral')) {
-            greeting = language === 'es' ? "¡Gana dinero compartiendo! ¿Te explico cómo funciona? 💰" : "Earn money sharing! Want me to explain how? 💰";
-        }
-
-        // Only update if it's truly the first message
-        setMessages(prev => prev.length === 1 && prev[0].role === 'bot' ? [{ role: 'bot', text: greeting }] : prev);
-    }, []); // FIXED: Empty dependency array - only run once on mount
+    // Initial greeting set in useState, no need to reset
+    // Context awareness can be added later without resetting conversation
 
     const handleSend = async () => {
         if (!input.trim()) return;

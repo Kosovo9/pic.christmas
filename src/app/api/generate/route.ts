@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateImage } from "@/lib/ai/generateChristmasPortrait";
 import { uploadImageFromUrl } from "@/lib/storage";
+import { addWatermarkToBase64 } from "@/lib/watermark";
 import {
     validateGenerationRequest,
     logGenerationRequest,
@@ -58,32 +59,51 @@ export async function POST(req: NextRequest) {
             aspectRatio,
         });
 
-        // 3. PERSIST IMAGE TO STORAGE (The "Cloud Folder")
-        let finalImageUrl = result.url;
+        // 🔒 ADD WATERMARK FOR PREVIEW (Studio Nexora, 50% opacity, avoiding head)
+        console.log("Adding watermark to preview...");
+        const watermarkedPreview = await addWatermarkToBase64(
+            result.url,
+            "Studio Nexora",
+            0.5
+        );
+
+        // 3. PERSIST BOTH VERSIONS TO STORAGE
+        let previewUrl = result.url; // Watermarked preview
+        let originalUrl = result.url; // Original without watermark
+
         try {
-            // Upload to Supabase Storage 'generated-images' bucket
-            // This ensures the photo is kept "forever" in the user's cloud folder
-            const storageUrl = await uploadImageFromUrl(result.url, userId);
-            if (storageUrl) {
-                finalImageUrl = storageUrl;
-                console.log("Image persisted to storage:", finalImageUrl);
+            // Upload WATERMARKED version to 'previews' folder (for user to see)
+            const previewStorageUrl = await uploadImageFromUrl(watermarkedPreview, userId, 'previews');
+            if (previewStorageUrl) {
+                previewUrl = previewStorageUrl;
+                console.log("✅ Watermarked preview saved:", previewUrl);
+            }
+
+            // Upload ORIGINAL version to 'originals' folder (for after payment)
+            const originalStorageUrl = await uploadImageFromUrl(result.url, userId, 'originals');
+            if (originalStorageUrl) {
+                originalUrl = originalStorageUrl;
+                console.log("✅ Original (no watermark) saved:", originalUrl);
             }
         } catch (storageError) {
-            console.error("Failed to persist image, using temporary URL:", storageError);
+            console.error("Failed to persist images:", storageError);
+            // Fallback: use watermarked version as preview
+            previewUrl = watermarkedPreview;
         }
 
         // 4. REGISTRAR LA SOLICITUD (Log successful generation)
-        // Estimated price for Flux Schnell ~0.003, let's log 0.05 to be conservative/safe for the spend limit
         const ESTIMATED_PRICE = 0.05;
-        await logGenerationRequest(userId, formatId || 'custom', ESTIMATED_PRICE, (prompt || '').length, finalImageUrl);
+        await logGenerationRequest(userId, formatId || 'custom', ESTIMATED_PRICE, (prompt || '').length, originalUrl);
 
         return NextResponse.json({
             success: true,
-            imageUrl: finalImageUrl,
+            imageUrl: previewUrl, // Return WATERMARKED preview to user
+            originalUrl: originalUrl, // Keep original URL (will be delivered after payment)
             images: [
                 {
                     id: crypto.randomUUID(),
-                    url: result.url,
+                    url: previewUrl, // Watermarked preview
+                    originalUrl: originalUrl, // Original without watermark
                     presetId: result.presetId,
                     variant: "A",
                 },
@@ -92,7 +112,9 @@ export async function POST(req: NextRequest) {
                 width,
                 height,
                 quantity,
-                formatId
+                formatId,
+                hasWatermark: true,
+                watermarkText: "Studio Nexora"
             }
         });
     } catch (error: any) {

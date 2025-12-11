@@ -7,6 +7,7 @@ export class GoogleAIStudioProvider implements AIProvider {
     cost = 0;
     quota = 60; // 60 requests per minute
     enabled = true;
+    avgSpeed = 10; // 8-12 seconds average
 
     private apiKey: string;
     private baseUrl = 'https://generativelanguage.googleapis.com/v1beta';

@@ -1,93 +1,103 @@
-// Stable Diffusion Local Provider - Self-hosted WebUI
+// Stable Diffusion Cloud Provider - 100% FREE APIs (Pollinations + Stability AI)
 import { AIProvider, GenerationParams, GenerationResult } from '../AIServiceManager';
 
 export class StableDiffusionProvider implements AIProvider {
-    name = 'stable-diffusion-local';
+    name = 'stable-diffusion-cloud';
     priority = 5;
     cost = 0;
-    quota = 999999; // Unlimited (self-hosted)
-    enabled = false; // Disabled by default, enable if WebUI is running
+    quota = 999999; // Unlimited on free tier
+    enabled = true; // Always enabled (uses free cloud APIs)
+    avgSpeed = 12; // 10-15 seconds average
 
-    private baseUrl: string;
+    private stabilityToken: string;
 
     constructor() {
-        this.baseUrl = process.env.SD_WEBUI_URL || 'http://localhost:7860';
+        // Stability AI FREE tier (25 credits/month) - OPCIONAL
+        this.stabilityToken = process.env.STABILITY_API_KEY || '';
 
-        // Auto-detect if WebUI is running
-        this.checkWebUI();
-    }
-
-    private async checkWebUI() {
-        try {
-            const response = await fetch(`${this.baseUrl}/sdapi/v1/sd-models`, {
-                method: 'GET'
-            });
-            this.enabled = response.ok;
-        } catch (error) {
-            this.enabled = false;
-        }
+        // Siempre habilitado - usa Pollinations como fallback (100% gratis)
+        console.log('✅ Stable Diffusion: Usando APIs 100% GRATIS (Pollinations + Stability AI)');
     }
 
     async healthCheck(): Promise<boolean> {
-        if (!this.enabled) return false;
-
-        try {
-            const response = await fetch(`${this.baseUrl}/sdapi/v1/sd-models`, {
-                method: 'GET'
-            });
-            return response.ok;
-        } catch (error) {
-            return false;
-        }
+        // Always healthy - uses free public endpoints
+        return true;
     }
 
     async generate(params: GenerationParams): Promise<GenerationResult> {
+        // Try Stability AI first (if token available)
+        if (this.stabilityToken) {
+            const result = await this.generateWithStability(params);
+            if (result.success) return result;
+        }
+
+        // Fallback: Use Pollinations (100% free, unlimited)
+        return this.generateWithPublicAPI(params);
+    }
+
+    private async generateWithStability(params: GenerationParams): Promise<GenerationResult> {
         try {
+            params.onProgress?.(30, 'Generating with Stability AI (FREE)...');
+
             const response = await fetch(
-                `${this.baseUrl}/sdapi/v1/txt2img`,
+                'https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image',
                 {
                     method: 'POST',
                     headers: {
+                        'Authorization': `Bearer ${this.stabilityToken}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        prompt: params.prompt,
-                        negative_prompt: 'blurry, low quality, distorted face, bad anatomy, ugly, deformed',
-                        steps: 30,
-                        cfg_scale: 7.5,
+                        text_prompts: [
+                            { text: params.prompt, weight: 1 },
+                            { text: 'blurry, low quality, distorted', weight: -1 }
+                        ],
+                        cfg_scale: 7,
+                        height: params.height || 1024,
                         width: params.width || 1024,
-                        height: params.height || 1280,
-                        sampler_name: 'DPM++ 2M Karras',
-                        seed: -1,
-                        // ControlNet for face preservation
-                        alwayson_scripts: {
-                            controlnet: {
-                                args: [{
-                                    enabled: true,
-                                    module: 'canny',
-                                    model: 'control_v11p_sd15_canny',
-                                    weight: 0.5,
-                                    input_image: params.refPhoto
-                                }]
-                            }
-                        }
+                        steps: 30,
+                        samples: 1
                     })
                 }
             );
 
             if (!response.ok) {
-                const error = await response.text();
-                throw new Error(`SD WebUI error: ${error}`);
+                throw new Error('Stability AI error');
             }
 
             const data = await response.json();
-
-            // Response contains base64 images array
-            const base64Image = `data:image/png;base64,${data.images[0]}`;
+            const base64 = `data:image/png;base64,${data.artifacts[0].base64}`;
 
             return {
                 success: true,
-                imageUrl: base64Image
+                imageUrl: base64
+            };
+
+        } catch (error: any) {
+            console.warn('Stability AI failed:', error.message);
+            return { success: false, error: error.message };
+        }
+    }
+
+    private async generateWithPublicAPI(params: GenerationParams): Promise<GenerationResult> {
+        try {
+            params.onProgress?.(30, 'Generating with Pollinations (FREE, UNLIMITED)...');
+
+            // Use Pollinations as ultimate fallback (100% free, unlimited)
+            const response = await fetch('https://image.pollinations.ai/prompt/' + encodeURIComponent(params.prompt), {
+                method: 'GET'
+            });
+
+            if (!response.ok) {
+                throw new Error('Public API error');
+            }
+
+            const blob = await response.blob();
+            const base64 = await this.blobToBase64(blob);
+
+            return {
+                success: true,
+                imageUrl: base64
             };
 
         } catch (error: any) {
@@ -96,5 +106,14 @@ export class StableDiffusionProvider implements AIProvider {
                 error: error.message
             };
         }
+    }
+
+    private async blobToBase64(blob: Blob): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
     }
 }

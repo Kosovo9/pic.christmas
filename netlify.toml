@@ -1,6 +1,20 @@
 [build]
-  command = "npm run build"
-  publish = ".next"
+  command = "npm install --legacy-peer-deps && npm run build"
+  ## publish directory is handled automatically by the Next.js plugin
+
+[build.environment]
+  NODE_VERSION = "18"
+  NPM_FLAGS = "--legacy-peer-deps"
+  CI = "false"
+  NETLIFY_USE_YARN = "false"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

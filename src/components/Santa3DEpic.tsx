@@ -282,8 +282,8 @@ export function Santa3DEpic() {
                 {/* ENVIRONMENT */}
                 <fog attach="fog" args={['#000033', 10, 30]} />
 
-                {/* SANTA & SLEIGH - Scaled down nicely */}
-                <group scale={[0.3, 0.3, 0.3]} position={[0, 2, 0]}>
+                {/* SANTA & SLEIGH - Scaled down nicely and moved UP to clear text */}
+                <group scale={[0.3, 0.3, 0.3]} position={[0, 4.5, 0]}>
                     <SantaSleigh />
 
                     {/* REINDEER TEAM - 4 reindeer in formation */}

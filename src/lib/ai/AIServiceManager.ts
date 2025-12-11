@@ -46,13 +46,13 @@ class AIServiceManager {
     }
 
     private initializeProviders() {
-        // Initialize providers PRIORITIZED BY SPEED
+        // Initialize providers PRIORITIZED BY SPEED + 100% FREE
         this.providers = [
-            new PollinationsProvider(),      // FASTEST: 2-4s
-            new HuggingFaceProvider(),       // FAST: 5-10s
-            new SegmindProvider(),           // FAST: 4-8s
-            new GoogleAIStudioProvider(),    // MEDIUM: 8-12s
-            new StableDiffusionProvider()    // SLOW: 10-15s (but unlimited)
+            new PollinationsProvider(),      // ⚡ FASTEST: 2-4s - 100% GRATIS ILIMITADO
+            new HuggingFaceProvider(),       // 🤗 FAST: 5-10s - 100% GRATIS (100/día)
+            new StableDiffusionProvider(),   // 🎨 QUALITY: 10-15s - 100% GRATIS ILIMITADO
+            new GoogleAIStudioProvider(),    // 🧠 MEDIUM: 8-12s - GRATIS (60/min)
+            // new SegmindProvider(),        // ❌ DESHABILITADO (requiere pago)
         ].sort((a, b) => {
             // Sort by speed first, then cost
             if (a.avgSpeed !== b.avgSpeed) return a.avgSpeed - b.avgSpeed;

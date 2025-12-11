@@ -218,6 +218,20 @@ export const validateGenerationRequest = async (
     };
 }> => {
     try {
+        // DEV MODE: Always allow if Supabase not configured
+        if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+            console.log('⚠️ Supabase not configured - allowing all requests (DEV MODE)');
+            return {
+                allowed: true,
+                reason: 'Dev mode - no limits',
+                details: {
+                    rateLimitOk: true,
+                    spendLimitOk: true,
+                    killSwitchActive: false
+                }
+            };
+        }
+
         const killSwitchActive = await isKillSwitchActive();
         const rateLimit = await checkRateLimit(userId);
         const spendLimit = await checkSpendLimit();
@@ -225,11 +239,11 @@ export const validateGenerationRequest = async (
         if (!killSwitchActive) {
             return {
                 allowed: false,
-                reason: 'Oferta gratuita terminada. El sistema vuelve a precios normales.',
+                reason: 'Sistema en mantenimiento. Intenta en unos minutos.',
                 details: {
-                    rateLimitOk: false,
-                    spendLimitOk: false,
-                    killSwitchActive: false
+                    rateLimitOk: rateLimit.allowed,
+                    spendLimitOk: spendLimit.allowed,
+                    killSwitchActive
                 }
             };
         }
@@ -237,7 +251,7 @@ export const validateGenerationRequest = async (
         if (!rateLimit.allowed) {
             return {
                 allowed: false,
-                reason: `Has alcanzado el límite de ${RATE_LIMIT_CONFIG.maxRequestsPerHour} generaciones por hora. Intenta en ${Math.round((rateLimit.resetTime.getTime() - Date.now()) / 60000)} minutos.`,
+                reason: `Límite de ${RATE_LIMIT_CONFIG.maxRequestsPerHour} generaciones por hora alcanzado. Espera ${Math.ceil((rateLimit.resetTime.getTime() - Date.now()) / 60000)} minutos.`,
                 details: {
                     rateLimitOk: false,
                     spendLimitOk: spendLimit.allowed,
@@ -249,9 +263,9 @@ export const validateGenerationRequest = async (
         if (!spendLimit.allowed) {
             return {
                 allowed: false,
-                reason: `Se ha alcanzado el límite de gastos ($${spendLimit.currentSpend}/$${spendLimit.limit}). El sistema está protegido. Intenta más tarde.`,
+                reason: `Límite de gasto diario alcanzado ($${spendLimit.currentSpend}/$${spendLimit.limit}). Sistema pausado por seguridad.`,
                 details: {
-                    rateLimitOk: true,
+                    rateLimitOk: rateLimit.allowed,
                     spendLimitOk: false,
                     killSwitchActive
                 }
@@ -268,9 +282,10 @@ export const validateGenerationRequest = async (
         };
     } catch (e) {
         console.error('Validation error:', e);
+        // FAIL-OPEN: Allow request if validation fails
         return {
             allowed: true,
-            reason: 'Validation error (fail-open)',
+            reason: 'Validation bypassed (error)',
             details: {
                 rateLimitOk: true,
                 spendLimitOk: true,

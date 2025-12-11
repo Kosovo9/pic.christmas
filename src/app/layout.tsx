@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Fraunces, Outfit } from "next/font/google"; // Premium Editorial Fonts
+import { Playfair_Display, Inter } from "next/font/google"; // Christmas AI Studio Fonts
 import "./globals.css";
 import Script from "next/script";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
   display: "swap",
-  weight: ["300", "400", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
 });
@@ -202,7 +202,6 @@ import { ChatWidget } from "@/components/ChatWidget";
 import { SecurityShield } from "@/components/SecurityShield";
 import { MusicPlayer } from "@/components/MusicPlayer";
 import { Santa3DEpic } from "@/components/Santa3DEpic";
-import { BrandHeader } from "@/components/BrandHeader";
 import { EarthFooter } from "@/components/EarthFooter";
 import ExitBanner from "@/components/ExitBanner";
 import { ShareIncentive } from "@/components/ShareIncentive";
@@ -219,7 +218,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${fraunces.variable} ${outfit.variable} antialiased min-h-screen bg-slate-950 text-white overflow-x-hidden font-sans`}
+        className={`${playfair.variable} ${inter.variable} antialiased min-h-screen bg-christmas-dark text-christmas-cream overflow-x-hidden font-sans`}
       >
         <Providers>
           <script
@@ -229,8 +228,8 @@ export default function RootLayout({
 
           {/* Global Components - ONLY for public pages (NOT Admin) */}
           <GlobalComponentsWrapper>
-            <SnowEffect />
-            <Santa3DEpic />
+            {/* REMOVED: SnowEffect - Christmas decorative element */}
+            {/* REMOVED: Santa3DEpic - Christmas decorative element */}
             <ChatWidget />
             <ExitBanner />
             <ShareIncentive />
@@ -239,7 +238,6 @@ export default function RootLayout({
           <SecurityShield />
           <SocialProof />
           <MusicPlayer />
-          <BrandHeader />
 
           {children}
           <EarthFooter />

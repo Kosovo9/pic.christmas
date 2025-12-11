@@ -5,31 +5,22 @@ import { Hero } from '../components/Hero';
 import { UploadWizard } from '../components/UploadWizard';
 import { PricingSection } from '../components/PricingSection';
 import { ResultsGallery } from '../components/ResultsGallery';
-import { ReferralSection } from '../components/ReferralSection';
-import { MusicToggle } from '../components/MusicToggle';
 import { Footer } from '../components/Footer';
 import { Navbar } from '../components/Navbar';
-import { ExamplesGallery } from '../components/ExamplesGallery';
 import { useReferral } from '../hooks/useReferral';
 import { useI18n } from '../hooks/useI18n';
 import { api } from '../services/api';
 import guidelinesData from '../data/guidelines.json';
-import { BeforeAfter } from '../components/BeforeAfter';
-import { FAQ } from '../components/FAQ';
 import { PageTransition } from '../components/PageTransition';
-import { StickyCTA } from '../components/StickyCTA';
-import { MissionSection } from '../components/MissionSection';
-import { SecurityShield } from '../components/SecurityShield';
-import { CharitySection } from '../components/CharitySection';
-import { LiveNotifications } from '../components/LiveNotifications';
-import { ExitIntentModal } from '../components/ExitIntentModal';
-import { SocialProof } from '../components/SocialProof';
 import { PaymentMethodSelector } from '../components/PaymentMethodSelector';
 import { OxxoPaymentUI } from '../components/OxxoPaymentUI';
 import { BankTransferUI } from '../components/BankTransferUI';
-import { SystemStatus } from '../components/SystemStatus';
-import { FlyingSanta3D } from '../components/FlyingSanta3D';
-import { Snowfall } from '../components/Snowfall';
+import { SecurityShield } from '../components/SecurityShield';
+import { MusicToggle } from '../components/MusicToggle';
+import { ExamplesGallery } from '../components/ExamplesGallery';
+import { DisclaimerModal } from '../components/DisclaimerModal';
+import { ViralExitModal } from '../components/ViralExitModal';
+
 
 
 export default function Home() {
@@ -43,6 +34,8 @@ export default function Home() {
   const [paymentDetails, setPaymentDetails] = useState<any>(null); // For OXXO/Bank details
   const [freeMode, setFreeMode] = useState<any>(null); // Task 8
   const [showExitBanner, setShowExitBanner] = useState(false); // Task 9
+  const [showDisclaimer, setShowDisclaimer] = useState(false); // Legal disclaimer
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false); // Track acceptance
 
   const uploadRef = useRef<HTMLDivElement>(null);
   const pricingRef = useRef<HTMLDivElement>(null);
@@ -68,7 +61,23 @@ export default function Home() {
   };
 
   const handleStart = () => {
+    // Show disclaimer before allowing upload
+    if (!disclaimerAccepted) {
+      setShowDisclaimer(true);
+    } else {
+      setShowGuidelines(true);
+    }
+  };
+
+  const handleDisclaimerAccept = () => {
+    setDisclaimerAccepted(true);
+    setShowDisclaimer(false);
     setShowGuidelines(true);
+  };
+
+  const handleDisclaimerReject = () => {
+    setShowDisclaimer(false);
+    // User rejected, stay on landing page
   };
 
   const scrollToReferrals = () => {
@@ -206,42 +215,30 @@ export default function Home() {
 
   return (
     <PageTransition>
-      <main className="min-h-screen bg-slate-950 text-white selection:bg-blue-500/30 font-sans">
+      <main className="min-h-screen bg-slate-950 text-slate-50 selection:bg-yellow-500/20 font-sans">
 
-        {/* EFFECTS */}
-        <Snowfall />
-        <FlyingSanta3D />
+        {/* 🎯 LANDING PAGE LIMPIA - ESTILO GOOGLE AI STUDIO + NAVIDEÑO */}
 
-        {/* FREE MODE BANNER - ELON STYLE (Task 8) */}
-        <FlyingSanta3D />
-
-        {/* FREE MODE BANNER - MOVED TO HERO */}
-
+        {/* Security & Music */}
         <SecurityShield />
-        <SocialProof />
-        {/* Navbar */}
-        <Navbar language={language} onLanguageChange={switchLanguage} onReferralsClick={scrollToReferrals} />
-
-        {/* Music Toggle */}
         <MusicToggle />
 
-        {/* Hero Section */}
-        <Hero language={language} onStart={handleStart} freeMode={freeMode} />
+        {/* Navbar Simple */}
+        <Navbar language={language} onLanguageChange={switchLanguage} onReferralsClick={scrollToReferrals} />
 
-        {/* Before/After Magic Mirror */}
-        <BeforeAfter />
+        {/* Hero Section - Primera Vista */}
+        <Hero language={language} onStart={handleStart} freeMode={freeMode} />
 
         {/* Guidelines Modal */}
         <GuidelinesModal />
 
-        {/* Examples Gallery */}
+        {/* Examples Gallery - Mostrar ejemplos */}
         <ExamplesGallery />
 
-        {/* Upload Wizard Section */}
-        <div ref={uploadRef} className={`transition-all duration-1000 ${currentView === 'landing' ? 'opacity-50 blur-sm pointer-events-none' : 'opacity-100'}`}>
+        {/* Upload Wizard Section - Solo cuando se activa */}
+        <div ref={uploadRef} className={`transition-all duration-500 ${currentView === 'landing' ? 'hidden' : 'block'}`}>
           {currentView !== 'landing' && (
-            <section className="py-24 relative">
-              <div className="absolute inset-0 bg-slate-900/50 skew-y-3 transform origin-top-left -z-10" />
+            <section className="py-16 relative">
               <UploadWizard onComplete={handleUploadComplete} />
             </section>
           )}
@@ -303,31 +300,20 @@ export default function Home() {
           </section>
         )}
 
-        {/* Mission & Philanthropy */}
-        <MissionSection />
-        <CharitySection />
-
-        {/* Referral Section */}
-        <div ref={referralRef}>
-          <ReferralSection />
-        </div>
-
-        {/* FAQ Section */}
-        <FAQ />
-
-        {/* Footer */}
+        {/* Footer Simple */}
         <Footer language={language} />
 
-        {/* Mobile Sticky CTA */}
-        <StickyCTA onClick={realStart} />
+        {/* Legal Disclaimer Modal */}
+        <DisclaimerModal
+          isOpen={showDisclaimer}
+          onAccept={handleDisclaimerAccept}
+          onReject={handleDisclaimerReject}
+          language={language}
+        />
 
-        {/* 🚀 ELON GROWTH HACKS */}
-        <LiveNotifications />
-        <ExitIntentModal />
+        {/* Viral Exit Intent Modal */}
+        <ViralExitModal language={language} />
 
-
-        {/* SystemStatus removed as requested */}
-        {/* <SystemStatus /> */}
       </main>
     </PageTransition>
   );

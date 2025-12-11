@@ -1,161 +1,289 @@
 @import "tailwindcss";
 
 @theme {
-  /* Fonts */
-  --font-sans: var(--font-outfit);
-  --font-serif: var(--font-fraunces);
-  --color-background: #020617;
-  --color-foreground: #f8fafc;
+  /* Christmas AI Studio Typography */
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
+  --color-background: #1a2332;
+  --color-foreground: #f5f5f5;
 }
 
 :root {
-  --background: #020617;
-  --foreground: #f8fafc;
+  /* 🎨 CHRISTMAS AI STUDIO PALETTE - EXACT MATCH */
+  --background: #0f1419;
+  --foreground: #f5f5f5;
 
-  /* Premium Magical Christmas Palette 🎄✨ */
-  --primary: #d4a373; /* Gold/Bronze */
-  --primary-glow: rgba(212, 163, 115, 0.4);
+  /* Christmas AI Studio Colors - EXACT */
+  --christmas-dark: #1a2332;
+  /* Deep Navy Background (from screenshots) */
+  --christmas-gold: #d4af37;
+  /* Champagne Gold (exact match) */
+  --christmas-cream: #f5f5f5;
+  /* Cream Text */
+  --christmas-green: #2d5016;
+  /* Dark Green accent */
 
-  --accent: #ef4444; /* Bright Red */
-  --accent-glow: rgba(239, 68, 68, 0.5);
+  /* Primary - Champagne Gold (Christmas Studio) */
+  --primary: #d4af37;
+  --primary-dark: #b8941f;
+  --primary-light: #f0d98d;
+  --primary-glow: rgba(212, 175, 55, 0.3);
 
-  --deep-bg: #020617; /* Deep Blue/Black Background (Slate 950) - FIXED from Red */
-  --background-start: #0f172a;
-  --background-end: #020617;
+  /* Accent - Deep Navy */
+  --accent: #1a2332;
+  --accent-glow: rgba(26, 35, 50, 0.5);
+
+  /* Background Layers */
+  --deep-bg: #0f1419;
+  /* Deepest background */
+  --surface-bg: #1a2332;
+  /* Card/elevated surfaces */
+  --border-subtle: rgba(212, 175, 55, 0.15);
+  --border-emphasis: rgba(212, 175, 55, 0.4);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(180deg, #1a2332 0%, #0f1419 100%);
+  --gradient-gold: linear-gradient(135deg, #d4af37 0%, #f0d98d 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
 }
 
 @layer base {
   body {
-    @apply text-slate-50 antialiased selection:bg-blue-500/30 selection:text-blue-200 relative overflow-x-hidden;
-    background-color: var(--deep-bg);
-    background-image: 
-      radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15), transparent 70%),
-      linear-gradient(to bottom, var(--background-start), var(--background-end));
+    @apply text-slate-50 antialiased selection:bg-yellow-500/20 selection:text-slate-50 relative overflow-x-hidden;
+    background: var(--christmas-dark);
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(212, 175, 55, 0.06), transparent 50%),
+      radial-gradient(circle at 80% 90%, rgba(212, 175, 55, 0.04), transparent 50%),
+      linear-gradient(180deg, #1a2332 0%, #0f1419 50%, #1a2332 100%);
+    font-feature-settings: 'ss01', 'ss02', 'cv01', 'cv02';
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif tracking-tight;
+    font-family: 'Playfair Display', var(--font-serif), serif;
+  }
+
+  p,
+  span,
+  div {
+    @apply font-sans;
   }
 }
 
 @layer utilities {
 
-  /* 💎 HIGH GAMMA GLASSMORPHISM */
-  .glass-panel {
-    @apply bg-slate-900/40 backdrop-blur-2xl border border-white/5 shadow-2xl;
+  /* PRESIDENTIAL GLASSMORPHISM - Replaced with inline Tailwind */
+  /* .glass-premium {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+    backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--border-subtle);
     box-shadow:
-      0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -1px rgba(0, 0, 0, 0.06),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-    /* Inner Highlight */
+      0 8px 32px 0 rgba(0, 0, 0, 0.37),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.2);
+  } */
+
+  /* .glass-card {
+    @apply glass-premium rounded-2xl;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  } */
+
+
+  /* .glass-card-hover {
+    @apply glass-card;
   }
 
-  .glass-card-hover {
-    @apply transition-all duration-300 hover:bg-slate-800/50 hover:border-white/10 hover:shadow-emerald-500/10 hover:-translate-y-1;
+  .glass-card-hover:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+    border-color: var(--border-emphasis);
+    transform: translateY(-4px);
+    box-shadow:
+      0 16px 48px 0 rgba(0, 0, 0, 0.5),
+      0 0 24px rgba(201, 165, 97, 0.15),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+  } */
+
+  .glass-nav {
+    background: rgba(10, 14, 26, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--border-subtle);
   }
 
-  /* ✨ TEXT EFFECTS */
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400;
+  /* ✨ LUXURY TEXT EFFECTS */
+  .text-gradient-luxury {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 50%, #94a3b8 100%);
   }
 
   .text-gradient-gold {
-    @apply bg-clip-text text-transparent bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600;
-    text-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #fef3c7 0%, #fbbf24 50%, #c9a561 100%);
+    text-shadow: 0 0 30px rgba(201, 165, 97, 0.3);
   }
 
-  .text-gradient-christmas {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-teal-200 to-emerald-400;
+  .text-gradient-accent {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%);
   }
 
-  /* 🚀 ANIMATIONS */
+  /* 🎯 PREMIUM BUTTONS */
+  .btn-primary {
+    @apply px-6 py-3 rounded-xl font-semibold transition-all duration-300;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    box-shadow: 0 4px 16px rgba(201, 165, 97, 0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(201, 165, 97, 0.4);
+  }
+
+  /* 🚀 SMOOTH ANIMATIONS */
   .animate-fade-in {
-    animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: premiumFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   .animate-slide-up {
-    animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: premiumSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   .animate-float {
-    animation: float 6s ease-in-out infinite;
+    animation: luxuryFloat 8s ease-in-out infinite;
   }
 
   .animate-glow-pulse {
-    animation: glowPulse 3s ease-in-out infinite;
+    animation: premiumGlow 4s ease-in-out infinite;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }
 }
 
-/* KEYFRAMES */
-@keyframes fadeIn {
-  from {
+/* 🎬 PREMIUM KEYFRAMES */
+@keyframes premiumFadeIn {
+  0% {
     opacity: 0;
-    filter: blur(10px);
+    filter: blur(12px);
+    transform: scale(0.98);
   }
 
-  to {
+  100% {
     opacity: 1;
     filter: blur(0);
+    transform: scale(1);
   }
 }
 
-@keyframes slideUp {
-  from {
+@keyframes premiumSlideUp {
+  0% {
     opacity: 0;
-    transform: translateY(40px);
+    transform: translateY(60px);
   }
 
-  to {
+  100% {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes float {
+@keyframes luxuryFloat {
 
   0%,
   100% {
-    transform: translateY(0);
+    transform: translateY(0) rotate(0deg);
+  }
+
+  25% {
+    transform: translateY(-12px) rotate(1deg);
   }
 
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-20px) rotate(0deg);
+  }
+
+  75% {
+    transform: translateY(-12px) rotate(-1deg);
   }
 }
 
-@keyframes glowPulse {
+@keyframes premiumGlow {
 
   0%,
   100% {
-    box-shadow: 0 0 5px var(--primary-glow);
+    box-shadow:
+      0 0 20px rgba(201, 165, 97, 0.2),
+      inset 0 0 20px rgba(201, 165, 97, 0.1);
   }
 
   50% {
-    box-shadow: 0 0 20px var(--primary-glow);
-    border-color: rgba(16, 185, 129, 0.5);
+    box-shadow:
+      0 0 40px rgba(201, 165, 97, 0.4),
+      0 0 60px rgba(59, 130, 246, 0.2),
+      inset 0 0 30px rgba(201, 165, 97, 0.2);
+  }
+}
+
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
 @keyframes shimmer {
-  from {
-    background-position: 0 0;
+  0% {
+    background-position: -200% center;
   }
 
-  to {
-    background-position: -200% 0;
+  100% {
+    background-position: 200% center;
   }
 }
 
-/* Custom Scrollbar for that premium feel */
+/* 💅 PRESIDENTIAL SCROLLBAR */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #020617;
+  background: var(--deep-bg);
+  border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 4px;
+  background: linear-gradient(180deg, #475569 0%, #334155 100%);
+  border-radius: 8px;
+  border: 2px solid var(--deep-bg);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: linear-gradient(180deg, #64748b 0%, #475569 100%);
+}
+
+/* 🎨 CUSTOM UTILITIES */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #475569 var(--deep-bg);
+}
+
+.backdrop-premium {
+  backdrop-filter: blur(24px) saturate(180%);
+}
+
+.border-gradient {
+  border: 1px solid transparent;
+  background: linear-gradient(var(--deep-bg), var(--deep-bg)) padding-box,
+    linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%) border-box;
 }

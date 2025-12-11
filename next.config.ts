@@ -1,25 +1,19 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  compress: true, // 🚀 10x Performance: Enable Gzip compression
-  poweredByHeader: false, // 🛡️ Security: Hide X-Powered-By
-  reactStrictMode: true, // 🧪 Stability: Stronger checks
-  experimental: {
-    reactCompiler: false, // Disable React Compiler to prevent build errors
-  },
-  eslint: {
-    // Disable ESLint during builds (warnings won't block deployment)
-    ignoreDuringBuilds: true,
-  },
+  compress: true,
+  poweredByHeader: false,
+  reactStrictMode: true,
+
+  // React Compiler moved from experimental (Next.js 15+)
+  reactCompiler: false,
+
   typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
     ignoreBuildErrors: true,
   },
+
   images: {
-    formats: ['image/avif', 'image/webp'], // 🖼️ Optimization: Modern formats
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -32,18 +26,23 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.supabase.co',
       }
     ],
   },
+
   async rewrites() {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://pic-christmas-backend.onrender.com/api/:path*', // 🔌 Proxy to Backend
+        destination: 'https://pic-christmas-backend.onrender.com/api/:path*',
       },
       {
         source: '/mp/ipn',
-        destination: 'https://pic-christmas-backend.onrender.com/api/payments/webhook', // 💰 Mercado Pago Webhook
+        destination: 'https://pic-christmas-backend.onrender.com/api/payments/webhook',
       }
     ];
   },

@@ -3,8 +3,18 @@
 import React, { useState } from 'react';
 import { BrandHeader } from '@/components/BrandHeader';
 import { EarthFooter } from '@/components/EarthFooter';
+import { AffiliatesAuth } from '@/app/affiliates/auth';
+import { SignOutButton } from '@clerk/nextjs';
 
 export default function AffiliatePage() {
+    return (
+        <AffiliatesAuth>
+            <AffiliateContent />
+        </AffiliatesAuth>
+    );
+}
+
+function AffiliateContent() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [generatedLink, setGeneratedLink] = useState('');
     const [couponCode, setCouponCode] = useState('');
@@ -213,6 +223,15 @@ export default function AffiliatePage() {
             </main>
 
             <EarthFooter />
+
+            {/* Sign Out Button for Affiliates */}
+            <div className="fixed bottom-4 left-4 z-50">
+                <SignOutButton>
+                    <button className="bg-red-500/80 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-full backdrop-blur-md transition-all">
+                        Sign Out
+                    </button>
+                </SignOutButton>
+            </div>
         </div>
     );
 }
