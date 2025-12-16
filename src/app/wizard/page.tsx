@@ -105,8 +105,9 @@ export default function WizardPage() {
             setTransformationId(record.id);
 
             setStep("credits");
-        } catch (e) {
-            alert("Upload failed or Verification timed out");
+        } catch (e: any) {
+            console.error(e);
+            alert(`Error Details: ${e?.message || e?.shape?.message || JSON.stringify(e)}`);
         }
     };
 
