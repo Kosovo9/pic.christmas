@@ -21,6 +21,8 @@ async function mockProcess(originalKey: string): Promise<{ a: string; b: string 
     return { a: originalKey, b: originalKey };
 }
 
+import { verifyTurnstileToken } from "@/lib/turnstile";
+
 export const transformationsRouter = createTRPCRouter({
     create: protectedProcedure
         .input(z.object({ originalKey: z.string() }))
@@ -39,8 +41,17 @@ export const transformationsRouter = createTRPCRouter({
         }),
 
     start: protectedProcedure
-        .input(z.object({ id: z.string() }))
+        .input(z.object({
+            id: z.string(),
+            turnstileToken: z.string() // P0: Anti-bot
+        }))
         .mutation(async ({ ctx, input }) => {
+            // P0: Verify human
+            await verifyTurnstileToken(
+                input.turnstileToken,
+                ctx.headers.get("x-forwarded-for") ?? undefined
+            );
+
             const { id } = input;
 
             // Check credits

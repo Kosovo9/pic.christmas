@@ -3,10 +3,22 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { getPresignedPutUrl, getPresignedGetUrl } from "@/lib/r2";
 import { v4 as uuidv4 } from "uuid";
 
+import { verifyTurnstileToken } from "@/lib/turnstile";
+
 export const r2Router = createTRPCRouter({
     createUploadUrl: protectedProcedure
-        .input(z.object({ contentType: z.string(), fileSize: z.number() }))
+        .input(z.object({
+            contentType: z.string(),
+            fileSize: z.number(),
+            turnstileToken: z.string() // P0: Anti-bot
+        }))
         .mutation(async ({ ctx, input }) => {
+            // P0: Verify human
+            await verifyTurnstileToken(
+                input.turnstileToken,
+                ctx.headers.get("x-forwarded-for") ?? undefined
+            );
+
             // Validate mime type and size (max 10MB)
             const allowedMimes = ["image/jpeg", "image/png", "image/webp"];
             if (!allowedMimes.includes(input.contentType)) {
