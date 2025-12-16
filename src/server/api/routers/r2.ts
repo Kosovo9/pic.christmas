@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { getPresignedPutUrl, getPresignedGetUrl } from "@/lib/r2";
@@ -14,10 +15,15 @@ export const r2Router = createTRPCRouter({
         }))
         .mutation(async ({ ctx, input }) => {
             // P0: Verify human
-            await verifyTurnstileToken(
-                input.turnstileToken,
-                ctx.headers.get("x-forwarded-for") ?? undefined
-            );
+            const ip = ctx.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+            const check = await verifyTurnstileToken({ token: input.turnstileToken, remoteIp: ip });
+
+            if (!check.ok) {
+                throw new TRPCError({
+                    code: "FORBIDDEN",
+                    message: "Security check failed. Please refresh and try again.",
+                });
+            }
 
             // Validate mime type and size (max 10MB)
             const allowedMimes = ["image/jpeg", "image/png", "image/webp"];

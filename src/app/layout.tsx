@@ -7,18 +7,18 @@ import {
     SignedOut,
     UserButton,
 } from '@clerk/nextjs'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Inter, Playfair_Display } from 'next/font/google'
 import { TRPCReactProvider } from "./trpc-provider";
 import './globals.css'
 
-const geistSans = Geist({
-    variable: '--font-geist-sans',
+const inter = Inter({
     subsets: ['latin'],
+    variable: '--font-sans',
 })
 
-const geistMono = Geist_Mono({
-    variable: '--font-geist-mono',
+const playfair = Playfair_Display({
     subsets: ['latin'],
+    variable: '--font-serif',
 })
 
 export const metadata: Metadata = {
@@ -34,10 +34,10 @@ export default function RootLayout({
     return (
         <ClerkProvider>
             <html lang="en" className="dark">
-                <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+                <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
                     <TRPCReactProvider>
                         <header className="flex justify-between items-center p-4 gap-4 h-16 border-b border-border sticky top-0 z-50 bg-background/50 backdrop-blur-md">
-                            <div className="text-xl font-bold bg-gradient-to-r from-blue-400 to-amber-200 bg-clip-text text-transparent">
+                            <div className="text-xl font-bold font-serif bg-gradient-to-r from-blue-400 to-amber-200 bg-clip-text text-transparent">
                                 pic.christmas
                             </div>
                             <div className="flex items-center gap-4">

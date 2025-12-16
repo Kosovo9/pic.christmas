@@ -1,17 +1,21 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useDropzone } from "react-dropzone";
 import { trpc } from "@/lib/trpc-client";
-import { Loader2, UploadCloud, CreditCard, Lock, Clock, Download, ChevronRight } from "lucide-react";
+import { Loader2, UploadCloud, CreditCard, Lock, Clock, Download, ChevronRight, Sparkles } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
 import { MercadoPagoButton } from "@/components/MercadoPagoButton";
+import Link from "next/link";
+import { TurnstileGate, type TurnstileRef } from "@/components/TurnstileGate";
+import { useTurnstileFlow } from "@/components/useTurnstileFlow";
 
 type Step = "upload" | "preview" | "credits" | "results";
 
 export default function WizardPage() {
+    const { user } = useUser();
     const router = useRouter();
     const searchParams = useSearchParams();
     const [step, setStep] = useState<Step>("upload");
@@ -19,6 +23,10 @@ export default function WizardPage() {
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [originalKey, setOriginalKey] = useState<string | null>(null);
     const [transformationId, setTransformationId] = useState<string | null>(null);
+
+    // Config Turnstile Ref
+    const turnstileGateRef = useRef<TurnstileRef>(null);
+    const { verifying, setToken, run } = useTurnstileFlow();
 
     // Credits State
     const [currency, setCurrency] = useState<"usd" | "mxn">("usd");
@@ -70,10 +78,17 @@ export default function WizardPage() {
     const handleUpload = async () => {
         if (!file) return;
         try {
+            // Get token on demand
+            const token = await run({
+                exec: () => turnstileGateRef.current?.execute(),
+                reset: () => turnstileGateRef.current?.reset()
+            });
+
             // 1. Get Presigned
             const { url, key } = await getPresigned.mutateAsync({
                 contentType: file.type,
                 fileSize: file.size,
+                turnstileToken: token,
             });
 
             // 2. Upload to R2
@@ -91,14 +106,23 @@ export default function WizardPage() {
 
             setStep("credits");
         } catch (e) {
-            alert("Upload failed");
+            alert("Upload failed or Verification timed out");
         }
     };
 
     const handleTransform = async () => {
         if (!transformationId) return;
         try {
-            await startTransformation.mutateAsync({ id: transformationId });
+            // Get token on demand
+            const token = await run({
+                exec: () => turnstileGateRef.current?.execute(),
+                reset: () => turnstileGateRef.current?.reset()
+            });
+
+            await startTransformation.mutateAsync({
+                id: transformationId,
+                turnstileToken: token, // P0: Anti-bot
+            });
             setStep("results");
         } catch (e) {
             alert("Transformation failed or no credits");
@@ -117,6 +141,13 @@ export default function WizardPage() {
 
     return (
         <div className="min-h-screen pt-12 pb-20 px-4 flex flex-col items-center max-w-3xl mx-auto">
+            <TurnstileGate
+                ref={turnstileGateRef}
+                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
+                onToken={setToken}
+                onError={(msg) => console.error("Turnstile Gate:", msg)}
+            />
+
             {/* Stepper Indicator - simplified */}
             <div className="flex w-full justify-between mb-8 text-sm text-gray-500">
                 <span className={cn(step === 'upload' && "text-blue-400 font-bold")}>1. Upload</span>
@@ -145,10 +176,17 @@ export default function WizardPage() {
                         <Clock className="w-4 h-4" />
                         Original file will be deleted automatically in 24 hours.
                     </p>
+                    <div className="flex justify-center mb-4 flex-col items-center gap-2">
+                        {/* Status Indicator for Invisible Captcha */}
+                        {verifying && <p className="text-sm text-gray-400 animate-pulse">Verifying...</p>}
+                    </div>
                     <button
                         onClick={handleUpload}
-                        disabled={getPresigned.isPending}
-                        className="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-bold flex items-center gap-2"
+                        disabled={getPresigned.isPending || verifying}
+                        className={cn(
+                            "px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-bold flex items-center gap-2",
+                            (verifying) && "opacity-70 cursor-wait"
+                        )}
                     >
                         {getPresigned.isPending && <Loader2 className="animate-spin w-4 h-4" />}
                         Confirm & Upload
@@ -234,11 +272,8 @@ export default function WizardPage() {
                                             <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
                                                 <input type="hidden" name="cmd" value="_s-xclick" />
                                                 <input type="hidden" name="hosted_button_id" value="QTUTJTARZMTQU" />
-                                                <input type="hidden" name="custom" value={credits.data ? "existing_user" : "new_user"} />
-                                                {/* Note: We need the actual userId here. We can get it from client side user object or trpc context but trpc is easiest if we had it in props. 
-                                                    Actually, let's use the Clerk helper in the component. 
-                                                */}
-                                                <PayPalCustomField />
+                                                <input type="hidden" name="custom" value={user?.id} />
+                                                <input type="hidden" name="rm" value="2" />
                                                 <button type="submit" className="w-full py-3 bg-[#0070BA] text-white font-bold rounded-xl hover:bg-[#005ea6] transition flex justify-center items-center gap-2">
                                                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.946 5.09-3.358 6.049-5.365 6.049h-.75c-.26 0-.456.224-.5.483l-.782 4.87a.782.782 0 0 1-.772.658H7.172a.66.66 0 0 1-.615-.46l-2.766-17.1a.66.66 0 0 1 .643-.762h5.716c1.644 0 2.89.289 3.597 1.05.626.674.839 1.516.634 2.809-.015.096-.03.192-.05.286-.92 5.25-3.084 5.989-4.708 5.989h-1.55a.825.825 0 0 0-.814.694l-.778 4.966a.185.185 0 0 1-.183.155z" /></svg>
                                                     Pay with PayPal

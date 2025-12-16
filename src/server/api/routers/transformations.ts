@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { transformations, userCredits } from "@/db/schema";
@@ -47,10 +48,15 @@ export const transformationsRouter = createTRPCRouter({
         }))
         .mutation(async ({ ctx, input }) => {
             // P0: Verify human
-            await verifyTurnstileToken(
-                input.turnstileToken,
-                ctx.headers.get("x-forwarded-for") ?? undefined
-            );
+            const ip = ctx.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+            const check = await verifyTurnstileToken({ token: input.turnstileToken, remoteIp: ip });
+
+            if (!check.ok) {
+                throw new TRPCError({
+                    code: "FORBIDDEN",
+                    message: "Security check failed. Please refresh and try again.",
+                });
+            }
 
             const { id } = input;
 
