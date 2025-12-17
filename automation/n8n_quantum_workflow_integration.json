@@ -1,0 +1,173 @@
+{
+    "name": "Quantum High-Ticket Lead Processor",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "lead-capture",
+                "options": {}
+            },
+            "name": "Webhook (Lead Capture)",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                250,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "insert",
+                "collection": "leads",
+                "options": {}
+            },
+            "name": "MongoDB (Persist Lead)",
+            "type": "n8n-nodes-base.mongoDb",
+            "typeVersion": 1,
+            "position": [
+                450,
+                300
+            ],
+            "credentials": {
+                "mongoDb": {
+                    "id": "YOUR_MONGODB_CREDENTIAL_ID",
+                    "name": "Mongo account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "http://localhost:5000/api/v1/process-lead",
+                "sendHeaders": true,
+                "headerParametersUi": {
+                    "parameter": [
+                        {
+                            "name": "X-API-KEY",
+                            "value": "default-quantum-key-change-me"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "bodyParametersUi": {
+                    "parameter": [
+                        {
+                            "name": "lead_id",
+                            "value": "={{$node[\"Webhook (Lead Capture)\"].json.body.id}}"
+                        },
+                        {
+                            "name": "prompt",
+                            "value": "={{$node[\"Webhook (Lead Capture)\"].json.body.message}}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "name": "HTTP Request (Call Quantum AI)",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 3,
+            "position": [
+                650,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "channel": "general",
+                "text": "=New High-Ticket Opportunity!\nLead Score: {{$node[\"HTTP Request (Call Quantum AI)\"].json.ai_result.lead_score}}\nActions: {{$node[\"HTTP Request (Call Quantum AI)\"].json.ai_result.next_action}}",
+                "components": [],
+                "attachments": [],
+                "jsonParameters": true
+            },
+            "name": "Slack (Notification)",
+            "type": "n8n-nodes-base.slack",
+            "typeVersion": 1,
+            "position": [
+                850,
+                300
+            ],
+            "credentials": {
+                "slackApi": {
+                    "id": "YOUR_SLACK_CREDENTIAL_ID",
+                    "name": "Slack account"
+                }
+            }
+        },
+        {
+            "parameters": {},
+            "name": "Error Trigger",
+            "type": "n8n-nodes-base.errorTrigger",
+            "typeVersion": 1,
+            "position": [
+                250,
+                500
+            ]
+        },
+        {
+            "parameters": {
+                "toEmail": "admin@example.com",
+                "subject": "CRITICAL: Workflow Failure",
+                "text": "=Workflow failed at node: {{$node[\"Error Trigger\"].json.execution.lastNodeExecuted}}"
+            },
+            "name": "Email (Error Alert)",
+            "type": "n8n-nodes-base.email",
+            "typeVersion": 1,
+            "position": [
+                450,
+                500
+            ],
+            "credentials": {
+                "smtp": {
+                    "id": "YOUR_SMTP_CREDENTIAL_ID",
+                    "name": "SMTP account"
+                }
+            }
+        }
+    ],
+    "connections": {
+        "Webhook (Lead Capture)": {
+            "main": [
+                [
+                    {
+                        "node": "MongoDB (Persist Lead)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "MongoDB (Persist Lead)": {
+            "main": [
+                [
+                    {
+                        "node": "HTTP Request (Call Quantum AI)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "HTTP Request (Call Quantum AI)": {
+            "main": [
+                [
+                    {
+                        "node": "Slack (Notification)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Error Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Email (Error Alert)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}
