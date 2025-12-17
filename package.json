@@ -35,7 +35,7 @@
     "drizzle-orm": "^0.33.0",
     "lucide-react": "^0.436.0",
     "mercadopago": "^2.0.11",
-    "next": "14.2.15",
+    "next": "^14.2.35",
     "pg": "^8.12.0",
     "postgres": "^3.4.4",
     "react": "^18",
