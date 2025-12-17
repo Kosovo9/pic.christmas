@@ -204,7 +204,7 @@ export default function WizardPage() {
                 {/* Error Banner */}
                 {errorMsg && (
                     <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-200 flex items-center gap-2 animate-in slide-in-from-top-2">
-                        <AlertCircleClassName="w-5 h-5 text-red-400" />
+                        <AlertCircle className="w-5 h-5 text-red-400" />
                         <span>{errorMsg}</span>
                         <button onClick={() => setErrorMsg(null)} className="ml-auto text-sm hover:text-white underline">Dismiss</button>
                     </div>
@@ -431,7 +431,7 @@ export default function WizardPage() {
                 </div>
             </div>
 
-            <p className="mt-8 text-slate-600 text-sm">© 2024 Pic.Christmas. All rights reserved.</p>
+            <p className="mt-8 text-slate-600 text-sm">© 2024 Pic.Christmas. All rights reserved. (v2.1 Glassmorphism Live)</p>
         </div>
     );
 }
