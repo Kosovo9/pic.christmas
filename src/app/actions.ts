@@ -5,6 +5,7 @@ import { CHRISTMAS_PROMPTS } from "@/lib/christmasPrompts";
 import { sendChristmasEmail } from "@/lib/resend";
 import crypto from "crypto";
 import { createClient } from "@supabase/supabase-js";
+import { auth } from "@clerk/nextjs/server";
 
 const GOOGLE_AI_API_KEY = process.env.GOOGLE_AI_API_KEY;
 const HUGGING_FACE_API_KEY = process.env.HUGGING_FACE_API_KEY;
@@ -16,6 +17,9 @@ const genAI = new GoogleGenerativeAI(GOOGLE_AI_API_KEY || "");
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 export async function generateChristmasPhoto(formData: FormData) {
+    const session = await auth();
+    if (!session.userId) return { error: "Authentication required" };
+
     if (!GOOGLE_AI_API_KEY) return { error: "Missing Google AI Key" };
     if (!HUGGING_FACE_API_KEY) return { error: "Missing Hugging Face Key" };
 
