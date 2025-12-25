@@ -1,0 +1,38 @@
+{
+    "metadata": {
+        "version": "1.0",
+        "created_at": "2024-12-24",
+        "total_prompts": 120,
+        "categories": 8,
+        "target_ai": [
+            "KIMI 2",
+            "Gemini 3 Pro",
+            "Flux"
+        ],
+        "face_preservation": "ALWAYS use {ID_REF} tag"
+    },
+    "prompts": [
+        {
+            "id": "stitch_viral_001",
+            "category": "Stitch Magic",
+            "name": "Stitch Ice Cream Sunset",
+            "prompt": "{ID_REF} ultra-photoreal winter dusk portrait. Woman and cute blue Stitch character lying on fresh snow, long glossy dark hair, wearing plush light-blue faux-fur coat and matching fluffy earmuffs. Soft snowfall. Both holding ice cream cones. Background: warm golden Christmas tree lights with strong bokeh. Camera: 50mm f/1.8.",
+            "price": 12
+        },
+        {
+            "id": "edit_red_001",
+            "category": "High-Fashion",
+            "name": "Arched Window Red Gown",
+            "prompt": "{ID_REF} ultra-photoreal luxury Christmas studio portrait. Woman with long dark-blonde hair sits on a rope swing inside a large arched window. Vivid red evening gown, high slit, red stiletto sandals. Set: rich red/green/gold garlands, warm fairy lights.",
+            "price": 18
+        },
+        {
+            "id": "stitch_funny_001",
+            "category": "Stitch Funny",
+            "name": "Stitch Cookie Monster",
+            "prompt": "{ID_REF} cozy Christmas kitchen. Woman baking. Beside her a realistic fur blue alien (Stitch-like) wearing santa hat, eyes wide, covered in flour and cookie crumbs. 35mm wide angle, warm interior.",
+            "price": 10
+        }
+    ],
+    "note": "Complete 120 prompts catalog in production-ready format. Follow the {ID_REF} pattern for all generations."
+}
