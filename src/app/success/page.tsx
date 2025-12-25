@@ -7,7 +7,7 @@ import { Suspense } from "react";
 
 function SuccessContent() {
     const searchParams = useSearchParams();
-    const sessionId = searchParams.get("session_id");
+    const sessionId = searchParams ? searchParams.get("session_id") : null;
 
     return (
         <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 text-center">
