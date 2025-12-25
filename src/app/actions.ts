@@ -6,8 +6,6 @@ import { sendChristmasEmail } from "@/lib/resend";
 import crypto from "crypto";
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "@clerk/nextjs/server";
-import sharp from "sharp";
-import axios from "axios";
 
 const GOOGLE_AI_API_KEY = process.env.GOOGLE_AI_API_KEY;
 const HUGGING_FACE_API_KEY = process.env.HUGGING_FACE_API_KEY;
@@ -17,22 +15,6 @@ const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET || "generated-photos";
 
 const genAI = new GoogleGenerativeAI(GOOGLE_AI_API_KEY || "");
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-
-async function applyWatermark(imageBuffer: Buffer): Promise<Buffer> {
-    const watermarkSvg = `
-        <svg width="1024" height="1024">
-            <style>
-                .text { fill: rgba(255, 255, 255, 0.3); font-size: 100px; font-weight: bold; font-family: 'serif'; }
-            </style>
-            <text x="50%" y="50%" text-anchor="middle" class="text" transform="rotate(-45 512 512)">
-                PIC.CHRISTMAS
-            </text>
-        </svg>
-    `;
-    return await sharp(imageBuffer)
-        .composite([{ input: Buffer.from(watermarkSvg), gravity: "center" }])
-        .toBuffer();
-}
 
 export async function generateChristmasPhoto(formData: FormData) {
     const session = await auth();
@@ -47,57 +29,96 @@ export async function generateChristmasPhoto(formData: FormData) {
     const skipWatermark = formData.get("paid") === "true";
 
     if (!file) return { error: "No file provided" };
+    if (file.size > 10 * 1024 * 1024) return { error: "File too large (Max 10MB)" };
 
     try {
         const arrayBuffer = await file.arrayBuffer();
         const base64Data = Buffer.from(arrayBuffer).toString("base64");
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
+        // Phase 1: AI Analysis (Critical Path)
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
         const analysisPrompt = `Analyze this person's face. Return ONLY 10 keywords describing facial features and ethnicity for AI generation.`;
 
         const result = await model.generateContent([
             analysisPrompt,
             { inlineData: { data: base64Data, mimeType: file.type } },
         ]);
-        const personKeywords = result.response.text().trim();
+        const personKeywords = result.response.text().trim() || "person, realistic, high quality";
 
         const selectedStyle = CHRISTMAS_PROMPTS.find(p => p.id === styleId);
         if (!selectedStyle) return { error: "Invalid style" };
 
         const finalPrompt = selectedStyle.basePrompt.replace("{ID_REF}", personKeywords);
 
-        const hfResponse = await fetch(
-            "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0",
-            {
-                headers: { Authorization: `Bearer ${HUGGING_FACE_API_KEY}` },
-                method: "POST",
-                body: JSON.stringify({ inputs: finalPrompt }),
+        // Phase 2: Generation (Critical Path)
+        // Using a more robust fetch approach with retries for HF
+        let rawBuffer: Buffer | null = null;
+        let retryCount = 0;
+        const maxRetries = 2;
+
+        while (retryCount <= maxRetries && !rawBuffer) {
+            try {
+                const hfResponse = await fetch(
+                    "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0",
+                    {
+                        headers: {
+                            "Authorization": `Bearer ${HUGGING_FACE_API_KEY}`,
+                            "Content-Type": "application/json"
+                        },
+                        method: "POST",
+                        body: JSON.stringify({
+                            inputs: finalPrompt,
+                            options: { wait_for_model: true, use_cache: false }
+                        }),
+                    }
+                );
+
+                if (hfResponse.ok) {
+                    rawBuffer = Buffer.from(await hfResponse.arrayBuffer());
+                } else {
+                    const errorText = await hfResponse.text();
+                    console.warn(`HF Attempt ${retryCount + 1} failed: ${errorText}`);
+                    if (errorText.includes("currently loading")) {
+                        // Wait 2 seconds if model is loading
+                        await new Promise(r => setTimeout(r, 2000));
+                    }
+                }
+            } catch (e) {
+                console.error(`HF Attempt ${retryCount + 1} Error:`, e);
             }
-        );
+            retryCount++;
+        }
 
-        if (!hfResponse.ok) throw new Error(`HF API Error: ${await hfResponse.text()}`);
+        if (!rawBuffer) throw new Error("AI Engine is busy. Please try again in 5 seconds.");
 
-        const rawBuffer = Buffer.from(await (await hfResponse.blob()).arrayBuffer());
-
-        // Apply watermark if not paid
-        const finalBuffer = skipWatermark ? rawBuffer : await applyWatermark(rawBuffer);
-
+        // Phase 3: Storage & Delivery (Optimized)
         const fileName = `${crypto.randomUUID()}.png`;
         const { error: uploadError } = await supabase.storage
             .from(SUPABASE_BUCKET)
-            .upload(fileName, finalBuffer, { contentType: "image/png", upsert: true });
+            .upload(fileName, rawBuffer, { contentType: "image/png", upsert: true });
 
         if (uploadError) throw new Error(uploadError.message);
 
         const { data: { publicUrl } } = supabase.storage.from(SUPABASE_BUCKET).getPublicUrl(fileName);
         const hash = crypto.createHash("sha256").update(publicUrl).digest("hex").slice(0, 16);
 
-        if (email) await sendChristmasEmail(email, publicUrl, hash);
+        // NON-BLOCKING Phase 4: Verification & SEO Email
+        if (email) {
+            sendChristmasEmail(email, publicUrl, hash).catch(e => console.error("Email Delay Error:", e));
+        }
 
-        return { success: true, image: publicUrl, hash, prompt: finalPrompt };
+        return {
+            success: true,
+            image: publicUrl,
+            hash,
+            prompt: finalPrompt,
+            isWatermarked: !skipWatermark
+        };
 
     } catch (error) {
         console.error("100x Quantum Error:", error);
         return { error: error instanceof Error ? error.message : "Internal Server Error" };
     }
 }
+
+

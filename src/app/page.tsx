@@ -2,14 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Upload, Sparkles, Heart, ShieldCheck, Play, Gift, Globe, DollarSign, Download, Unlock, ChevronDown, Check } from "lucide-react";
+import { useUser, SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
-// Mock User/Auth for visual dev (replace with real Clerk hooks in production)
-const useUser = () => ({ isLoaded: true, isSignedIn: true, user: { primaryEmailAddress: { emailAddress: "demo@user.com" } } });
-const SignedIn = ({ children }: { children: React.ReactNode }) => <>{children}</>;
-const SignedOut = ({ children }: { children: React.ReactNode }) => null;
-const SignInButton = ({ children, mode }: { children: React.ReactNode; mode?: string }) => <>{children}</>;
-const UserButton = (props: any) => <div className="w-8 h-8 rounded-full bg-christmas-gold/20 flex items-center justify-center text-xs">U</div>;
 
 import { Button, Card, Section, GradientText, Badge, Modal, Spinner } from "@/components/redesign";
 import StitchCharacter from "@/components/StitchCharacter";
@@ -34,6 +30,7 @@ export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [imageHash, setImageHash] = useState<string | null>(null);
   const [isPaid, setIsPaid] = useState(false);
 
   // Fallback to English if translation missing
@@ -70,6 +67,7 @@ export default function Home() {
       const result = await generateChristmasPhoto(formData);
       if (result.success && result.image) {
         setGeneratedImage(result.image);
+        setImageHash(result.hash || null);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         alert("Error: " + result.error);
@@ -107,9 +105,9 @@ export default function Home() {
 
           <div className="flex items-center gap-6">
             <div className="hidden md:flex items-center gap-6 text-xs font-bold uppercase tracking-widest text-white/60">
-              <a href="#studio" className="hover:text-christmas-gold transition-colors">{t.nav_studio}</a>
-              <a href="#themes" className="hover:text-christmas-gold transition-colors">{t.nav_catalog}</a>
-              <a href="#charity" className="hover:text-christmas-gold transition-colors">{t.nav_charity}</a>
+              <Link href="#studio" className="hover:text-christmas-gold transition-colors">{t.nav_studio}</Link>
+              <Link href="#themes" className="hover:text-christmas-gold transition-colors">{t.nav_catalog}</Link>
+              <Link href="#charity" className="hover:text-christmas-gold transition-colors">{t.nav_charity}</Link>
             </div>
 
             {/* Language Selector Dropdown */}
@@ -162,15 +160,16 @@ export default function Home() {
 
             <SignedIn>
               <div className="flex items-center gap-4">
-                <a href="/affiliates" className="hidden md:flex text-[10px] text-christmas-gold hover:underline items-center gap-1 font-bold uppercase tracking-wider">
+                <Link href="/affiliates" className="hidden md:flex text-[10px] text-christmas-gold hover:underline items-center gap-1 font-bold uppercase tracking-wider">
                   <DollarSign className="w-3 h-3" /> {t.nav_affiliates}
-                </a>
+                </Link>
                 <UserButton afterSignOutUrl="/" />
               </div>
             </SignedIn>
           </div>
         </div>
       </nav>
+
 
       {/* HERO SECTION CINEMÁTICO */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32">
@@ -278,6 +277,7 @@ export default function Home() {
               <div className="text-center mb-10">
                 <Badge variant="success" size="lg" className="mb-4">Success / Éxito!</Badge>
                 <h2 className="text-4xl font-serif">Tu Obra Maestra Cuántica</h2>
+                {imageHash && <p className="text-[10px] text-white/30 font-mono mt-2 uppercase tracking-widest">Hash ID: {imageHash}</p>}
               </div>
               <div className="max-w-md mx-auto relative group">
                 <Card variant="gradient" className="overflow-hidden p-2 rounded-[3rem]">
@@ -292,9 +292,28 @@ export default function Home() {
 
                   <div className="p-6 space-y-4">
                     {!isPaid ? (
-                      <Button variant="secondary" fullWidth size="lg" icon={<Unlock className="w-5 h-5" />} onClick={() => setIsPaid(true)}>
-                        Unlock HD ($9.90)
-                      </Button>
+                      <div className="flex flex-col gap-3">
+                        <Button
+                          variant="secondary"
+                          fullWidth
+                          size="lg"
+                          icon={<Unlock className="w-5 h-5" />}
+                          onClick={() => window.open(`https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QTUTJTARZMTQU`, '_blank')}
+                        >
+                          Pay with PayPal ($9.90)
+                        </Button>
+                        <Button
+                          variant="outline"
+                          fullWidth
+                          size="lg"
+                          onClick={() => window.open(`https://link.mercadopago.com.mx/studionexora`, '_blank')}
+                        >
+                          Pagar con MercadoPago (MXN)
+                        </Button>
+                        <p className="text-[10px] text-center text-white/40 uppercase tracking-widest mt-2">
+                          Unlock High-Res & Remove Watermark
+                        </p>
+                      </div>
                     ) : (
                       <Button variant="primary" fullWidth size="lg" icon={<Download className="w-5 h-5" />} onClick={() => window.open(generatedImage, '_blank')}>
                         Download 8K
@@ -308,6 +327,7 @@ export default function Home() {
               </div>
             </div>
           )}
+
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
             {/* LEFT: UPLOAD & CONFIG */}

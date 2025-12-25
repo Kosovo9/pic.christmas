@@ -521,7 +521,7 @@ export const GradientText: React.FC<GradientTextProps> = ({
     );
 };
 
-export default {
+const RedesignUI = {
     Button,
     Card,
     Input,
@@ -533,3 +533,6 @@ export default {
     Divider,
     GradientText,
 };
+
+export default RedesignUI;
+

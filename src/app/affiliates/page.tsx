@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { useUser, SignedIn, SignedOut, RedirectToSignIn } from "@clerk/nextjs";
+
 import { Globe, DollarSign, Users, MousePointer2, Share2, ArrowLeft } from "lucide-react";
 import { getAffiliateStats } from "./actions";
 import { Snowfall } from "@/components/Snowfall";
@@ -28,10 +30,11 @@ export default function AffiliatesPage() {
             <Snowfall />
 
             <nav className="border-b border-white/5 px-6 py-4 flex justify-between items-center backdrop-blur-xl sticky top-0 z-50 bg-black/40">
-                <a href="/" className="flex items-center gap-2 text-christmas-gold hover:text-white transition font-bold uppercase tracking-tighter">
+                <Link href="/" className="flex items-center gap-2 text-christmas-gold hover:text-white transition font-bold uppercase tracking-tighter">
                     <ArrowLeft className="w-4 h-4" /> Back to Studio
-                </a>
+                </Link>
                 <div className="font-serif text-2xl tracking-tighter text-white">
+
                     Affiliate <span className="text-christmas-gold">Center</span>
                 </div>
                 <div className="w-24"></div>
