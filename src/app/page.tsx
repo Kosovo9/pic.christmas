@@ -1,52 +1,195 @@
-import Link from "next/link";
-import { ArrowRight, Sparkles, Clock, ShieldCheck } from "lucide-react";
+"use client";
+
+import React, { useState, useRef, useEffect } from 'react';
+import { NetflixHero } from '../components/NetflixHero';
+import { CarouselRow } from '../components/CarouselRow';
+import dynamic from 'next/dynamic';
+const UploadWizard = dynamic(() => import('../components/UploadWizard').then(mod => mod.UploadWizard), {
+  loading: () => <div className="animate-pulse bg-gray-800 h-96 rounded-lg w-full"></div>
+});
+const PricingSection = dynamic(() => import('../components/PricingSection').then(mod => mod.PricingSection));
+const ResultsGallery = dynamic(() => import('../components/ResultsGallery').then(mod => mod.ResultsGallery));
+import { EarthFooter } from '../components/EarthFooter';
+import { Navbar } from '../components/Navbar';
+import { useReferral } from '../hooks/useReferral';
+import { useI18n } from '@/i18n/I18nProvider';
+import { api } from '../services/api';
+import guidelinesData from '../data/guidelines.json';
+import { PageTransition } from '../components/PageTransition';
+import { PaymentMethodSelector } from '../components/PaymentMethodSelector';
+import { OxxoPaymentUI } from '../components/OxxoPaymentUI';
+import { BankTransferUI } from '../components/BankTransferUI';
+import { SecurityShield } from '../components/SecurityShield';
+import { ExamplesGallery } from '../components/ExamplesGallery';
+import { DisclaimerModal } from '../components/DisclaimerModal';
+import { ViralExitModal } from '../components/ViralExitModal';
+import { TrendingRow } from '../components/TrendingRow';
+
+// 🎬 MOCK DATA FOR CAROUSELS
+const TRENDING_SCENES = [
+  { title: "Royal Winter Gala", thumb: "https://images.unsplash.com/photo-1544275608-d22731ee0ae6?q=80&w=600&auto=format&fit=crop" },
+  { title: "Cozy Log Cabin", thumb: "https://images.unsplash.com/photo-1575383566580-2bd337666323?q=80&w=600&auto=format&fit=crop" },
+  { title: "Snowy Central Park", thumb: "https://images.unsplash.com/photo-1482355322998-2e70c5aa8578?q=80&w=600&auto=format&fit=crop" },
+  { title: "Vintage Santa Portrait", thumb: "https://images.unsplash.com/photo-1606757303112-9844c3c3a4f6?q=80&w=600&auto=format&fit=crop" },
+  { title: "Magical Reindeer Ride", thumb: "https://images.unsplash.com/photo-1482635914560-690226c61f22?q=80&w=600&auto=format&fit=crop" },
+];
+
+const SnowEffect = () => {
+  const [snowflakes, setSnowflakes] = useState<{ id: number; left: string; size: string; delay: string; duration: string }[]>([]);
+
+  useEffect(() => {
+    const flakes = Array.from({ length: 50 }).map((_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      size: `${Math.random() * 5 + 2}px`,
+      delay: `${Math.random() * 5}s`,
+      duration: `${Math.random() * 10 + 5}s`,
+    }));
+    setSnowflakes(flakes);
+  }, []);
+
+  return (
+    <div className="snow-container">
+      {snowflakes.map(flake => (
+        <div
+          key={flake.id}
+          className="snowflake"
+          style={{
+            left: flake.left,
+            width: flake.size,
+            height: flake.size,
+            animationDelay: flake.delay,
+            animationDuration: flake.duration,
+          }}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default function Home() {
-    return (
-        <main className="flex min-h-[calc(100vh-64px)] flex-col items-center justify-center bg-[url('https://images.unsplash.com/photo-1544967082-d9d25d867d66?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center text-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+  const { t, locale } = useI18n();
+  const { referralCode } = useReferral();
+  const [currentView, setCurrentView] = useState<'landing' | 'upload' | 'pricing' | 'payment' | 'results'>('landing');
+  const [uploadData, setUploadData] = useState<any>(null);
+  const [showGuidelines, setShowGuidelines] = useState(false);
+  const [orderDetails, setOrderDetails] = useState<{ id: string; amount: number } | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+  const [paymentDetails, setPaymentDetails] = useState<any>(null);
+  const [freeMode, setFreeMode] = useState<any>(null);
 
-            <div className="relative z-10 p-6 max-w-4xl w-full flex flex-col items-center animate-in fade-in zoom-in duration-1000">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-300 text-sm font-medium mb-6">
-                    <Sparkles className="w-4 h-4" />
-                    <span>Limited Holiday Edition 2024</span>
-                </div>
+  const [showWizard, setShowWizard] = useState(false);
+  const wizardRef = useRef<HTMLDivElement>(null);
 
-                <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight bg-gradient-to-br from-white via-gray-200 to-gray-500 bg-clip-text text-transparent mb-6">
-                    Transform your photos into <br />
-                    <span className="text-blue-400 drop-shadow-lg">Christmas Magic</span>
-                </h1>
+  const handleStartCreation = () => {
+    setShowWizard(true);
+    setTimeout(() => {
+      wizardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
 
-                <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-                    Premium AI transformation. Upload your photo and get studio-quality holiday portraits in seconds. Data deleted in 24h.
-                </p>
+  const uploadRef = useRef<HTMLDivElement>(null);
+  const pricingRef = useRef<HTMLDivElement>(null);
+  const referralRef = useRef<HTMLDivElement>(null);
+  const paymentRef = useRef<HTMLDivElement>(null);
 
-                <Link
-                    href="/wizard"
-                    className="group relative inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-bold text-lg rounded-full hover:bg-gray-200 transition-all hover:scale-105 shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]"
-                >
-                    Start Transformation
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
+  const handleUploadComplete = async (data: any) => {
+    setUploadData(data);
+    try {
+      const uploadResult = await api.uploadPhotos(data.files);
+      setCurrentView('pricing');
+      setTimeout(() => {
+        pricingRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } catch (error) {
+      console.error("Upload failed", error);
+      alert("Upload failed. Please try again.");
+    }
+  };
 
-                <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-left w-full">
-                    <div className="bg-black/40 border border-white/10 p-6 rounded-2xl backdrop-blur-md">
-                        <Clock className="w-8 h-8 text-blue-400 mb-4" />
-                        <h3 className="text-xl font-bold mb-2">24h Privacy</h3>
-                        <p className="text-gray-400">We delete all your uploads and results automatically after 24 hours.</p>
-                    </div>
-                    <div className="bg-black/40 border border-white/10 p-6 rounded-2xl backdrop-blur-md">
-                        <Sparkles className="w-8 h-8 text-amber-400 mb-4" />
-                        <h3 className="text-xl font-bold mb-2">Premium Quality</h3>
-                        <p className="text-gray-400">Hyper-realistic AI models tuned specifically for holiday aesthetics.</p>
-                    </div>
-                    <div className="bg-black/40 border border-white/10 p-6 rounded-2xl backdrop-blur-md">
-                        <ShieldCheck className="w-8 h-8 text-green-400 mb-4" />
-                        <h3 className="text-xl font-bold mb-2">Secure Payments</h3>
-                        <p className="text-gray-400">Powered by Stripe. We never store your card details.</p>
-                    </div>
-                </div>
+  const handlePackageSelect = async (pkgId: string) => {
+    try {
+      const orderData = {
+        packageId: pkgId,
+        config: uploadData?.config || { adults: 1, children: 0, pets: 0 },
+        originalImages: uploadData?.fileUrls || [],
+        referralCode: referralCode || undefined,
+        useCredit: false
+      };
+      const order = await api.createOrder(orderData);
+      setOrderDetails({ id: order._id, amount: order.totalAmount });
+      setCurrentView('payment');
+      setTimeout(() => {
+        paymentRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } catch (error) {
+      console.error('Order creation failed:', error);
+    }
+  };
+
+  const handlePaymentMethodSelected = async (methodId: string) => {
+    setPaymentMethod(methodId);
+    if (!orderDetails) return;
+    if (methodId === 'credit_debit' || methodId === 'paypal') {
+      const payment = await api.createPaymentIntent(orderDetails.id);
+      if (payment.url) window.location.href = payment.url;
+    }
+  };
+
+  const scrollToReferrals = () => {
+    referralRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <PageTransition>
+      <main className="min-h-screen bg-[#141414] text-slate-50 selection:bg-red-600/30 font-sans pb-24 relative overflow-hidden">
+        <SnowEffect />
+        <div className="fixed top-24 left-6 z-[60] animate-bounce">
+          <div className="stitch-badge px-4 py-2 rounded-full text-white text-sm font-bold flex items-center gap-2 cursor-pointer shadow-xl">
+            <span className="text-xl">👽</span>
+            <span>STITCH EDITION LIVE!</span>
+          </div>
+        </div>
+
+        <SecurityShield />
+        <Navbar onReferralsClick={scrollToReferrals} />
+
+        <NetflixHero onStart={handleStartCreation} />
+
+        <TrendingRow items={TRENDING_SCENES} id="trending-gallery" />
+
+        <div ref={wizardRef} className="relative z-10 px-4">
+          {showWizard && (
+            <div className="mt-8 mb-20 animate-fade-in-up">
+              <UploadWizard onComplete={handleUploadComplete} />
             </div>
-        </main>
-    );
+          )}
+        </div>
+
+        <div ref={pricingRef}>
+          {(currentView === 'pricing' || currentView === 'payment' || currentView === 'results') && (
+            <PricingSection onSelect={handlePackageSelect} config={uploadData?.config} />
+          )}
+        </div>
+
+        <div ref={paymentRef} className="max-w-4xl mx-auto px-4 py-8">
+          {currentView === 'payment' && orderDetails && (
+            <div className="bg-[#181818] border border-gray-700 rounded-lg p-8 shadow-2xl">
+              <PaymentMethodSelector
+                orderId={orderDetails.id}
+                amount={orderDetails.amount}
+                onPaymentMethodSelected={handlePaymentMethodSelected}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="mt-24 border-t border-gray-800">
+          <EarthFooter />
+        </div>
+
+        <ViralExitModal language={locale} />
+      </main>
+    </PageTransition>
+  );
 }

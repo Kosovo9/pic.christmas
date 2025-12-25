@@ -1,0 +1,43 @@
+{
+    "version": "1.0.0",
+    "project": "Pic.Christmas AI Studio",
+    "categories": [
+        {
+            "id": "stitch-you",
+            "name": "Stitch & You (Viral Edition)",
+            "description": "Fotos virales contigo y Stitch en escenas navideñas.",
+            "prompts": [
+                "Stitch holding a giant snowball, wearing a tiny blue scarf, realistic fur, cinematic lighting, snow falling, in a cozy cabin background.",
+                "A person sharing a hot chocolate with Stitch, both wearing matching Christmas sweaters, hyper-realistic, 8k, warm atmosphere.",
+                "Stitch surfing on a giant sled in the Alps, wearing cool sunglasses, action shot, snowflakes splashing, hyper-detailed."
+            ]
+        },
+        {
+            "id": "luxury",
+            "name": "Luxury & Fashion",
+            "description": "Estilo editorial de alto nivel.",
+            "prompts": [
+                "Editorial Christmas portrait, high fashion red velvet gown, giant arched window with snow outside, luxury mansion, cinematic bokeh.",
+                "Model posing with a giant advent calendar, gold leaf details, high-end jewelry, studio lighting, hyper-realistic."
+            ]
+        },
+        {
+            "id": "global-icons",
+            "name": "Global Icons",
+            "description": "Escenas icónicas en ciudades del mundo.",
+            "prompts": [
+                "Christmas in Paris, Eiffel Tower background with lights, snow, romantic atmosphere, cinematic 8k.",
+                "New Year's Eve in New York, Times Square, neon lights, blizzard, vibrant colors, realistic."
+            ]
+        },
+        {
+            "id": "men-luxury",
+            "name": "Men Solo Luxury",
+            "description": "Estilo sofisticado masculino.",
+            "prompts": [
+                "Man in a sharp charcoal suit standing on a penthouse balcony overlooking a snowy city, holding a crystal glass, moody lighting.",
+                "Sophisticated gentleman sitting by a fireplace in a mahogany library, wearing a cashmere turtleneck, ultra-detailed."
+            ]
+        }
+    ]
+}
