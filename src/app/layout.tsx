@@ -20,18 +20,22 @@ export const metadata: Metadata = {
   description: "Transform your photos into magical holiday portraits.",
 };
 
+import { ClerkProvider } from "@clerk/nextjs";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${inter.variable} ${playfair.variable} antialiased bg-[#050B14] text-white`}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${inter.variable} ${playfair.variable} antialiased bg-[#050B14] text-white`}
+        >
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

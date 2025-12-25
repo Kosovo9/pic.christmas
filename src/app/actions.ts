@@ -2,21 +2,22 @@
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { CHRISTMAS_PROMPTS } from "@/lib/christmasPrompts";
-import Replicate from "replicate";
 import { sendChristmasEmail } from "@/lib/resend";
 import crypto from "crypto";
+import { createClient } from "@supabase/supabase-js";
 
-const GOOGLE_AI_API_KEY = process.env.GOOGLE_AI_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_AI_API_KEY;
-const REPLICATE_API_TOKEN = process.env.REPLICATE_API_TOKEN;
+const GOOGLE_AI_API_KEY = process.env.GOOGLE_AI_API_KEY;
+const HUGGING_FACE_API_KEY = process.env.HUGGING_FACE_API_KEY;
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET || "generated-photos";
 
 const genAI = new GoogleGenerativeAI(GOOGLE_AI_API_KEY || "");
-const replicate = new Replicate({
-    auth: REPLICATE_API_TOKEN,
-});
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 export async function generateChristmasPhoto(formData: FormData) {
     if (!GOOGLE_AI_API_KEY) return { error: "Missing Google AI Key" };
-    if (!REPLICATE_API_TOKEN) return { error: "Missing Replicate Token" };
+    if (!HUGGING_FACE_API_KEY) return { error: "Missing Hugging Face Key" };
 
     const file = formData.get("file") as File;
     const styleId = formData.get("styleId") as string;
@@ -25,65 +26,80 @@ export async function generateChristmasPhoto(formData: FormData) {
     if (!file) return { error: "No file provided" };
 
     try {
-        // 1. Convert File to Base64
+        // 1. Analyze with Gemini (Nano Banana Prompt Compression)
         const arrayBuffer = await file.arrayBuffer();
         const base64Data = Buffer.from(arrayBuffer).toString("base64");
-
-        // 2. Analyze with Gemini (Identity/Portrait Locking)
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-        const analysisPrompt = `Analyze this person's face in detail for a 100% accurate AI portrait. Describe:
-        - Gender, age, ethnicity
-        - Exact hair color/texture, eye shape/color
-        - Facial features (beard, glasses, freckles, jawline)
-        Output a comma-separated list of precise physical traits for a Stable Diffusion prompt.`;
+
+        const analysisPrompt = `Analyze this person's face. 
+        Return ONLY a highly compressed comma-separated list of 10 keywords describing their unique facial features, ethnicity, hair, and age. 
+        Focus on identifying traits for an AI image generator. No intro, no outro, just keywords.`;
 
         const result = await model.generateContent([
             analysisPrompt,
             { inlineData: { data: base64Data, mimeType: file.type } },
         ]);
-        const personDescription = result.response.text();
+        const personKeywords = result.response.text().trim();
 
-        // 3. Construct the 10x Optimized Prompt
+        // 2. Select and Build Prompt
         const selectedStyle = CHRISTMAS_PROMPTS.find(p => p.id === styleId);
-        if (!selectedStyle) return { error: "Invalid style selected" };
+        if (!selectedStyle) return { error: "Invalid style" };
 
-        let finalPrompt = selectedStyle.basePrompt.replace("[Subject]", personDescription);
-        finalPrompt = finalPrompt.replace(/\[Subject Family\]/g, "family").replace(/\[Subject Pet\]/g, "pet");
+        const finalPrompt = selectedStyle.basePrompt.replace("{ID_REF}", personKeywords);
 
-        console.log("🚀 Generating with Flux.1-pro:", finalPrompt);
+        console.log("🚀 Generating with SDXL (Hugging Face) 100x Speed:", finalPrompt);
 
-        // 4. Generate with Replicate
-        const output = await replicate.run(
-            "black-forest-labs/flux-schnell",
+        // 3. Generate with Stable Diffusion XL (Hugging Face API - Open Source)
+        // Using SDXL 1.0 for high-quality open source results
+        const hfResponse = await fetch(
+            "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0",
             {
-                input: {
-                    prompt: finalPrompt,
-                    aspect_ratio: selectedStyle.aspectRatio === "4:5" ? "4:5" : (selectedStyle.aspectRatio === "16:9" ? "16:9" : "1:1"),
-                    output_format: "webp",
-                    output_quality: 90,
-                    num_inference_steps: 4
-                }
+                headers: { Authorization: `Bearer ${HUGGING_FACE_API_KEY}` },
+                method: "POST",
+                body: JSON.stringify({ inputs: finalPrompt }),
             }
         );
 
-        const imageUrl = (output as string[])[0];
-        const hash = crypto.createHash("sha256").update(imageUrl).digest("hex").slice(0, 16);
+        if (!hfResponse.ok) {
+            const error = await hfResponse.text();
+            throw new Error(`HF API Error: ${error}`);
+        }
 
-        // 5. Email Automation
+        const imageBlob = await hfResponse.blob();
+        const imageBuffer = Buffer.from(await imageBlob.arrayBuffer());
+
+        // 4. Upload to Supabase Storage (Private 24h)
+        const fileName = `${crypto.randomUUID()}.png`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+            .from(SUPABASE_BUCKET)
+            .upload(fileName, imageBuffer, {
+                contentType: "image/png",
+                upsert: true
+            });
+
+        if (uploadError) throw new Error(`Supabase Upload Error: ${uploadError.message}`);
+
+        // Get Public URL
+        const { data: { publicUrl } } = supabase.storage
+            .from(SUPABASE_BUCKET)
+            .getPublicUrl(fileName);
+
+        const hash = crypto.createHash("sha256").update(publicUrl).digest("hex").slice(0, 16);
+
+        // 5. Email Notification
         if (email) {
-            await sendChristmasEmail(email, imageUrl, hash);
+            await sendChristmasEmail(email, publicUrl, hash);
         }
 
         return {
             success: true,
-            image: imageUrl,
+            image: publicUrl,
             hash,
-            prompt: finalPrompt,
-            analysis: personDescription
+            prompt: finalPrompt
         };
 
     } catch (error) {
-        console.error("100x Generation Error:", error);
+        console.error("100x Quantum Error:", error);
         return { error: error instanceof Error ? error.message : "Internal Server Error" };
     }
 }
