@@ -2,14 +2,18 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { Upload, Sparkles, Heart, ShieldCheck, Play, Gift, Globe, DollarSign, Download, Unlock } from "lucide-react";
-import { useUser, SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { Upload, Sparkles, Heart, ShieldCheck, Play, Gift, Globe, DollarSign, Download, Unlock, ChevronDown, Check } from "lucide-react";
 
-// Importamos componentes rediseñados y Stitch
+// Mock User/Auth for visual dev (replace with real Clerk hooks in production)
+const useUser = () => ({ isLoaded: true, isSignedIn: true, user: { primaryEmailAddress: { emailAddress: "demo@user.com" } } });
+const SignedIn = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+const SignedOut = ({ children }: { children: React.ReactNode }) => null;
+const SignInButton = ({ children, mode }: { children: React.ReactNode; mode?: string }) => <>{children}</>;
+const UserButton = (props: any) => <div className="w-8 h-8 rounded-full bg-christmas-gold/20 flex items-center justify-center text-xs">U</div>;
+
 import { Button, Card, Section, GradientText, Badge, Modal, Spinner } from "@/components/redesign";
 import StitchCharacter from "@/components/StitchCharacter";
 
-// Importamos componentes funcionales originales para mantener 100% de funcionalidad
 import { Snowfall } from "@/components/Snowfall";
 import { UploadWizard } from "@/components/UploadWizard";
 import { MusicPlayer } from "@/components/MusicPlayer";
@@ -24,6 +28,7 @@ import { messages, Locale } from "@/lib/messages";
 export default function Home() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [lang, setLang] = useState<Locale>("es");
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("stitch");
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -31,6 +36,7 @@ export default function Home() {
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isPaid, setIsPaid] = useState(false);
 
+  // Fallback to English if translation missing
   const t = messages[lang] || messages["en"];
 
   const categories = [
@@ -81,7 +87,7 @@ export default function Home() {
       <CountdownBanner />
       <Snowfall />
       <MusicPlayer />
-      <ChatHolly />
+      <ChatHolly language={lang} />
       <ViralExitModal language={lang} />
 
       {/* NAVBAR PREMIUM */}
@@ -101,19 +107,50 @@ export default function Home() {
 
           <div className="flex items-center gap-6">
             <div className="hidden md:flex items-center gap-6 text-xs font-bold uppercase tracking-widest text-white/60">
-              <a href="#studio" className="hover:text-christmas-gold transition-colors">Studio</a>
-              <a href="#themes" className="hover:text-christmas-gold transition-colors">Catalog</a>
-              <a href="#charity" className="hover:text-christmas-gold transition-colors">Charity</a>
+              <a href="#studio" className="hover:text-christmas-gold transition-colors">{t.nav_studio}</a>
+              <a href="#themes" className="hover:text-christmas-gold transition-colors">{t.nav_catalog}</a>
+              <a href="#charity" className="hover:text-christmas-gold transition-colors">{t.nav_charity}</a>
             </div>
 
-            {/* Language Selector Simple */}
-            <button
-              onClick={() => setLang(lang === 'es' ? 'en' : 'es')}
-              className="text-xs font-bold uppercase hover:text-christmas-gold transition-colors"
-            >
-              <Globe className="w-4 h-4 inline mr-1" />
-              {lang}
-            </button>
+            {/* Language Selector Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+                className="flex items-center gap-1 text-xs font-bold uppercase hover:text-christmas-gold transition-colors"
+              >
+                <Globe className="w-4 h-4" />
+                <span>{lang.toUpperCase()}</span>
+                <ChevronDown className={`w-3 h-3 transition-transform ${isLangMenuOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {isLangMenuOpen && (
+                <div className="absolute top-full right-0 mt-2 w-48 bg-black/90 border border-white/10 rounded-xl shadow-2xl backdrop-blur-xl overflow-hidden z-50 animate-in slide-in-from-top-2 p-1 max-h-80 overflow-y-auto custom-scrollbar">
+                  <div className="grid grid-cols-1 gap-1">
+                    {Object.keys(messages).map((l) => (
+                      <button
+                        key={l}
+                        onClick={() => { setLang(l as Locale); setIsLangMenuOpen(false); }}
+                        className={`px-4 py-2 text-left text-xs uppercase font-bold flex items-center justify-between rounded-lg transition-colors ${lang === l ? 'bg-christmas-gold text-black' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
+                      >
+                        <span className="flex items-center gap-2">
+                          {l === 'en' && '🇺🇸'} {l === 'es' && '🇪🇸'} {l === 'fr' && '🇫🇷'}
+                          {l === 'de' && '🇩🇪'} {l === 'it' && '🇮🇹'} {l === 'pt' && '🇧🇷'}
+                          {l === 'ru' && '🇷🇺'} {l === 'zh' && '🇨🇳'} {l === 'ja' && '🇯🇵'}
+                          {l === 'ar' && '🇸🇦'} {l === 'hi' && '🇮🇳'} {l === 'ko' && '🇰🇷'}
+                          {l === 'tr' && '🇹🇷'} {l === 'nl' && '🇳🇱'} {l === 'vi' && '🇻🇳'}
+                          {l}
+                        </span>
+                        {lang === l && <Check className="w-3 h-3" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            {/* Backdrop to close menu */}
+            {isLangMenuOpen && (
+              <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setIsLangMenuOpen(false)} />
+            )}
 
             <SignedOut>
               <SignInButton mode="modal">
@@ -126,7 +163,7 @@ export default function Home() {
             <SignedIn>
               <div className="flex items-center gap-4">
                 <a href="/affiliates" className="hidden md:flex text-[10px] text-christmas-gold hover:underline items-center gap-1 font-bold uppercase tracking-wider">
-                  <DollarSign className="w-3 h-3" /> Affiliates
+                  <DollarSign className="w-3 h-3" /> {t.nav_affiliates}
                 </a>
                 <UserButton afterSignOutUrl="/" />
               </div>
@@ -158,9 +195,9 @@ export default function Home() {
             </Badge>
 
             <h1 className="text-6xl md:text-8xl font-serif leading-[0.9] tracking-tighter">
-              Navidad <br />
-              <GradientText variant="gold">Mágica &</GradientText> <br />
-              <span className="text-outline-white">Eterna</span>
+              {t.hero_title_line1} <br />
+              <GradientText variant="gold">{t.hero_title_line2}</GradientText> <br />
+              <span className="text-outline-white">{t.hero_title_line3}</span>
             </h1>
 
             <p className="text-xl text-gray-300 max-w-lg font-light leading-relaxed">
@@ -181,7 +218,7 @@ export default function Home() {
                 size="lg"
                 onClick={() => document.getElementById('themes')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                Ver Catálogo
+                {t.nav_catalog}
               </Button>
             </div>
 
@@ -210,8 +247,8 @@ export default function Home() {
                   <ShieldCheck className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="text-xs font-bold uppercase text-white/60">Privacidad</div>
-                  <div className="font-bold text-white">100% Segura</div>
+                  <div className="text-xs font-bold uppercase text-white/60">{t.footer_legal}</div>
+                  <div className="font-bold text-white">100% Safe</div>
                 </div>
               </div>
             </Card>
@@ -222,7 +259,7 @@ export default function Home() {
                   <Sparkles className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="text-xs font-bold uppercase text-white/60">Calidad AI</div>
+                  <div className="text-xs font-bold uppercase text-white/60">AI Quality</div>
                   <div className="font-bold text-white">8K Ultra HD</div>
                 </div>
               </div>
@@ -239,7 +276,7 @@ export default function Home() {
           {generatedImage && (
             <div className="animate-in fade-in zoom-in duration-700">
               <div className="text-center mb-10">
-                <Badge variant="success" size="lg" className="mb-4">¡Imagen Generada con Éxito!</Badge>
+                <Badge variant="success" size="lg" className="mb-4">Success / Éxito!</Badge>
                 <h2 className="text-4xl font-serif">Tu Obra Maestra Cuántica</h2>
               </div>
               <div className="max-w-md mx-auto relative group">
@@ -256,11 +293,11 @@ export default function Home() {
                   <div className="p-6 space-y-4">
                     {!isPaid ? (
                       <Button variant="secondary" fullWidth size="lg" icon={<Unlock className="w-5 h-5" />} onClick={() => setIsPaid(true)}>
-                        Desbloquear HD ($9.90)
+                        Unlock HD ($9.90)
                       </Button>
                     ) : (
                       <Button variant="primary" fullWidth size="lg" icon={<Download className="w-5 h-5" />} onClick={() => window.open(generatedImage, '_blank')}>
-                        Descargar 8K
+                        Download 8K
                       </Button>
                     )}
                     <p className="text-center text-[10px] uppercase tracking-widest text-white/40">
@@ -287,7 +324,7 @@ export default function Home() {
                     <div className="flex items-center gap-4 text-emerald-400 bg-emerald-950/30 p-4 rounded-xl border border-emerald-500/20 animate-slide-in-up">
                       <ShieldCheck className="w-6 h-6" />
                       <div>
-                        <span className="font-bold text-sm block">Foto Analizada con Éxito</span>
+                        <span className="font-bold text-sm block">Success Analysis</span>
                         <span className="text-[10px] opacity-70">Identity Locked 99.9%</span>
                       </div>
                     </div>
@@ -297,10 +334,10 @@ export default function Home() {
                 <div className="mt-8 p-6 rounded-2xl bg-gradient-to-r from-purple-900/10 to-blue-900/10 border border-white/5 flex gap-4 items-center group hover:bg-white/5 transition cursor-pointer">
                   <Gift className="w-10 h-10 text-purple-400 group-hover:scale-110 transition" />
                   <div>
-                    <h4 className="font-bold text-purple-200">Gana Dinero</h4>
-                    <p className="text-xs text-purple-300/60">Únete al programa de afiliados y gana 20%</p>
+                    <h4 className="font-bold text-purple-200">{t.nav_affiliates}</h4>
+                    <p className="text-xs text-purple-300/60">Join & Earn 20%</p>
                   </div>
-                  <Button variant="ghost" size="sm" className="ml-auto" onClick={() => window.location.href = '/affiliates'}>Ver más</Button>
+                  <Button variant="ghost" size="sm" className="ml-auto" onClick={() => window.location.href = '/affiliates'}>Go</Button>
                 </div>
               </div>
             </div>
@@ -313,7 +350,7 @@ export default function Home() {
                     <span className="bg-white text-black w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold font-sans">2</span>
                     {t.styleTitle}
                   </h2>
-                  <p className="text-gray-500 text-sm pl-14">Catálogo curado por diseñadores • Edición 2024</p>
+                  <p className="text-gray-500 text-sm pl-14">{t.catalog_curated}</p>
                 </div>
 
                 <div className="flex gap-2 overflow-x-auto pb-2 max-w-full custom-scrollbar">
@@ -340,13 +377,13 @@ export default function Home() {
                     key={style.id}
                     onClick={() => setSelectedStyle(style.id)}
                     className={`
-                              cursor-pointer rounded-[2rem] overflow-hidden relative aspect-[3/4] group transition-all duration-300 border-2
-                              ${selectedStyle === style.id
+                               cursor-pointer rounded-[2rem] overflow-hidden relative aspect-[3/4] group transition-all duration-300 border-2
+                               ${selectedStyle === style.id
                         ? 'border-christmas-gold ring-4 ring-christmas-gold/20 scale-[0.98]'
                         : 'border-transparent hover:border-white/20 hover:scale-[1.01]'}
                            `}
                   >
-                    {/* Fallback visual until real images are mapped */}
+                    {/* Fallback visual */}
                     <div className="absolute inset-0 bg-neutral-800 flex items-center justify-center overflow-hidden">
                       <span className="text-[100px] opacity-5 select-none font-serif font-black">{style.id.charAt(0)}</span>
                     </div>
@@ -380,11 +417,11 @@ export default function Home() {
                 >
                   {loading ? (
                     <span className="flex items-center gap-3">
-                      <Spinner size="md" color="white" /> Procesando...
+                      <Spinner size="md" color="white" /> Processing...
                     </span>
                   ) : (
                     <span className="flex items-center gap-3">
-                      <Sparkles className="w-6 h-6" /> Generar Foto Navideña
+                      <Sparkles className="w-6 h-6" /> {t.generate}
                     </span>
                   )}
                 </Button>
@@ -394,24 +431,23 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* CHARITY SECTION (Preserved logic, new design) */}
+      {/* CHARITY SECTION */}
       <div id="charity" className="max-w-7xl mx-auto px-6 py-32">
         <Section variant="festive" className="rounded-[4rem] relative overflow-hidden text-center border border-white/10">
           <div className="relative z-10 space-y-8">
-            <Badge variant="success" size="lg">Impacto Social</Badge>
-            <h3 className="text-5xl md:text-7xl font-serif">Hacemos la Diferencia</h3>
+            <Badge variant="success" size="lg">Social Impact</Badge>
+            <h3 className="text-5xl md:text-7xl font-serif">{t.impact_title}</h3>
             <p className="text-xl text-white/70 max-w-2xl mx-auto font-light">
-              Cada foto que generas alimenta y abriga a mascotas abandonadas.
-              <strong className="text-white"> 3% de nuestros ingresos</strong> son donados semanalmente.
+              {t.impact_text}
             </p>
             <div className="grid grid-cols-2 max-w-md mx-auto gap-8 pt-8">
               <div>
                 <div className="text-5xl font-bold text-christmas-gold mb-2">45k+</div>
-                <div className="text-xs uppercase tracking-widest text-white/50">Comidas Servidas</div>
+                <div className="text-xs uppercase tracking-widest text-white/50">{t.impact_stat1}</div>
               </div>
               <div>
                 <div className="text-5xl font-bold text-christmas-gold mb-2">127</div>
-                <div className="text-xs uppercase tracking-widest text-white/50">Refugios Apoyados</div>
+                <div className="text-xs uppercase tracking-widest text-white/50">{t.impact_stat2}</div>
               </div>
             </div>
           </div>
@@ -427,31 +463,32 @@ export default function Home() {
               <span className="text-xl font-serif text-white">pic.christmas</span>
             </div>
             <p className="text-xs leading-relaxed">
-              The world's leading Christmas AI Studio.<br />
+              {t.subtitle}<br />
               Powered by Nexora Quantum Engine 2.0.
             </p>
           </div>
 
           <div>
-            <h4 className="text-white font-bold uppercase tracking-widest mb-6 text-xs">Legal</h4>
+            <h4 className="text-white font-bold uppercase tracking-widest mb-6 text-xs">{t.footer_legal}</h4>
             <ul className="space-y-3 text-xs">
-              <li><a href="#" className="hover:text-christmas-gold transition">Privacy Policy (GDPR)</a></li>
+              <li><a href="#" className="hover:text-christmas-gold transition">Privacy Policy</a></li>
               <li><a href="#" className="hover:text-christmas-gold transition">Terms of Service</a></li>
               <li><a href="#" className="hover:text-christmas-gold transition">Ethical AI Use</a></li>
+              <li className="text-white/30">{t.disclaimer}</li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-white font-bold uppercase tracking-widest mb-6 text-xs">Comunidad</h4>
+            <h4 className="text-white font-bold uppercase tracking-widest mb-6 text-xs">{t.footer_community}</h4>
             <ul className="space-y-3 text-xs">
-              <li><a href="/affiliates" className="hover:text-christmas-gold transition">Affiliate Program</a></li>
+              <li><a href="/affiliates" className="hover:text-christmas-gold transition">{t.nav_affiliates}</a></li>
               <li><a href="#" className="hover:text-christmas-gold transition">Influencers</a></li>
-              <li><a href="#" className="hover:text-christmas-gold transition">Charity Impact</a></li>
+              <li><a href="#" className="hover:text-christmas-gold transition">{t.nav_charity}</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-white font-bold uppercase tracking-widest mb-6 text-xs">Global</h4>
+            <h4 className="text-white font-bold uppercase tracking-widest mb-6 text-xs">{t.footer_global}</h4>
             <div className="flex flex-wrap gap-2">
               {Object.keys(messages).map((l) => (
                 <button key={l} onClick={() => setLang(l as Locale)} className="px-3 py-1 border border-white/10 rounded hover:bg-white/10 text-xs uppercase transition">
@@ -464,7 +501,7 @@ export default function Home() {
 
         <div className="border-t border-white/5 pt-12 text-center">
           <p className="text-white/20 text-[10px] font-mono uppercase tracking-widest mb-4">
-            © 2024 Nexora AI Factory • All Rights Reserved
+            © 2024 Nexora AI Factory • {t.footer_rights}
           </p>
           <div className="flex justify-center gap-8 opacity-20 hover:opacity-100 transition duration-500">
             {/* Dummy Pay Logos */}

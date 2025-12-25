@@ -2,19 +2,28 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { MessageCircle, X, Send, Loader2, Sparkles } from 'lucide-react';
+import { messages as i18nMessages, Locale } from '@/lib/messages';
 
-export function ChatHolly() {
+interface ChatHollyProps {
+    language: Locale;
+}
+
+export function ChatHolly({ language = 'es' }: ChatHollyProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const [messages, setMessages] = useState<{ role: 'user' | 'assistant', text: string }[]>([
-        { role: 'assistant', text: 'Hi! I\'m Holly 🎄, your 24/7 Christmas helper. Ask me about photos, timing, or pricing!' }
-    ]);
+    const [messages, setMessages] = useState<{ role: 'user' | 'assistant', text: string }[]>([]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
 
+    // Initialize/Update welcome message when language changes or first render
+    useEffect(() => {
+        const welcomeMsg = i18nMessages[language]?.chat_welcome || i18nMessages['en'].chat_welcome;
+        setMessages([{ role: 'assistant', text: welcomeMsg }]);
+    }, [language]);
+
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+    }, [messages, isOpen]);
 
     const handleSend = async () => {
         if (!input.trim() || loading) return;
@@ -34,7 +43,7 @@ export function ChatHolly() {
                         role: m.role === 'assistant' ? 'model' : 'user',
                         parts: [{ text: m.text }]
                     })),
-                    language: 'English' // Dynamic in prod
+                    language: language // Pass dynamically
                 })
             });
             const data = await res.json();

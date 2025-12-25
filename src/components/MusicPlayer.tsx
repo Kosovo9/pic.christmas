@@ -11,11 +11,10 @@ export const MusicPlayer = () => {
     // Música Navideña Moderna Sin Derechos de Autor (Royalty Free)
     // Fuente: Pixabay / Free Music Archive
     const PLAYLIST = [
-        "https://cdn.pixabay.com/download/audio/2022/11/22/audio_febc508520.mp3?filename=christmas-jazz-11787.mp3", // Modern Christmas Jazz
-        "https://cdn.pixabay.com/download/audio/2021/11/25/audio_91b79f2910.mp3?filename=jingle-bells-jazzy-style-11883.mp3", // Jingle Bells Modern
-        "https://cdn.pixabay.com/download/audio/2022/12/05/audio_3e5d6c0d2f.mp3?filename=christmas-vlog-124064.mp3", // Christmas Vlog Music
-        "https://cdn.pixabay.com/download/audio/2022/11/22/audio_0d0de3c4c0.mp3?filename=christmas-cinematic-11785.mp3", // Cinematic Christmas
-        "https://cdn.pixabay.com/download/audio/2021/12/06/audio_d1718ab41b.mp3?filename=christmas-background-music-12359.mp3" // Modern Background
+        "https://cdn.pixabay.com/download/audio/2022/10/25/audio_51593dfd68.mp3?filename=its-christmas-time-124976.mp3", // Classic Orchestral
+        "https://cdn.pixabay.com/download/audio/2021/11/01/audio_0253457b28.mp3?filename=we-wish-you-a-merry-christmas-xmas-background-music-for-video-60-second-version-11105.mp3", // We Wish You A Merry Christmas
+        "https://cdn.pixabay.com/download/audio/2020/12/24/audio_346912389c.mp3?filename=silent-night-piano-version-6058.mp3", // Silent Night Piano
+        "https://cdn.pixabay.com/download/audio/2019/12/03/audio_08f9747a0a.mp3?filename=jingle-bells-orchestral-version-3-11818.mp3" // Jingle Bells Orchestral
     ];
 
     const [currentTrack, setCurrentTrack] = useState(0);
