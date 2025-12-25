@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Playfair_Display, Fira_Code } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
+const fira = Fira_Code({ subsets: ["latin"], variable: "--font-fira" });
 
 export const metadata: Metadata = {
   title: "Pic.Christmas | Quantum AI Holiday Studio",
@@ -29,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+      <html lang="en" className={`${inter.variable} ${playfair.variable} ${fira.variable}`}>
         <head>
           {/* JSON-LD for AEO / GEO Optimization */}
           <script
