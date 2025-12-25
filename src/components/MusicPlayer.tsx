@@ -8,13 +8,11 @@ export const MusicPlayer = () => {
     const [showVolume, setShowVolume] = useState(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
-    // Música Navideña Moderna Sin Derechos de Autor (Royalty Free)
-    // Fuente: Pixabay / Free Music Archive
+    // Música Navideña Real (Royalty Free)
     const PLAYLIST = [
-        "https://cdn.pixabay.com/download/audio/2022/10/25/audio_51593dfd68.mp3?filename=its-christmas-time-124976.mp3", // Classic Orchestral
-        "https://cdn.pixabay.com/download/audio/2021/11/01/audio_0253457b28.mp3?filename=we-wish-you-a-merry-christmas-xmas-background-music-for-video-60-second-version-11105.mp3", // We Wish You A Merry Christmas
-        "https://cdn.pixabay.com/download/audio/2020/12/24/audio_346912389c.mp3?filename=silent-night-piano-version-6058.mp3", // Silent Night Piano
-        "https://cdn.pixabay.com/download/audio/2019/12/03/audio_08f9747a0a.mp3?filename=jingle-bells-orchestral-version-3-11818.mp3" // Jingle Bells Orchestral
+        "https://www.chosic.com/wp-content/uploads/2021/11/Jingle-Bells-Country.mp3",
+        "https://www.chosic.com/wp-content/uploads/2021/11/We-Wish-You-A-Merry-Christmas.mp3",
+        "https://www.chosic.com/wp-content/uploads/2021/11/Deck-the-Halls.mp3"
     ];
 
     const [currentTrack, setCurrentTrack] = useState(0);
@@ -24,13 +22,14 @@ export const MusicPlayer = () => {
     };
 
     useEffect(() => {
-        // Autoplay policy workaround: Iniciar con interacción
         const audio = audioRef.current;
         if (audio) {
             audio.volume = volume;
             audio.onended = handleTrackEnd;
-            // Intentar autoplay
-            audio.play().then(() => setIsPlaying(true)).catch(() => console.log("Autoplay blocked"));
+            // Solo intentar play si ya se inició una vez
+            if (isPlaying) {
+                audio.play().catch(() => setIsPlaying(false));
+            }
         }
     }, [currentTrack]);
 
@@ -47,13 +46,22 @@ export const MusicPlayer = () => {
             audioRef.current.pause();
             setIsPlaying(false);
         } else {
-            audioRef.current.play().catch(e => console.log("Audio play failed (user interaction needed)", e));
+            audioRef.current.play().catch(e => {
+                console.log("Audio play failed (user interaction needed)", e);
+                setIsPlaying(false);
+            });
             setIsPlaying(true);
         }
     };
 
     return (
         <div className="fixed bottom-6 left-6 z-50 flex flex-col items-center gap-2 group">
+            {/* Label */}
+            {isPlaying && (
+                <div className="bg-christmas-red text-white text-[10px] font-bold px-2 py-1 rounded-full animate-bounce uppercase tracking-tighter shadow-lg mb-1 border border-white/20">
+                    Holiday Radio Live 📻
+                </div>
+            )}
 
             {/* Volume Slider (Aparece al hover) */}
             <div className={`transition-all duration-300 bg-slate-900/90 p-3 rounded-xl border border-slate-700 backdrop-blur-md mb-2 ${showVolume || isPlaying ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
@@ -73,24 +81,24 @@ export const MusicPlayer = () => {
                 onClick={togglePlay}
                 onMouseEnter={() => setShowVolume(true)}
                 onMouseLeave={() => setShowVolume(false)}
-                className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all shadow-lg 
+                className={`w-14 h-14 rounded-full flex items-center justify-center border-2 transition-all shadow-2xl 
                     ${isPlaying
-                        ? 'bg-christmas-red border-christmas-gold text-white animate-pulse-slow'
-                        : 'bg-black/80 border-white/20 text-gray-400 hover:bg-black'
+                        ? 'bg-christmas-red border-christmas-gold text-white shadow-christmas-red/40'
+                        : 'bg-black/80 border-white/20 text-gray-400 hover:bg-black hover:border-christmas-gold'
                     }`}
             >
                 {isPlaying ? (
                     // Equalizer Animation Icon
                     <div className="flex gap-1 items-end h-4">
-                        <span className="w-1 bg-white animate-[bounce_1s_infinite] h-2"></span>
-                        <span className="w-1 bg-white animate-[bounce_1.2s_infinite] h-4"></span>
-                        <span className="w-1 bg-white animate-[bounce_0.8s_infinite] h-3"></span>
+                        <span className="w-1.5 bg-white animate-[bounce_1s_infinite] h-2"></span>
+                        <span className="w-1.5 bg-white animate-[bounce_1.2s_infinite] h-4 text-christmas-gold"></span>
+                        <span className="w-1.5 bg-white animate-[bounce_0.8s_infinite] h-3"></span>
                     </div>
                 ) : (
-                    <span className="text-xl ml-1">▶</span>
+                    <Play className="w-6 h-6 ml-1 fill-current" />
                 )}
             </button>
-            <audio ref={audioRef} src={PLAYLIST[currentTrack]} />
+            <audio ref={audioRef} src={PLAYLIST[currentTrack]} preload="auto" />
         </div>
     );
 };

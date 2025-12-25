@@ -34,7 +34,8 @@ export async function POST(req: Request) {
         const chat = model.startChat({
             history: history || [],
             generationConfig: {
-                maxOutputTokens: 250,
+                maxOutputTokens: 500,
+                temperature: 0.7,
             },
         });
 
@@ -42,9 +43,15 @@ export async function POST(req: Request) {
         const response = await result.response;
         const text = response.text();
 
-        return NextResponse.json({ reply: text });
+        return NextResponse.json({
+            reply: text,
+            status: "success",
+            agent: "Holly 🎁"
+        });
     } catch (error) {
         console.error("AI Chat Error:", error);
-        return NextResponse.json({ reply: "Oh no! My circuits froze. Can you try again? ❄️" }, { status: 500 });
+        // Fallback response in the correct language if possible
+        const fallback = "Ho ho ho! I'm a bit overwhelmed with letters to Santa. Please try again in a moment! ❄️";
+        return NextResponse.json({ reply: fallback }, { status: 200 }); // Return 200 to avoid UI crashes
     }
 }

@@ -163,7 +163,10 @@ export default function Home() {
                 <Link href="/affiliates" className="hidden md:flex text-[10px] text-christmas-gold hover:underline items-center gap-1 font-bold uppercase tracking-wider">
                   <DollarSign className="w-3 h-3" /> {t.nav_affiliates}
                 </Link>
-                <UserButton afterSignOutUrl="/" />
+                <div className="flex items-center gap-2 bg-white/5 pr-3 rounded-full border border-white/10">
+                  <UserButton afterSignOutUrl="/" />
+                  <span className="text-[10px] font-bold uppercase tracking-tighter hidden lg:block">{user?.firstName || 'Account'}</span>
+                </div>
               </div>
             </SignedIn>
           </div>
@@ -340,8 +343,19 @@ export default function Home() {
 
                 <Card variant="elevated" className="p-8 space-y-8 backdrop-blur-sm">
                   <UploadWizard onUploadComplete={setFile} />
+
+                  {/* Quality & Format Specs */}
+                  <div className="grid grid-cols-2 gap-4 mt-6 border-t border-white/5 pt-6">
+                    <div className="flex items-center gap-2 text-[10px] text-white/40 uppercase tracking-widest">
+                      <ShieldCheck className="w-4 h-4 text-emerald-500" /> {t.studio_resolutions}
+                    </div>
+                    <div className="flex items-center gap-2 text-[10px] text-white/40 uppercase tracking-widest text-right justify-end">
+                      <Download className="w-4 h-4 text-blue-500" /> {t.studio_formats}
+                    </div>
+                  </div>
+
                   {file && (
-                    <div className="flex items-center gap-4 text-emerald-400 bg-emerald-950/30 p-4 rounded-xl border border-emerald-500/20 animate-slide-in-up">
+                    <div className="flex items-center gap-4 text-emerald-400 bg-emerald-950/30 p-4 rounded-xl border border-emerald-500/20 animate-slide-in-up mt-6">
                       <ShieldCheck className="w-6 h-6" />
                       <div>
                         <span className="font-bold text-sm block">Success Analysis</span>
@@ -351,26 +365,26 @@ export default function Home() {
                   )}
                 </Card>
 
-                <div className="mt-8 p-6 rounded-2xl bg-gradient-to-r from-purple-900/10 to-blue-900/10 border border-white/5 flex gap-4 items-center group hover:bg-white/5 transition cursor-pointer">
+                <div className="mt-8 p-6 rounded-2xl bg-gradient-to-r from-purple-900/10 to-blue-900/10 border border-white/5 flex gap-4 items-center group hover:bg-white/5 transition cursor-pointer" onClick={() => window.location.href = '/affiliates'}>
                   <Gift className="w-10 h-10 text-purple-400 group-hover:scale-110 transition" />
                   <div>
                     <h4 className="font-bold text-purple-200">{t.nav_affiliates}</h4>
                     <p className="text-xs text-purple-300/60">Join & Earn 20%</p>
                   </div>
-                  <Button variant="ghost" size="sm" className="ml-auto" onClick={() => window.location.href = '/affiliates'}>Go</Button>
+                  <Button variant="ghost" size="sm" className="ml-auto">Go</Button>
                 </div>
               </div>
             </div>
 
-            {/* RIGHT: STYLES CATALOG */}
-            <div id="themes" className="lg:col-span-7 space-y-10">
+            {/* RIGHT: STYLES STUDIO */}
+            <div className="lg:col-span-7 space-y-10">
               <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-8">
                 <div>
                   <h2 className="text-4xl font-serif mb-2 flex items-center gap-4">
                     <span className="bg-white text-black w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold font-sans">2</span>
                     {t.styleTitle}
                   </h2>
-                  <p className="text-gray-500 text-sm pl-14">{t.catalog_curated}</p>
+                  <p className="text-gray-500 text-sm pl-14">Hundreds of locations available</p>
                 </div>
 
                 <div className="flex gap-2 overflow-x-auto pb-2 max-w-full custom-scrollbar">
@@ -403,9 +417,13 @@ export default function Home() {
                         : 'border-transparent hover:border-white/20 hover:scale-[1.01]'}
                            `}
                   >
-                    {/* Fallback visual */}
-                    <div className="absolute inset-0 bg-neutral-800 flex items-center justify-center overflow-hidden">
-                      <span className="text-[100px] opacity-5 select-none font-serif font-black">{style.id.charAt(0)}</span>
+                    <div className="absolute inset-0 bg-neutral-800">
+                      <Image
+                        src={`https://images.unsplash.com/photo-1544275608-d22731ee0ae6?q=80&w=400&auto=format&fit=crop`}
+                        alt={style.scene_name}
+                        fill
+                        className="object-cover opacity-60 group-hover:opacity-80 transition-opacity"
+                      />
                     </div>
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex flex-col justify-end p-6">
@@ -413,13 +431,13 @@ export default function Home() {
                         <h3 className={`font-serif text-xl leading-tight mb-1 ${selectedStyle === style.id ? 'text-christmas-gold' : 'text-white'}`}>
                           {style.scene_name}
                         </h3>
-                        <p className="text-[10px] text-white/50 uppercase tracking-widest">{style.category}</p>
+                        <p className="text-[10px] text-white/50 uppercase tracking-widest">{style.location || style.category}</p>
                       </div>
                     </div>
 
                     {selectedStyle === style.id && (
                       <div className="absolute top-4 right-4 bg-christmas-gold text-black p-1 rounded-full">
-                        <ShieldCheck className="w-4 h-4" />
+                        <Check className="w-4 h-4" />
                       </div>
                     )}
                   </div>
@@ -447,6 +465,45 @@ export default function Home() {
                 </Button>
               </div>
             </div>
+          </div>
+        </div>
+      </Section>
+
+      {/* CATALOG SECTION (TOP 15 VIRAL) */}
+      <Section id="themes" variant="dark" className="border-t border-white/5 bg-black">
+        <div className="max-w-7xl mx-auto py-20">
+          <div className="text-center mb-16">
+            <Badge variant="primary" className="mb-4">{t.nav_catalog}</Badge>
+            <h2 className="text-5xl md:text-7xl font-serif text-christmas-gold">{t.catalog_top_title}</h2>
+            <p className="text-white/50 mt-4 max-w-xl mx-auto">{t.catalog_curated}</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {CHRISTMAS_PROMPTS.filter(p => p.tags.includes('viral')).slice(0, 15).map((p, i) => (
+              <Card key={p.id} variant="glass" className="p-0 overflow-hidden group hover:scale-105 transition-all duration-500 aspect-[4/5] flex flex-col">
+                <div className="flex-1 relative">
+                  <Image
+                    src={`https://images.unsplash.com/photo-1544275608-d22731ee0ae6?q=80&w=300&auto=format&fit=crop`}
+                    alt={p.scene_name}
+                    fill
+                    className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                  />
+                  <div className="absolute top-3 left-3 bg-black/60 px-2 py-1 rounded-md text-[8px] font-bold text-christmas-gold uppercase tracking-widest border border-christmas-gold/30">
+                    #{i + 1} Trending
+                  </div>
+                </div>
+                <div className="p-4 bg-gradient-to-t from-neutral-900 to-transparent">
+                  <h4 className="font-serif text-sm line-clamp-1">{p.scene_name}</h4>
+                  <p className="text-[8px] text-white/30 uppercase mt-1">Ready for 8K Generation</p>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          <div className="mt-16 text-center">
+            <Button variant="outline" size="lg" onClick={() => document.getElementById('studio')?.scrollIntoView({ behavior: 'smooth' })}>
+              Access Full Studio Catalog (200+ styles)
+            </Button>
           </div>
         </div>
       </Section>
