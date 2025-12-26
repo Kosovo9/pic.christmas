@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { Play } from 'lucide-react';
 
 export const MusicPlayer = () => {
     const [isPlaying, setIsPlaying] = useState(false);

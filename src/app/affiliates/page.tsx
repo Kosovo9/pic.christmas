@@ -4,9 +4,10 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useUser, SignedIn, SignedOut, RedirectToSignIn } from "@clerk/nextjs";
 
-import { Globe, DollarSign, Users, MousePointer2, Share2, ArrowLeft } from "lucide-react";
+import { Globe, DollarSign, Users, MousePointer2, Share2, ArrowLeft, ShieldCheck } from "lucide-react";
 import { getAffiliateStats } from "./actions";
 import { Snowfall } from "@/components/Snowfall";
+import { Badge, Button, Card } from "@/components/redesign";
 
 export default function AffiliatesPage() {
     const { isLoaded, isSignedIn, user } = useUser();
