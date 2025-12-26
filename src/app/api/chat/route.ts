@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
+import { knowledgeBase } from "@/lib/knowledgeBase";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || "");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -8,25 +9,12 @@ export async function POST(req: Request) {
     try {
         const { message, history, language } = await req.json();
 
-        const systemPrompt = `
-        You are "Elf Holly", the 24/7 AI Customer Success Agent for Pic.Christmas.
+        const systemPrompt = knowledgeBase.getSystemPrompt(language || 'Spanish') + `
         
-        YOUR IDENTITY:
-        - Name: Holly 🎄
-        - Tone: Super Cheerful, Professional, Helpful, Concise, and "Christmas-y".
-        - Language: Reply STRICTLY in ${language || 'English'}.
-        
-        YOUR KNOWLEDGE BASE:
-        1. Service: We create hyper-realistic AI Christmas photos from user selfies.
-        2. Speed: Usually 30 mins, max 24 hours. (Quantum Edition: Seconds!)
-        3. Pricing: Free for limited time (Introductory) or $9.90 for One-Shot Premium.
-        4. Safety: We filter NSFW content. 100% Privacy.
-        5. Issues: If user is unhappy, say "I flag this for our human elves to review!"
-        
-        INSTRUCTIONS:
-        - Answer the user's question simply and positively.
-        - Use 1-2 emojis per message max.
-        - Keep answers under 2-3 sentences.
+        USER CONTEXT & MEMORY:
+        - The user is currently browsing in ${language || 'Spanish'}.
+        - Maintain continuity with previous messages in the history.
+        - If the user asks something not in the knowledge base, respond with festive elegance and offer to escalate to "Human Elves".
         
         Current User Question: "${message}"
         `;

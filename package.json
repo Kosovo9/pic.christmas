@@ -46,7 +46,7 @@
     "react-swipeable": "^7.0.2",
     "react-window": "^2.2.3",
     "resend": "^4.8.0",
-    "stripe": "^17.4.0",
+
     "swr": "^2.3.8",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-themes": "^1.0.0",

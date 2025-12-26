@@ -43,13 +43,22 @@ export function ChatHolly({ language = 'es' }: ChatHollyProps) {
                         role: m.role === 'assistant' ? 'model' : 'user',
                         parts: [{ text: m.text }]
                     })),
-                    language: language // Pass dynamically
+                    language: language
                 })
             });
+            
+            if (!res.ok) throw new Error("Network response was not ok");
+            
             const data = await res.json();
-            setMessages(prev => [...prev, { role: 'assistant', text: data.reply }]);
+            if (data.reply) {
+                setMessages(prev => [...prev, { role: 'assistant', text: data.reply }]);
+            } else {
+                throw new Error("Empty reply from AI");
+            }
         } catch (e) {
-            setMessages(prev => [...prev, { role: 'assistant', text: "Sorry, I'm a bit frozen! Try again? ❄️" }]);
+            console.error("Chat Error:", e);
+            const errorMsg = language === 'es' ? "¡Ups! Me he quedado un poco congelada. ¿Podrías intentarlo de nuevo? ❄️" : "Sorry, I'm a bit frozen! Try again? ❄️";
+            setMessages(prev => [...prev, { role: 'assistant', text: errorMsg }]);
         } finally {
             setLoading(false);
         }
@@ -63,19 +72,19 @@ export function ChatHolly({ language = 'es' }: ChatHollyProps) {
                     className="bg-christmas-red text-white p-4 rounded-full shadow-2xl hover:scale-110 transition active:scale-95 flex items-center gap-2 group border border-white/20"
                 >
                     <Sparkles className="w-5 h-5 text-christmas-gold animate-pulse" />
-                    <span className="font-bold text-sm pr-2 hidden group-hover:block">Chat with Holly</span>
+                    <span className="font-bold text-sm pr-2 hidden group-hover:block">Holly AI Concierge</span>
                     <MessageCircle className="w-6 h-6" />
                 </button>
             )}
 
             {isOpen && (
-                <div className="bg-[#0f172a] border border-white/10 w-[350px] h-[500px] rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5">
-                    <div className="bg-gradient-to-r from-christmas-red to-red-900 p-4 flex justify-between items-center">
+                <div className="bg-black/90 backdrop-blur-2xl border border-white/10 w-[380px] h-[600px] rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 duration-500">
+                    <div className="bg-white/5 p-6 flex justify-between items-center border-b border-white/5">
                         <div className="flex items-center gap-3">
-                            <div className="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center text-xl">🎄</div>
+                            <div className="bg-gradient-gold w-12 h-12 rounded-full flex items-center justify-center text-black font-bold shadow-gold">H</div>
                             <div>
-                                <div className="font-bold text-sm">Elf Holly</div>
-                                <div className="text-[10px] text-white/60">Live 24/7 AI Success</div>
+                                <div className="font-serif text-lg text-white">Holly AI</div>
+                                <div className="text-[9px] uppercase tracking-[0.2em] text-christmas-gold font-bold">Quantum Assistant</div>
                             </div>
                         </div>
                         <button onClick={() => setIsOpen(false)} className="text-white/50 hover:text-white">

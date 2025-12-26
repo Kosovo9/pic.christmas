@@ -37,14 +37,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ...props
     }, ref) => {
         const baseStyles = `
-      font-sans font-bold rounded-premium transition-smooth
+      font-sans font-bold    rounded-full transition-all duration-500 ease-out
       focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-christmas-gold
       disabled:opacity-50 disabled:cursor-not-allowed
-      inline-flex items-center justify-center gap-2
+      inline-flex items-center justify-center gap-3
+      tracking-tight font-medium
       ${fullWidth ? 'w-full' : ''}
-    `;
-
-        const sizeStyles = {
+    `;       const sizeStyles = {
             sm: 'px-3 py-2 text-sm',
             md: 'px-6 py-3 text-base',
             lg: 'px-8 py-4 text-lg',
@@ -53,16 +52,15 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
         const variantStyles = {
             primary: `
-        bg-gradient-red text-white
-        hover:shadow-red hover:scale-105
+        bg-white text-black
+        hover:bg-christmas-gold hover:text-black hover:shadow-[0_0_30px_rgba(255,215,0,0.4)]
         active:scale-95
         ${loading ? 'opacity-75' : ''}
       `,
             secondary: `
-        bg-gradient-gold text-neutral-900
-        hover:shadow-gold hover:scale-105
+        bg-christmas-red text-white
+        hover:bg-red-700 hover:shadow-[0_0_30px_rgba(196,28,59,0.4)]
         active:scale-95
-        font-bold
       `,
             outline: `
         border-2 border-christmas-gold text-christmas-gold

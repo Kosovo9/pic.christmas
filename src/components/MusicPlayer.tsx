@@ -5,15 +5,20 @@ import { Play } from 'lucide-react';
 
 export const MusicPlayer = () => {
     const [isPlaying, setIsPlaying] = useState(false);
-    const [volume, setVolume] = useState(0.3); // Iniciar al 30% (suave)
+    const [volume, setVolume] = useState(0.3);
     const [showVolume, setShowVolume] = useState(false);
+    const [mounted, setMounted] = useState(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     // Música Navideña Real (Royalty Free)
     const PLAYLIST = [
-        "https://www.chosic.com/wp-content/uploads/2021/11/Jingle-Bells-Country.mp3",
-        "https://www.chosic.com/wp-content/uploads/2021/11/We-Wish-You-A-Merry-Christmas.mp3",
-        "https://www.chosic.com/wp-content/uploads/2021/11/Deck-the-Halls.mp3"
+        "https://cdn.pixabay.com/audio/2022/12/01/audio_739343398c.mp3", // Lo-Fi Christmas
+        "https://cdn.pixabay.com/audio/2023/11/24/audio_964684364c.mp3", // Modern Festive
+        "https://cdn.pixabay.com/audio/2022/11/22/audio_8b5344868e.mp3"  // Chill Christmas
     ];
 
     const [currentTrack, setCurrentTrack] = useState(0);
@@ -27,12 +32,11 @@ export const MusicPlayer = () => {
         if (audio) {
             audio.volume = volume;
             audio.onended = handleTrackEnd;
-            // Solo intentar play si ya se inició una vez
             if (isPlaying) {
                 audio.play().catch(() => setIsPlaying(false));
             }
         }
-    }, [currentTrack]);
+    }, [currentTrack, volume, isPlaying, handleTrackEnd]);
 
     useEffect(() => {
         if (audioRef.current) {
@@ -55,12 +59,14 @@ export const MusicPlayer = () => {
         }
     };
 
+    if (!mounted) return null;
+
     return (
         <div className="fixed bottom-6 left-6 z-50 flex flex-col items-center gap-2 group">
             {/* Label */}
             {isPlaying && (
-                <div className="bg-christmas-red text-white text-[10px] font-bold px-2 py-1 rounded-full animate-bounce uppercase tracking-tighter shadow-lg mb-1 border border-white/20">
-                    Holiday Radio Live 📻
+                <div className="bg-white/10 backdrop-blur-md text-white text-[9px] font-bold px-3 py-1 rounded-full animate-pulse uppercase tracking-[0.2em] shadow-2xl mb-2 border border-white/10">
+                    Quantum Audio • Active
                 </div>
             )}
 
@@ -99,7 +105,7 @@ export const MusicPlayer = () => {
                     <Play className="w-6 h-6 ml-1 fill-current" />
                 )}
             </button>
-            <audio ref={audioRef} src={PLAYLIST[currentTrack]} preload="auto" />
+            <audio ref={audioRef} src={PLAYLIST[currentTrack]} preload="auto" crossOrigin="anonymous" />
         </div>
     );
 };

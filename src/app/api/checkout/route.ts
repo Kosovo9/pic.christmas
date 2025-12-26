@@ -1,9 +1,5 @@
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-    apiVersion: "2025-01-27-preview" as any,
-});
+// Stripe removed as per user request
 
 export async function POST(req: Request) {
     try {
@@ -20,28 +16,8 @@ export async function POST(req: Request) {
             name = "Diamond Premium";
         }
 
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ["card"],
-            line_items: [
-                {
-                    price_data: {
-                        currency: "usd",
-                        product_data: {
-                            name: name,
-                            description: "AI Christmas Portrait Masterpiece",
-                        },
-                        unit_amount: amount,
-                    },
-                    quantity: 1,
-                },
-            ],
-            mode: "payment",
-            success_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/cancel`,
-            customer_email: email,
-        });
-
-        return NextResponse.json({ url: session.url });
+        // Stripe checkout is disabled. Use PayPal or Mercado Pago.
+        return NextResponse.json({ error: "Stripe is disabled. Please use PayPal or Mercado Pago." }, { status: 400 });
     } catch (error) {
         console.error("Checkout Error:", error);
         return NextResponse.json({ error: "Checkout failed" }, { status: 500 });

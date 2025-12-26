@@ -132,7 +132,7 @@ export default function AffiliatesPage() {
                             <Card variant="elevated" className="p-10">
                                 <h4 className="font-black mb-6 uppercase text-[11px] tracking-[0.4em] text-christmas-gold">Quantum Payouts</h4>
                                 <p className="text-gray-400 leading-relaxed font-light text-sm italic">
-                                    Your earnings are settled automatically. We support PayPal, Stripe, and Direct Bank Transfer. Threshold: $50 USD.
+                                    Your earnings are settled automatically. We support PayPal, Mercado Pago, and Direct Bank Transfer. Threshold: $50 USD.
                                 </p>
                             </Card>
                             <Card variant="elevated" className="p-10">

@@ -14,6 +14,8 @@ import { Snowfall } from "@/components/Snowfall";
 import { UploadWizard } from "@/components/UploadWizard";
 import { MusicPlayer } from "@/components/MusicPlayer";
 import { ChatHolly } from "@/components/ChatHolly";
+import PayPalBtn from "@/components/PayPalBtn";
+import MPBtn from "@/components/MercadoPagoBtn";
 import { CountdownBanner } from "@/components/CountdownBanner";
 import { ViralExitModal } from "@/components/ViralExitModal";
 
@@ -89,10 +91,10 @@ export default function Home() {
       <ViralExitModal language={lang} />
 
       {/* NAVBAR PREMIUM */}
-      <nav className="fixed top-[40px] left-0 right-0 z-40 px-6 py-4 glass-effect border-b border-white/5 transition-all duration-300">
+      <nav className="fixed top-0 left-0 right-0 z-50 px-8 py-6 backdrop-blur-2xl bg-black/20 border-b border-white/5 transition-all duration-500">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-gold flex items-center justify-center font-serif font-bold text-black text-xl shadow-gold animate-glow">
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center font-serif font-bold text-black text-2xl shadow-[0_0_30px_rgba(255,255,255,0.2)]">
               C
             </div>
             <div className="flex flex-col">
@@ -103,8 +105,8 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex items-center gap-6">
-            <div className="hidden md:flex items-center gap-6 text-xs font-bold uppercase tracking-widest text-white/60">
+          <div className="flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-8 text-[10px] font-black uppercase tracking-[0.3em] text-white/40">
               <Link href="#studio" className="hover:text-christmas-gold transition-colors">{t.nav_studio}</Link>
               <Link href="#themes" className="hover:text-christmas-gold transition-colors">{t.nav_catalog}</Link>
               <Link href="#charity" className="hover:text-christmas-gold transition-colors">{t.nav_charity}</Link>
@@ -175,7 +177,7 @@ export default function Home() {
 
 
       {/* HERO SECTION CINEMÁTICO */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-40 pb-20">
         {/* Fondo con Overlay */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -191,19 +193,20 @@ export default function Home() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8 animate-slide-in-up">
-            <Badge variant="primary" size="md" className="animate-pulse">
+            <Badge variant="primary" size="lg" className="animate-pulse tracking-[0.3em] font-black">
               <Sparkles className="w-4 h-4 mr-2" />
-              EDICIÓN LIMITADA 2024
+              LIMITED EDITION 2024
             </Badge>
 
-            <h1 className="text-6xl md:text-8xl font-serif leading-[0.9] tracking-tighter">
+            <h1 className="text-7xl md:text-9xl font-serif leading-[0.85] tracking-tighter">
               {t.hero_title_line1} <br />
-              <GradientText variant="gold">{t.hero_title_line2}</GradientText> <br />
-              <span className="text-outline-white">{t.hero_title_line3}</span>
+              <GradientText variant="gold" className="py-2">{t.hero_title_line2}</GradientText> <br />
+              <span className="text-outline-white opacity-50">{t.hero_title_line3}</span>
             </h1>
 
-            <p className="text-xl text-gray-300 max-w-lg font-light leading-relaxed">
-              {t.subtitle} Elevate your holiday identity with medical-grade AI realism and 8K cinematic lighting.
+            <p className="text-lg md:text-xl text-white/60 max-w-lg font-light leading-relaxed tracking-wide">
+              {t.subtitle} <br />
+              <span className="text-white/40 text-sm uppercase tracking-[0.3em] mt-4 block">Medical-Grade AI Realism • 8K Cinematic</span>
             </p>
 
             <div className="flex flex-wrap gap-4 pt-4">
@@ -296,23 +299,10 @@ export default function Home() {
                   <div className="p-6 space-y-4">
                     {!isPaid ? (
                       <div className="flex flex-col gap-3">
-                        <Button
-                          variant="secondary"
-                          fullWidth
-                          size="lg"
-                          icon={<Unlock className="w-5 h-5" />}
-                          onClick={() => window.open(`https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QTUTJTARZMTQU`, '_blank')}
-                        >
-                          Pay with PayPal ($9.90)
-                        </Button>
-                        <Button
-                          variant="outline"
-                          fullWidth
-                          size="lg"
-                          onClick={() => window.open(`https://link.mercadopago.com.mx/studionexora`, '_blank')}
-                        >
-                          Pagar con MercadoPago (MXN)
-                        </Button>
+                        <div className="space-y-4">
+                          <PayPalBtn amount={9.90} orderId={imageHash || 'order_123'} />
+                          <MPBtn amount={199} orderId={imageHash || 'order_123'} />
+                        </div>
                         <p className="text-[10px] text-center text-white/40 uppercase tracking-widest mt-2">
                           Unlock High-Res & Remove Watermark
                         </p>
@@ -332,9 +322,9 @@ export default function Home() {
           )}
 
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
             {/* LEFT: UPLOAD & CONFIG */}
-            <div className="lg:col-span-5 space-y-10">
+            <div className="lg:col-span-4 space-y-10">
               <div className="sticky top-32">
                 <h2 className="text-4xl font-serif mb-8 flex items-center gap-4">
                   <span className="bg-christmas-gold text-black w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold font-sans">1</span>
@@ -377,7 +367,7 @@ export default function Home() {
             </div>
 
             {/* RIGHT: STYLES STUDIO */}
-            <div className="lg:col-span-7 space-y-10">
+            <div className="lg:col-span-8 space-y-10">
               <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-8">
                 <div>
                   <h2 className="text-4xl font-serif mb-2 flex items-center gap-4">
@@ -405,7 +395,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-6 max-h-[800px] overflow-y-auto custom-scrollbar pr-2">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-[900px] overflow-y-auto custom-scrollbar pr-4">
                 {filteredStyles.map(style => (
                   <div
                     key={style.id}
@@ -426,12 +416,12 @@ export default function Home() {
                       />
                     </div>
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex flex-col justify-end p-6">
-                      <div className="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                        <h3 className={`font-serif text-xl leading-tight mb-1 ${selectedStyle === style.id ? 'text-christmas-gold' : 'text-white'}`}>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-4">
+                      <div className="transform translate-y-1 group-hover:translate-y-0 transition-transform duration-500">
+                        <h3 className={`font-serif text-sm md:text-base leading-tight mb-1 ${selectedStyle === style.id ? 'text-christmas-gold' : 'text-white'}`}>
                           {style.scene_name}
                         </h3>
-                        <p className="text-[10px] text-white/50 uppercase tracking-widest">{style.location || style.category}</p>
+                        <p className="text-[8px] text-white/40 uppercase tracking-[0.2em]">{style.location || style.category}</p>
                       </div>
                     </div>
 
@@ -445,14 +435,14 @@ export default function Home() {
               </div>
 
               <div className="pt-8">
-                <Button
-                  fullWidth
-                  size="xl"
-                  variant="primary"
-                  disabled={loading || !file || !selectedStyle}
-                  onClick={handleGenerate}
-                  className="shadow-[0_0_50px_rgba(196,28,59,0.3)] h-24 text-2xl"
-                >
+                  <Button
+                    fullWidth
+                    size="xl"
+                    variant="primary"
+                    disabled={loading || !file || !selectedStyle}
+                    onClick={handleGenerate}
+                    className="shadow-[0_0_60px_rgba(255,255,255,0.1)] h-28 text-3xl uppercase tracking-[0.1em] font-black"
+                  >
                   {loading ? (
                     <span className="flex items-center gap-3">
                       <Spinner size="md" color="white" /> Processing...
@@ -478,7 +468,7 @@ export default function Home() {
             <p className="text-white/50 mt-4 max-w-xl mx-auto">{t.catalog_curated}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {CHRISTMAS_PROMPTS.filter(p => p.tags.includes('viral')).slice(0, 15).map((p, i) => (
               <Card key={p.id} variant="glass" className="p-0 overflow-hidden group hover:scale-105 transition-all duration-500 aspect-[4/5] flex flex-col">
                 <div className="flex-1 relative">
@@ -532,8 +522,8 @@ export default function Home() {
       </div>
 
       {/* FOOTER */}
-      <footer className="bg-neutral-950 py-20 border-t border-white/5 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16 text-sm text-gray-400">
+      <footer className="bg-black py-32 border-t border-white/5 px-8">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 mb-24 text-[11px] text-white/40 uppercase tracking-widest font-bold">
           <div className="col-span-1 space-y-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-christmas-gold flex items-center justify-center font-bold text-black font-serif">C</div>
@@ -580,12 +570,10 @@ export default function Home() {
           <p className="text-white/20 text-[10px] font-mono uppercase tracking-widest mb-4">
             © 2024 Nexora AI Factory • {t.footer_rights}
           </p>
-          <div className="flex justify-center gap-8 opacity-20 hover:opacity-100 transition duration-500">
-            {/* Dummy Pay Logos */}
-            <span className="font-black italic">STRIPE</span>
-            <span className="font-black italic">PAYPAL</span>
-            <span className="font-black italic">VISA</span>
-            <span className="font-black italic">MASTERCARD</span>
+          <div className="flex justify-center gap-12 opacity-30 hover:opacity-100 transition duration-700">
+            {/* Payment Logos */}
+            <span className="font-black italic tracking-tighter text-xl">PAYPAL</span>
+            <span className="font-black italic tracking-tighter text-xl">MERCADO PAGO</span>
           </div>
         </div>
       </footer>

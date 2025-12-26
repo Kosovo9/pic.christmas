@@ -24,8 +24,13 @@ export default async function handler(req: any, res: any) {
         headers: { Authorization: `Basic ${basic}`, 'Content-Type': 'application/json' }
     })
     const paypalData = await r.json()
-    if (paypalData.status !== 'COMPLETED') return res.status(400).json({ error: 'failed' })
+    
+    if (paypalData.status !== 'COMPLETED') {
+        console.error("PayPal Capture Failed:", paypalData);
+        return res.status(400).json({ error: 'PayPal capture failed', details: paypalData });
+    }
 
+    // Note: user_id should ideally be passed or retrieved from the session
     await supabaseAdmin.from('sales').insert({
         gateway: 'paypal',
         external_id: orderId,

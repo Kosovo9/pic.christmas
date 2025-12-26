@@ -17,7 +17,7 @@ export default async function handler(req: any, res: any) {
                     title: 'Pic.Christmas HD',
                     quantity: 1,
                     unit_price: Number(amount),
-                    currency_id: 'USD'
+                    currency_id: 'MXN'
                 }],
                 back_urls: {
                     success: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/success`,
