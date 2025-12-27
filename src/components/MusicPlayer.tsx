@@ -23,9 +23,9 @@ export const MusicPlayer = () => {
 
     const [currentTrack, setCurrentTrack] = useState(0);
 
-    const handleTrackEnd = () => {
+    const handleTrackEnd = React.useCallback(() => {
         setCurrentTrack((prev) => (prev + 1) % PLAYLIST.length);
-    };
+    }, [PLAYLIST.length]);
 
     useEffect(() => {
         const audio = audioRef.current;

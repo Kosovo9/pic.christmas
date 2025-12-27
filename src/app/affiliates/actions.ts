@@ -8,28 +8,47 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 export async function getAffiliateStats(email: string) {
     try {
-        // Quantum Fetch from Supabase (Real logic)
+        // 1. Get User ID from email
+        const { data: userRec } = await supabase.from("users").select("id").eq("email", email).single();
+        if (!userRec) throw new Error("User not found");
+
+        // 2. Quantum Fetch from Supabase
         const { data, error } = await supabase
             .from("affiliates")
             .select("*")
-            .eq("email", email)
+            .eq("user_id", userRec.id)
             .single();
 
         if (error || !data) {
-            // Auto-Create partner if doesn't exist (Quantum Growth)
+            // Auto-Create partner if doesn't exist
             const newCode = email.split("@")[0].toUpperCase() + Math.floor(Math.random() * 100);
             const { data: newData, error: insertError } = await supabase
                 .from("affiliates")
-                .insert([{ email, code: newCode, clicks: 0, orders: 0, earnings: 0 }])
+                .insert([{
+                    user_id: userRec.id,
+                    code: newCode,
+                    clicks: 0,
+                    conversions: 0,
+                    commission_usd: 0
+                }])
                 .select()
                 .single();
 
             if (insertError) throw insertError;
-
-            return newData;
+            return {
+                code: newData.code,
+                clicks: newData.clicks,
+                orders: newData.conversions,
+                earnings: newData.commission_usd
+            };
         }
 
-        return data;
+        return {
+            code: data.code,
+            clicks: data.clicks,
+            orders: data.conversions,
+            earnings: data.commission_usd
+        };
     } catch (e) {
         console.error("Supabase Affiliate Error:", e);
         // Fallback for demo if tables aren't ready

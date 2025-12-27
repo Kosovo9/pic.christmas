@@ -34,6 +34,7 @@ export async function generateChristmasPhoto(formData: FormData) {
         generationInProgress = false;
         return { error: "Authentication required" };
     }
+    const clerkId = session.userId; // Capture for DB usage
 
     if (!GOOGLE_AI_API_KEY) {
         generationInProgress = false;
@@ -129,6 +130,32 @@ export async function generateChristmasPhoto(formData: FormData) {
 
         const { data: { publicUrl } } = supabase.storage.from(SUPABASE_BUCKET).getPublicUrl(fileName);
         const hash = crypto.createHash("sha256").update(publicUrl).digest("hex").slice(0, 16);
+
+        // Phase 3.5: DB Persistence (Unlock Logic Support)
+        try {
+            // A. Sync User
+            let { data: userRec } = await supabase.from('users').select('id').eq('clerk_id', clerkId).single();
+            if (!userRec) {
+                const { data: newUser, error: userErr } = await supabase.from('users').insert({
+                    clerk_id: clerkId,
+                    email: email || "unknown@pic.christmas"
+                }).select('id').single();
+                if (userErr) throw userErr;
+                userRec = newUser;
+            }
+
+            // B. Register Image
+            if (userRec) {
+                await supabase.from('images').insert({
+                    user_id: userRec.id,
+                    storage_path: fileName,
+                    is_unlocked: skipWatermark,
+                    upscaled_path: publicUrl // Temporary storing full URL here for simplified retrieval
+                });
+            }
+        } catch (dbErr) {
+            console.error("DB Sync Error (Non-fatal for generation):", dbErr);
+        }
 
         // NON-BLOCKING Phase 4: Verification & SEO Email
         if (email) {

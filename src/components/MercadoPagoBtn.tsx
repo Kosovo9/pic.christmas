@@ -7,7 +7,7 @@ if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_MP_PUBLIC_KEY) {
     initMercadoPago(process.env.NEXT_PUBLIC_MP_PUBLIC_KEY!)
 }
 
-export default function MPBtn({ amount, orderId }: { amount: number; orderId: string }) {
+export default function MPBtn({ amount, orderId, clerkId }: { amount: number; orderId: string; clerkId: string }) {
     const [pref, setPref] = useState<string | null>(null)
 
     useEffect(() => {
@@ -16,15 +16,17 @@ export default function MPBtn({ amount, orderId }: { amount: number; orderId: st
             initMercadoPago(process.env.NEXT_PUBLIC_MP_PUBLIC_KEY!)
         }
 
-        fetch('/api/mp/create', { 
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ amount, orderId }) 
-        })
-            .then(r => r.json())
-            .then(d => setPref(d.id))
-            .catch(e => console.error("MP Error", e))
-    }, [amount, orderId])
+        if (clerkId) {
+            fetch('/api/mp/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount, orderId, clerkId })
+            })
+                .then(r => r.json())
+                .then(d => setPref(d.id))
+                .catch(e => console.error("MP Error", e))
+        }
+    }, [amount, orderId, clerkId])
 
     return pref ? (
         <div className="animate-in fade-in duration-500">

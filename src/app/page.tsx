@@ -19,6 +19,7 @@ import MPBtn from "@/components/MercadoPagoBtn";
 import { CountdownBanner } from "@/components/CountdownBanner";
 import { ViralExitModal } from "@/components/ViralExitModal";
 
+
 import { generateChristmasPhoto } from "./actions";
 import { CHRISTMAS_PROMPTS } from "@/lib/christmasPrompts";
 import { messages, Locale } from "@/lib/messages";
@@ -298,10 +299,14 @@ export default function Home() {
 
                   <div className="p-6 space-y-4">
                     {!isPaid ? (
-                      <div className="flex flex-col gap-3">
-                        <div className="space-y-4">
-                          <PayPalBtn amount={9.90} orderId={imageHash || 'order_123'} />
-                          <MPBtn amount={199} orderId={imageHash || 'order_123'} />
+                      <div className="flex flex-col gap-4">
+                        <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
+                          <p className="text-center text-xs text-white/50 uppercase tracking-widest mb-4">Instant Unlock</p>
+                          <PayPalBtn amount={9.90} orderId={imageHash!} clerkId={user?.id || ""} />
+                        </div>
+                        <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
+                          <p className="text-center text-xs text-white/50 uppercase tracking-widest mb-4">Pago en MXN (Instantáneo)</p>
+                          <MPBtn amount={9.90 * 20} orderId={imageHash!} clerkId={user?.id || ""} />
                         </div>
                         <p className="text-[10px] text-center text-white/40 uppercase tracking-widest mt-2">
                           Unlock High-Res & Remove Watermark
@@ -435,14 +440,14 @@ export default function Home() {
               </div>
 
               <div className="pt-8">
-                  <Button
-                    fullWidth
-                    size="xl"
-                    variant="primary"
-                    disabled={loading || !file || !selectedStyle}
-                    onClick={handleGenerate}
-                    className="shadow-[0_0_60px_rgba(255,255,255,0.1)] h-28 text-3xl uppercase tracking-[0.1em] font-black"
-                  >
+                <Button
+                  fullWidth
+                  size="xl"
+                  variant="primary"
+                  disabled={loading || !file || !selectedStyle}
+                  onClick={handleGenerate}
+                  className="shadow-[0_0_60px_rgba(255,255,255,0.1)] h-28 text-3xl uppercase tracking-[0.1em] font-black"
+                >
                   {loading ? (
                     <span className="flex items-center gap-3">
                       <Spinner size="md" color="white" /> Processing...
