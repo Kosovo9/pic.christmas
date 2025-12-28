@@ -8,6 +8,9 @@ create table users (
     full_name text,
     created_at timestamptz default now()
 );
+-- 10x Feature: User Credits
+alter table users
+add column credits int default 3;
 create table images (
     id uuid primary key default uuid_generate_v4(),
     user_id uuid references users(id) on delete cascade,
@@ -16,6 +19,8 @@ create table images (
     unlocked_at timestamptz,
     expires_at timestamptz,
     upscaled_path text,
+    video_path text,
+    credits_cost int default 1,
     created_at timestamptz default now()
 );
 create table sales (

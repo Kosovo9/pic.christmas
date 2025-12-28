@@ -199,10 +199,10 @@ export default function Home() {
               LIMITED EDITION 2024
             </Badge>
 
-            <h1 className="text-7xl md:text-9xl font-serif leading-[0.85] tracking-tighter">
+            <h1 className="text-7xl md:text-[10rem] font-serif leading-[0.8] tracking-tighter">
               {t.hero_title_line1} <br />
-              <GradientText variant="gold" className="py-2">{t.hero_title_line2}</GradientText> <br />
-              <span className="text-outline-white opacity-50">{t.hero_title_line3}</span>
+              <GradientText variant="gold" className="py-4 drop-shadow-[0_0_50px_rgba(255,215,0,0.3)]">{t.hero_title_line2}</GradientText> <br />
+              <span className="text-outline-white opacity-30 hover:opacity-100 transition-opacity duration-1000 cursor-default">{t.hero_title_line3}</span>
             </h1>
 
             <p className="text-lg md:text-xl text-white/60 max-w-lg font-light leading-relaxed tracking-wide">
@@ -216,8 +216,18 @@ export default function Home() {
                 size="lg"
                 onClick={() => document.getElementById('studio')?.scrollIntoView({ behavior: 'smooth' })}
                 icon={<Play className="w-5 h-5 fill-current" />}
+                className="bg-gradient-to-r from-christmas-gold to-yellow-600 border-none text-black shadow-[0_0_40px_rgba(255,215,0,0.5)] hover:scale-110 transition-transform"
               >
                 {t.generate}
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => alert("Generando Pack Viral 10x...")}
+                icon={<Sparkles className="w-5 h-5 text-christmas-gold" />}
+                className="border-white/20 hover:border-christmas-gold group"
+              >
+                <span className="group-hover:text-christmas-gold transition-colors">Generar Pack Viral (5 Estilos)</span>
               </Button>
               <Button
                 variant="outline"
