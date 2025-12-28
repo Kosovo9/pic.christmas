@@ -6,8 +6,14 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || "");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 export async function POST(req: Request) {
+    let language = 'en';
+    let message: string;
+    let history: any[];
     try {
-        const { message, history, language } = await req.json();
+        const body = await req.json();
+        message = body.message;
+        history = body.history;
+        language = body.language || 'en';
 
         // Map locale to full language name
         const langMap: Record<string, string> = {
@@ -57,7 +63,7 @@ export async function POST(req: Request) {
             fr: "Ho ho ho ! Je suis un peu débordée par les lettres au Père Noël. Réessayez ! ❄️"
         };
 
-        const fallback = backOffMsgs[language as string] || backOffMsgs['en'];
+        const fallback = backOffMsgs[language] || backOffMsgs['en'];
         return NextResponse.json({ reply: fallback }, { status: 200 });
     }
 }
