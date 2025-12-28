@@ -290,6 +290,52 @@ export default function Home() {
         </div>
       </section>
 
+      {/* FEATURES SECTION - 3 COLUMNS PREMIUM */}
+      <Section variant="dark" className="border-t border-white/5 relative z-20">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16 space-y-4">
+            <Badge variant="primary">Innovación Cuántica</Badge>
+            <h2 className="text-5xl md:text-7xl font-serif">Por qué elegir <GradientText variant="gold">Quantum Studio</GradientText></h2>
+            <p className="text-white/40 max-w-2xl mx-auto uppercase tracking-widest text-[10px] font-bold">Tecnología de vanguardia para momentos inolvidables</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Columna 1: IA Ultra Realista */}
+            <Card variant="glass" className="p-10 space-y-6 group hover:border-christmas-gold/50 transition-all duration-700 border-white/5">
+              <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-christmas-gold to-yellow-600 flex items-center justify-center shadow-[0_10px_30px_rgba(255,215,0,0.3)] group-hover:scale-110 transition-transform">
+                <Sparkles className="w-8 h-8 text-black" />
+              </div>
+              <h3 className="text-2xl font-serif text-white group-hover:text-christmas-gold transition-colors">IA Ultra Realista 8K</h3>
+              <p className="text-white/60 text-sm leading-relaxed">
+                Nuestro motor <span className="text-christmas-gold">Nexora 2.0</span> procesa cada píxel para mantener tu esencia facial con un realismo médico y cinematográfico inigualable.
+              </p>
+            </Card>
+
+            {/* Columna 2: Seguridad y Privacidad */}
+            <Card variant="glass" className="p-10 space-y-6 group hover:border-emerald-500/50 transition-all duration-700 border-white/5">
+              <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-[0_10px_30px_rgba(16,185,129,0.3)] group-hover:scale-110 transition-transform">
+                <ShieldCheck className="w-8 h-8 text-black" />
+              </div>
+              <h3 className="text-2xl font-serif text-white group-hover:text-emerald-400 transition-colors">Privacidad Blindada</h3>
+              <p className="text-white/60 text-sm leading-relaxed">
+                Tus fotos son procesadas encriptadamente y eliminadas automáticamente. Cumplimos con los estándares globales de seguridad biométrica.
+              </p>
+            </Card>
+
+            {/* Columna 3: Entrega Instantánea */}
+            <Card variant="glass" className="p-10 space-y-6 group hover:border-blue-500/50 transition-all duration-700 border-white/5">
+              <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_10px_30px_rgba(59,130,246,0.3)] group-hover:scale-110 transition-transform">
+                <Globe className="w-8 h-8 text-black" />
+              </div>
+              <h3 className="text-2xl font-serif text-white group-hover:text-blue-400 transition-colors">Magia sin Fronteras</h3>
+              <p className="text-white/60 text-sm leading-relaxed">
+                Desde Stitch hasta lujo solo en segundos. Descarga digital instantánea optimizada para redes sociales y redes de impresión profesional.
+              </p>
+            </Card>
+          </div>
+        </div>
+      </Section>
+
       {/* STUDIO SECTION */}
       <Section id="studio" variant="dark" className="relative z-20 -mt-20 rounded-t-[3rem] bg-neutral-950 border-t border-white/5 shadow-[0_-20px_60px_rgba(0,0,0,0.8)]">
         <div className="max-w-7xl mx-auto space-y-20 pt-20">
