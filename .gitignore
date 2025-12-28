@@ -46,3 +46,6 @@ next-env.d.ts
 /dist/
 *.tar.gz
 *.zip
+
+# Local Netlify folder
+.netlify
