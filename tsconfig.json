@@ -40,6 +40,7 @@
     ".next",
     "deploy",
     "deploy_final",
-    "dist"
+    "dist",
+    "netlify"
   ]
 }

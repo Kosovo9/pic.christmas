@@ -1,18 +1,9 @@
+# *
 User-agent: *
 Allow: /
 
-# GEO/AEO Optimization
-User-agent: GPTBot
-Allow: /
+# Host
+Host: https://pichristmas.netlify.app
 
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-# Sitemap
-Sitemap: https://pic.christmas/sitemap.xml
+# Sitemaps
+Sitemap: https://pichristmas.netlify.app/sitemap.xml
