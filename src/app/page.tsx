@@ -92,17 +92,17 @@ export default function Home() {
       <ViralExitModal language={lang} />
 
       {/* NAVBAR PREMIUM */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-8 py-6 backdrop-blur-2xl bg-black/20 border-b border-white/5 transition-all duration-500">
+      <nav className="fixed top-0 left-0 right-0 z-50 px-8 py-4 backdrop-blur-2xl bg-black/20 border-b border-white/5 transition-all duration-500">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center font-serif font-bold text-black text-2xl shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center font-serif font-bold text-black text-xl shadow-[0_0_20px_rgba(255,255,255,0.15)]">
               C
             </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-serif tracking-tight text-white">
-                pic.<span className="text-christmas-gold">christmas</span>
-              </span>
-              <span className="text-[9px] uppercase tracking-[0.2em] text-white/50">Quantum Studio</span>
+            <div>
+              <div className="text-base font-bold tracking-tighter flex items-center gap-1">
+                pic<span className="text-christmas-gold">.christmas</span>
+              </div>
+              <div className="text-[8px] uppercase tracking-[0.2em] text-white/40 font-bold">Quantum Studio</div>
             </div>
           </div>
 
@@ -178,7 +178,7 @@ export default function Home() {
 
 
       {/* HERO SECTION CINEMÁTICO */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-40 pb-20">
+      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden pt-32 pb-20">
         {/* Fondo con Overlay */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -194,20 +194,26 @@ export default function Home() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8 animate-slide-in-up">
-            <Badge variant="primary" size="lg" className="animate-pulse tracking-[0.3em] font-black">
-              <Sparkles className="w-4 h-4 mr-2" />
+            <Badge variant="primary" size="md" className="animate-pulse tracking-[0.2em] font-bold">
+              <Sparkles className="w-3.5 h-3.5 mr-2" />
               LIMITED EDITION 2024
             </Badge>
 
-            <h1 className="text-7xl md:text-[10rem] font-serif leading-[0.8] tracking-tighter">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif leading-[1.1] tracking-tight">
               {t.hero_title_line1} <br />
-              <GradientText variant="gold" className="py-4 drop-shadow-[0_0_50px_rgba(255,215,0,0.3)]">{t.hero_title_line2}</GradientText> <br />
-              <span className="text-outline-white opacity-30 hover:opacity-100 transition-opacity duration-1000 cursor-default">{t.hero_title_line3}</span>
+              <GradientText variant="gold" className="py-2 drop-shadow-[0_0_30px_rgba(255,215,0,0.2)]">
+                {t.hero_title_line2}
+              </GradientText> <br />
+              <span className="text-outline-white opacity-40 hover:opacity-100 transition-opacity duration-700 cursor-default">
+                {t.hero_title_line3}
+              </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-white/60 max-w-lg font-light leading-relaxed tracking-wide">
+            <p className="text-base md:text-lg text-white/70 max-w-lg font-light leading-relaxed">
               {t.subtitle} <br />
-              <span className="text-white/40 text-sm uppercase tracking-[0.3em] mt-4 block">Medical-Grade AI Realism • 8K Cinematic</span>
+              <span className="text-white/40 text-[10px] uppercase tracking-[0.2em] mt-3 block font-bold">
+                Medical-Grade AI Realism • 8K Cinematic
+              </span>
             </p>
 
             <div className="flex flex-wrap gap-4 pt-4">
@@ -251,27 +257,27 @@ export default function Home() {
 
           <div className="hidden lg:flex justify-center relative animate-float">
             {/* STITCH 3D CHARACTER */}
-            <div className="relative w-[500px] h-[500px]">
-              <div className="absolute inset-0 bg-christmas-gold/10 blur-[100px] rounded-full animate-pulse" />
-              <StitchCharacter initialAction="wave" className="w-full h-full transform scale-125" />
+            <div className="relative w-[400px] h-[400px]">
+              <div className="absolute inset-0 bg-christmas-gold/10 blur-[80px] rounded-full animate-pulse" />
+              <StitchCharacter initialAction="wave" className="w-full h-full transform scale-110" />
             </div>
 
             {/* Floating Cards */}
-            <Card variant="glass" className="absolute top-10 -right-10 p-4 w-48 animate-float-delayed backdrop-blur-xl">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
-                  <ShieldCheck className="w-6 h-6" />
+            <Card variant="glass" className="absolute top-10 -right-8 p-3 w-40 animate-float-delayed backdrop-blur-xl">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                  <ShieldCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-xs font-bold uppercase text-white/60">{t.footer_legal}</div>
-                  <div className="font-bold text-white">100% Safe</div>
+                  <div className="text-[10px] font-bold uppercase text-white/60">{t.footer_legal}</div>
+                  <div className="font-bold text-white text-xs">100% Safe</div>
                 </div>
               </div>
             </Card>
 
-            <Card variant="glass" className="absolute bottom-20 -left-10 p-4 w-52 animate-float backdrop-blur-xl">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400">
+            <Card variant="glass" className="absolute bottom-20 -left-8 p-3 w-44 animate-float backdrop-blur-xl">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400">
                   <Sparkles className="w-6 h-6" />
                 </div>
                 <div>

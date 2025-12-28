@@ -88,7 +88,7 @@ export const MusicPlayer = () => {
                 onClick={togglePlay}
                 onMouseEnter={() => setShowVolume(true)}
                 onMouseLeave={() => setShowVolume(false)}
-                className={`w-14 h-14 rounded-full flex items-center justify-center border-2 transition-all shadow-2xl 
+                className={`w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all shadow-2xl 
                     ${isPlaying
                         ? 'bg-christmas-red border-christmas-gold text-white shadow-christmas-red/40'
                         : 'bg-black/80 border-white/20 text-gray-400 hover:bg-black hover:border-christmas-gold'
@@ -96,13 +96,13 @@ export const MusicPlayer = () => {
             >
                 {isPlaying ? (
                     // Equalizer Animation Icon
-                    <div className="flex gap-1 items-end h-4">
-                        <span className="w-1.5 bg-white animate-[bounce_1s_infinite] h-2"></span>
-                        <span className="w-1.5 bg-white animate-[bounce_1.2s_infinite] h-4 text-christmas-gold"></span>
-                        <span className="w-1.5 bg-white animate-[bounce_0.8s_infinite] h-3"></span>
+                    <div className="flex gap-1 items-end h-3">
+                        <span className="w-1 bg-white animate-[bounce_1s_infinite] h-1.5"></span>
+                        <span className="w-1 bg-white animate-[bounce_1.2s_infinite] h-3 text-christmas-gold"></span>
+                        <span className="w-1 bg-white animate-[bounce_0.8s_infinite] h-2"></span>
                     </div>
                 ) : (
-                    <Play className="w-6 h-6 ml-1 fill-current" />
+                    <Play className="w-5 h-5 ml-0.5 fill-current" />
                 )}
             </button>
             <audio ref={audioRef} src={PLAYLIST[currentTrack]} preload="auto" crossOrigin="anonymous" />

@@ -46,9 +46,9 @@ export function ChatHolly({ language = 'es' }: ChatHollyProps) {
                     language: language
                 })
             });
-            
+
             if (!res.ok) throw new Error("Network response was not ok");
-            
+
             const data = await res.json();
             if (data.reply) {
                 setMessages(prev => [...prev, { role: 'assistant', text: data.reply }]);
@@ -69,16 +69,16 @@ export function ChatHolly({ language = 'es' }: ChatHollyProps) {
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="bg-christmas-red text-white p-4 rounded-full shadow-2xl hover:scale-110 transition active:scale-95 flex items-center gap-2 group border border-white/20"
+                    className="bg-christmas-red text-white p-3 rounded-full shadow-2xl hover:scale-110 transition active:scale-95 flex items-center gap-2 group border border-white/20"
                 >
-                    <Sparkles className="w-5 h-5 text-christmas-gold animate-pulse" />
-                    <span className="font-bold text-sm pr-2 hidden group-hover:block">Holly AI Concierge</span>
-                    <MessageCircle className="w-6 h-6" />
+                    <Sparkles className="w-4 h-4 text-christmas-gold animate-pulse" />
+                    <span className="font-bold text-xs pr-1 hidden group-hover:block">Holly AI</span>
+                    <MessageCircle className="w-5 h-5" />
                 </button>
             )}
 
             {isOpen && (
-                <div className="bg-black/90 backdrop-blur-2xl border border-white/10 w-[380px] h-[600px] rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 duration-500">
+                <div className="bg-black/90 backdrop-blur-2xl border border-white/10 w-[320px] h-[500px] rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 duration-500">
                     <div className="bg-white/5 p-6 flex justify-between items-center border-b border-white/5">
                         <div className="flex items-center gap-3">
                             <div className="bg-gradient-gold w-12 h-12 rounded-full flex items-center justify-center text-black font-bold shadow-gold">H</div>
