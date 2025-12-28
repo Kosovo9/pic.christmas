@@ -1,4 +1,4 @@
-const PLATFORM_URL = 'http://localhost:3001';
+const PLATFORM_URL = 'https://pichristmas.netlify.app';
 const CONCURRENT_REQUESTS = 20;
 
 async function stressTest() {
