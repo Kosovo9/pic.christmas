@@ -1,0 +1,38 @@
+# Netlify redirects for Christmas AI Studio
+
+# Handle client-side routing (SPA fallback)
+/*    /index.html   200
+
+# API routes to functions
+/api/*  /.netlify/functions/:splat  200
+
+# Force HTTPS redirect
+http://pic.christmas/*  https://pic.christmas/:splat  301!
+http://www.pic.christmas/*  https://pic.christmas/:splat  301!
+
+# WWW to non-WWW redirect
+https://www.pic.christmas/*  https://pic.christmas/:splat  301!
+
+# Legacy redirects (if migrating from old domain)
+/christmas/*  /:splat  301
+/ai-studio/*  /:splat  301
+
+# Admin routes (protect if needed)
+/admin/*  /admin/index.html  200
+
+# Health check
+/health  /api/health  200
+
+# Sitemap and robots
+/sitemap  /sitemap.xml  301
+/robots  /robots.txt  301
+
+# Image optimization fallback
+/images/*  /api/image/:splat  200
+
+# Payment success/cancel pages
+/payment/success  /  302
+/payment/cancel   /  302
+
+# 404 fallback
+/404  /index.html  200
